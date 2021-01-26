@@ -1,0 +1,60 @@
+ext {
+    appName = "密码管理"
+    plugin = [
+            Plugins.application,
+            Plugins.kotlin_android,
+            Plugins.kotlin_android_extensions,
+            Plugins.kotlin_kapt,
+
+    ]
+    deps = [
+            'com.github.arcadefire:nice-spinner:1.4.4',
+            'com.zhy:base-rvadapter:3.0.3',
+            //3D地图so及jar
+            'com.amap.api:3dmap:7.7.0',
+            //定位功能
+            'com.amap.api:location:5.2.0',
+            'com.tencent.bugly:crashreport:latest.release',
+             "com.esri.geometry:esri-geometry-api:2.2.3"
+    ]
+//    depProject = [ModelName.BaseCore]
+    depProject = [ModelName.BaseCore, ModelName.UnityLib]
+}
+configPluginApp project
+configAndroidDomain project
+configDependencies project
+configDepProject project
+android {
+
+    signingConfigs {
+        release {
+            keyAlias 'autopilot'
+            storeFile file('../resources/huanguo.keystore')
+            storePassword 'vwqUyg0zZPbLzyNo'
+            keyPassword 'vwqUyg0zZPbLzyNo'
+        }
+        debug {
+            keyAlias 'autopilot'
+            storeFile file('../resources/huanguo.keystore')
+            storePassword 'vwqUyg0zZPbLzyNo'
+            keyPassword 'vwqUyg0zZPbLzyNo'
+        }
+    }
+
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    kapt(Android.room.roomCompiler)
+}
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
+
+
+
+
+
+

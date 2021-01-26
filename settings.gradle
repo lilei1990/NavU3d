@@ -1,0 +1,4 @@
+include ':app'
+include ':base_core'
+include ':unityLibrary'
+rootProject.name = "NavU3d"

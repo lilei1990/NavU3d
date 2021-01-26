@@ -1,0 +1,57 @@
+<resources>
+
+    <style name="Dialog.FullScreen" parent="Base.Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
+    <style name="SplashTheme_Night" parent="AppTheme_Night">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
+    <style name="farm_tools_config_cl">
+        <item name="android:layout_width">@dimen/dp_130</item>
+        <item name="android:layout_height">@dimen/dp_194</item>
+        <item name="android:padding">@dimen/dp_12</item>
+        <item name="android:background">@mipmap/shadow_bg_white</item>
+    </style>
+
+    <style name="farm_tools_config_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+    </style>
+
+    <style name="farm_tools_config_img">
+        <item name="android:layout_width">@dimen/dp_100</item>
+        <item name="android:layout_height">@dimen/dp_100</item>
+        <item name="android:layout_marginTop">@dimen/dp_2</item>
+    </style>
+
+    <style name="farm_tools_config_et">
+        <item name="android:layout_width">@dimen/dp_45</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/dp_12</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">numberDecimal</item>
+        <item name="android:lines">1</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+    </style>
+    `
+
+    <style name="farm_tools_config_unit">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:padding">@dimen/dp_0</item>
+    </style>
+
+
+</resources>

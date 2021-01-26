@@ -1,0 +1,199 @@
+import sun.rmi.runtime.Log
+
+ext {
+    //app配置
+    configAndroidDomain = this.&configAndroidDomain
+    //Dependencies配置
+    configDepProject = this.&configDepProject
+    configDependencies = this.&configDependencies
+    configPluginApp = this.&configPluginApp
+}
+
+//application插件配置
+def configPluginApp(Project pro) {
+    def name = pro.plugin
+    name.each {
+        pro.apply plugin: it
+    }
+}
+/**
+ * app Domain配置
+ * @param pro
+ * @return
+ */
+def configAndroidDomain(Project pro) {
+    println "==============日志输出=============="
+    println "com.android.application:" + pro.plugins.hasPlugin("com.android.application")
+    //判断是否主app还是lib
+    if (pro.plugins.hasPlugin("com.android.application")) {
+        configAppAndroidDomain(pro)
+    } else {
+        configLibAndroidDomain(pro)
+    }
+}
+
+
+def configAppAndroidDomain(Project pro) {
+    configField(pro)
+    configSigning(pro)
+    pro.android {
+        compileSdkVersion Version.compileSdkVersion
+        defaultConfig {
+            applicationId Version.applicationId
+            minSdkVersion Version.minSdkVersion
+            targetSdkVersion Version.targetSdkVersion
+            versionCode Version.versionCode
+            versionName Version.versionName
+            multiDexEnabled true
+            ndk {
+                abiFilters 'armeabi-v7a'
+            }
+        }
+        buildTypes {
+            release {
+                minifyEnabled true
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+        }
+        //配置资源路径
+        configSourceSets(pro.android)
+
+        lintOptions {
+            abortOnError false
+        }
+        viewBinding {
+            enabled = true
+        }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+        kotlinOptions {
+            jvmTarget = '1.8'
+        }
+    }
+}
+/**
+ * 配置资源路径
+ * @param android
+ * @return
+ */
+def configSourceSets(android) {
+    android.sourceSets {
+        main {
+//            res.srcDirs = [
+//                    'src/main/res',
+//                    'src/main/res/layout',
+//                    'src/main/res/layout/view',
+//                    'src/main/res/layout/adapter',
+//                    'src/main/res/layout/include',
+//                    'src/main/res/layout/other',
+//                    'src/main/res/layout/values'
+//            ]
+            jniLibs.srcDirs = ['libs']
+
+        }
+    }
+}
+/**
+ * 配置app信息键值对
+ * @param pro
+ * @return
+ */
+def configField(Project pro) {
+    pro.android.defaultConfig {
+        resValue "string", "app_name", pro.appName
+    }
+}
+/**
+ * 配置打包key
+ * @param pro
+ * @return
+ */
+def configSigning(Project pro) {
+    File signPropertiesFile = file('sign/keystore.properties')
+    if (!signPropertiesFile.exists()) return
+    pro.android {
+        Properties properties = new Properties()
+        properties.load(new FileInputStream(signPropertiesFile))
+        signingConfigs {
+            release {
+                storeFile file(properties['keystore'])
+                storePassword properties['storePassword']
+                keyAlias properties['keyAlias']
+                keyPassword properties['keyPassword']
+            }
+        }
+        buildTypes.release.signingConfig signingConfigs.release
+    }
+}
+/**
+ * Android构建配置
+ * @param pro
+ * @return
+ */
+def configLibAndroidDomain(Project pro) {
+    pro.android {
+        compileSdkVersion Version.compileSdkVersion
+        defaultConfig {
+            minSdkVersion Version.minSdkVersion
+            versionCode Version.versionCode
+            versionName Version.versionName
+            multiDexEnabled true
+        }
+
+//        buildTypes {
+//            release {
+//                minifyEnabled false
+////            consumerProguardFiles 'proguard-rules.pro'
+//                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            }
+//        }
+        configSourceSets(pro.android)
+        lintOptions {
+            abortOnError false
+        }
+        viewBinding {
+            enabled = true
+        }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+        testOptions.unitTests.all {
+            testLogging {
+                events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+            }
+        }
+    }
+}
+
+/**
+ * 添加依赖model
+ * @param pro
+ * @return
+ */
+def configDepProject(Project pro) {
+    pro.dependencies {
+        def name = pro.depProject
+        name.each {
+            implementation project(it)
+        }
+    }
+}
+
+/**
+ * 添加依赖model
+ * @param pro
+ * @return
+ */
+def configDependencies(Project pro) {
+    pro.dependencies {
+        api fileTree(dir: 'libs', include: ['*.jar'])
+        testImplementation 'junit:junit:4.12'
+        def name = pro.deps
+        name.each {
+            api(it)
+        }
+    }
+}

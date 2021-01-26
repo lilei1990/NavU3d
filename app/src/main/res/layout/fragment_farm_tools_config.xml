@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#9c9c9c"
+    tools:context=".ui.fragment.FarmToolsConfigFragment">
+
+    <include
+        android:id="@+id/incTitleBar"
+        layout="@layout/title_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_12"
+        android:layout_marginRight="@dimen/dp_12"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/incTitleBar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/farm_tools_config_cl"
+            android:background="@mipmap/shadow_bg_white">
+
+            <TextView
+                android:id="@+id/tvTitleWide"
+                style="@style/farm_tools_config_title"
+                android:text="@string/farm_tools_wide"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ivWide"
+                style="@style/farm_tools_config_img"
+                android:background="@drawable/selector_button_main"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleWide" />
+
+            <EditText
+                android:id="@+id/etWide"
+                style="@style/farm_tools_config_et"
+                android:text="3.3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivWide" />
+
+            <TextView
+                style="@style/farm_tools_config_unit"
+                android:text="米"
+                app:layout_constraintBottom_toBottomOf="@+id/etWide"
+                app:layout_constraintStart_toEndOf="@id/etWide"
+                app:layout_constraintTop_toTopOf="@+id/etWide" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout style="@style/farm_tools_config_cl">
+
+            <TextView
+                android:id="@+id/tvTitleOffset"
+                style="@style/farm_tools_config_title"
+                android:text="@string/farm_tools_offset"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ivOffset"
+                style="@style/farm_tools_config_img"
+                android:background="@drawable/selector_button_main"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleOffset" />
+
+            <EditText
+                android:id="@+id/etOffset"
+                style="@style/farm_tools_config_et"
+                android:text="3.3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivOffset" />
+
+            <TextView
+                style="@style/farm_tools_config_unit"
+                android:text="米"
+                app:layout_constraintBottom_toBottomOf="@+id/etOffset"
+                app:layout_constraintStart_toEndOf="@id/etOffset"
+                app:layout_constraintTop_toTopOf="@+id/etOffset" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout style="@style/farm_tools_config_cl">
+
+            <TextView
+                android:id="@+id/tvTitleBackCenter"
+                style="@style/farm_tools_config_title"
+                android:text="@string/farm_tools_to_back_center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ivBackCenter"
+                style="@style/farm_tools_config_img"
+                android:background="@drawable/selector_button_main"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleBackCenter" />
+
+            <EditText
+                android:id="@+id/etBackCenter"
+                style="@style/farm_tools_config_et"
+                android:text="3.3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivBackCenter" />
+
+            <TextView
+                style="@style/farm_tools_config_unit"
+                android:text="米"
+                app:layout_constraintBottom_toBottomOf="@+id/etBackCenter"
+                app:layout_constraintStart_toEndOf="@id/etBackCenter"
+                app:layout_constraintTop_toTopOf="@+id/etBackCenter" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout style="@style/farm_tools_config_cl">
+
+            <TextView
+                android:id="@+id/tvTitleOverlapping"
+                style="@style/farm_tools_config_title"
+                android:text="@string/farm_tools_overlapping"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ivOverlapping"
+                style="@style/farm_tools_config_img"
+                android:background="@drawable/selector_button_main"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleOverlapping" />
+
+            <EditText
+                android:id="@+id/etOverlapping"
+                style="@style/farm_tools_config_et"
+                android:text="3.3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivOverlapping" />
+
+            <TextView
+                style="@style/farm_tools_config_unit"
+                android:text="米"
+                app:layout_constraintBottom_toBottomOf="@+id/etOverlapping"
+                app:layout_constraintStart_toEndOf="@id/etOverlapping"
+                app:layout_constraintTop_toTopOf="@+id/etOverlapping" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

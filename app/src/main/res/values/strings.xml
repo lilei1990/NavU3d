@@ -1,0 +1,25 @@
+<resources>
+    <string name="game_view_content_description">Game view</string>
+
+    <string name="splash_text">辅助导航U3D</string>
+
+    <string name="go_back">返回</string>
+    <string name="confirm">确定</string>
+    <string name="farm_tools_config">农具配置</string>
+    <string name="farm_machinery_config">农机配置</string>
+    <string name="antenna_config">天线配置</string>
+    <string name="diff_data_source_config">差分数据源</string>
+    <string name="nav_mode_config">导航模式</string>
+    <string name="farm_tools_wide">农具宽幅</string>
+    <string name="farm_tools_offset">农具偏移</string>
+    <string name="farm_tools_to_back_center">农具到后轴中心点</string>
+    <string name="farm_tools_overlapping">重叠/遗漏</string>
+    <string name="wheelbase">轴距</string>
+    <string name="antenna_to_front">天线到前轴距离</string>
+    <string name="antenna_height">天线高度</string>
+    <string name="task_name">名称</string>
+    <string name="task_creator">创建人</string>
+    <string name="task_area">地块</string>
+    <string name="task_farm_tools">农具</string>
+    <string name="task_date">日期</string>
+</resources>

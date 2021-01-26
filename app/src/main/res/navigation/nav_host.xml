@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/main_menu_fragment"
+    tools:ignore="UnusedNavigation">
+    <fragment
+        android:id="@+id/main_menu_fragment"
+        android:name="com.huida.navu3d.ui.fragment.main.MainMenuFragment">
+        <action
+            android:id="@+id/action_main_menu_fragment_to_setting_fragment"
+            app:destination="@id/setting_fragment"
+            app:enterAnim="@anim/in_from_right"
+            app:exitAnim="@anim/out_to_left" />
+        <action
+            android:id="@+id/action_main_menu_fragment_to_task_list_fragment"
+            app:destination="@id/task_list_fragment" />
+    </fragment>
+    <!--配置选项-->
+    <fragment
+        android:id="@+id/setting_fragment"
+        android:name="com.huida.navu3d.ui.fragment.main.SettingFragment">
+        <action
+            android:id="@+id/action_setting_fragment_to_farm_Tools_fragment"
+            app:destination="@id/farm_Tools_fragment" />
+        <action
+            android:id="@+id/action_setting_fragment_to_fram_machinery_fragment"
+            app:destination="@id/fram_machinery_fragment" />
+    </fragment>
+    <!--农具配置页面-->
+    <fragment
+        android:id="@+id/farm_Tools_fragment"
+        android:name="com.huida.navu3d.ui.fragment.farmTools.FarmToolsConfigFragment" />
+    <!--任务列表界面-->
+    <fragment
+        android:id="@+id/task_list_fragment"
+        android:name="com.huida.navu3d.ui.fragment.workTask.TaskListFragment">
+
+    </fragment>
+    <!--农机配置页面-->
+    <fragment
+        android:id="@+id/fram_machinery_fragment"
+        android:name="com.huida.navu3d.ui.fragment.farmMachinery.FarmMachineryConfigFragment" />
+</navigation>
