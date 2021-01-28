@@ -3,6 +3,8 @@ package com.lei.base_core.base
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.SkinAppCompatDelegateImpl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
@@ -11,6 +13,7 @@ import com.lei.base_core.utils.StatusUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+
 
 /**
  * des mvvm 基础 activity
@@ -82,4 +85,9 @@ abstract class BaseVmActivity<VB : ViewBinding>(val inflate: (LayoutInflater) ->
         super.onDestroy()
         cancel()
     }
+
+    override fun getDelegate(): AppCompatDelegate {
+        return SkinAppCompatDelegateImpl.get(this, this)
+    }
+
 }

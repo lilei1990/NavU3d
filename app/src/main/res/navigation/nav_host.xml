@@ -34,7 +34,7 @@
     <!--任务列表界面-->
     <fragment
         android:id="@+id/task_list_fragment"
-        android:name="com.huida.navu3d.ui.fragment.workTask.TaskListFragment">
+        android:name="com.huida.navu3d.ui.fragment.workTask.WorkTaskFragment">
 
     </fragment>
     <!--农机配置页面-->

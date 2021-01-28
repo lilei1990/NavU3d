@@ -4,7 +4,7 @@ import android.content.Context
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.huida.navu3d.R
-import com.huida.navu3d.ui.activity.U3dActivity
+import com.huida.navu3d.ui.activity.u3d.U3dActivity
 import com.huida.navu3d.bean.WorkTaskData
 import com.zhy.adapter.recyclerview.CommonAdapter
 import com.zhy.adapter.recyclerview.base.ViewHolder
@@ -15,12 +15,15 @@ import com.zhy.adapter.recyclerview.base.ViewHolder
  * 邮箱 :416587959@qq.com
  * 描述 :工作任务
  */
-class WorkTaskListAdapter(context: Context?, layoutId: Int, datas: MutableList<WorkTaskData>?) :
+class WorkTaskListAdapter(context: Context?, layoutId: Int, datas: ArrayList<WorkTaskData>) :
     CommonAdapter<WorkTaskData>(context, layoutId, datas) {
     override fun convert(holder: ViewHolder?, t: WorkTaskData?, position: Int) {
         holder?.setOnClickListener(R.id.clRoot) {
             ToastUtils.showLong("${position}被点击")
             ActivityUtils.startActivity(U3dActivity::class.java)
         }
+        holder?.setText(R.id.tv_name,t?.name)
+        holder?.setText(R.id.tv_creator,"创建人:${t?.creator}")
+
     }
 }

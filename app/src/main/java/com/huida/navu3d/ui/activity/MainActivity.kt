@@ -1,16 +1,12 @@
 package com.huida.navu3d.ui.activity
 
 import android.os.Bundle
-import android.widget.SeekBar
-import com.amap.api.location.CoordinateConverter
-import com.amap.api.location.DPoint
-import com.amap.api.maps.AMap
-import com.huida.navu3d.common.BindingView
+import com.huida.navu3d.common.Constants
 import com.huida.navu3d.databinding.ActivityMainBinding
 import com.lei.base_core.base.BaseVmActivity
-import com.lei.base_core.common.binding
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.lei.base_core.utils.PrefUtils
+import com.lei.base_core.utils.StatusUtils
+
 /**
  * 作者 : lei
  * 时间 : 2021/01/26.
@@ -29,6 +25,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding>(ActivityMainBinding::in
     override fun init(savedInstanceState: Bundle?) {
 
 
+}
 //        binding.glsv.init()
 //        var converter = CoordinateConverter(this)
 //        // CoordType.GPS 待转换坐标类型
@@ -88,9 +85,18 @@ class MainActivity : BaseVmActivity<ActivityMainBinding>(ActivityMainBinding::in
 //                binding.glsv.doDrawLine(xies as ArrayList<XY>?)
 //            }
 //        }
-
+         /**
+          * 沉浸式状态,随主题改变
+          */
+         override fun setSystemInvadeBlack() {
+             val theme = PrefUtils.getBoolean(Constants.SP_THEME_KEY, false)
+             if (theme) {
+                 StatusUtils.setSystemStatus(this, true, false)
+             } else {
+                 StatusUtils.setSystemStatus(this, true, true)
+             }
+         }
     }
 
 
-}
 

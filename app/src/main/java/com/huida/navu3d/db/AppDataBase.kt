@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.blankj.utilcode.util.FileUtils
 import com.huida.navu3d.bean.*
-import com.huida.navu3d.common.Config
-import com.huida.navu3d.common.Config.dataBasePath
+import com.huida.navu3d.common.Constants
+import com.huida.navu3d.common.Constants.dataBasePath
 import com.lei.base_core.BaseApp
 
 
@@ -66,6 +66,6 @@ abstract class AppDataBase : RoomDatabase() {
      * 删除数据库文件
      */
     fun deleteDataBase() {
-        FileUtils.delete(Config.dataBasePath)
+        FileUtils.delete(Constants.dataBasePath)
     }
 }

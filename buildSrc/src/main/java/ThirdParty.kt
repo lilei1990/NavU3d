@@ -44,5 +44,14 @@ object ThirdParty {
 
     }
 
+    val skin = Skin
+    object Skin {
+        private const val version = "4.0.5"
+      const val support= "skin.support:skin-support:$version"                   // skin-support
+      const val support_appcompat= "skin.support:skin-support-appcompat:$version"         // skin-support 基础控件支持
+      const val support_design="skin.support:skin-support-design:$version"            // skin-support-design material design 控件支持[可选]
+      const val support_cardview="skin.support:skin-support-cardview:$version"          // skin-support-cardview CardView 控件支持[可选]
+      const val support_constraint_layout="skin.support:skin-support-constraint-layout:$version" // skin-support-constraint-layout ConstraintLayout 控件支持[可选]
+    }
 
 }

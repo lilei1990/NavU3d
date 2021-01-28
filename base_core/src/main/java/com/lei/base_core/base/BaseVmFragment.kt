@@ -13,8 +13,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.viewbinding.ViewBinding
 import com.lei.base_core.utils.ParamUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 
 /**
  * des mvvm 基础 fragment
@@ -23,7 +21,7 @@ import kotlinx.coroutines.MainScope
 boolean attachToParent
  */
 abstract class BaseVmFragment<VB : ViewBinding>(val inflate: (LayoutInflater, ViewGroup?, Boolean) -> VB) :
-    Fragment(), CoroutineScope by MainScope() {
+    Fragment() {
     private var _binding: VB? = null
      val binding get() = _binding!!
 

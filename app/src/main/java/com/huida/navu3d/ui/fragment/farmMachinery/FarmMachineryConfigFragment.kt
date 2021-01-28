@@ -2,6 +2,7 @@ package com.huida.navu3d.ui.fragment.farmMachinery
 
 import android.os.Bundle
 import androidx.lifecycle.asFlow
+import androidx.lifecycle.lifecycleScope
 import com.huida.navu3d.common.initBackClick
 import com.huida.navu3d.common.initConfirmClick
 import com.huida.navu3d.databinding.FragmentFarmMachineryConfigBinding
@@ -29,7 +30,7 @@ class FarmMachineryConfigFragment :
     override fun init(savedInstanceState: Bundle?) {
         binding.incTitleBar.initBackClick()
         binding.incTitleBar.initConfirmClick {
-            launch(Dispatchers.IO) {
+            lifecycleScope.launch(Dispatchers.IO) {
                 viewModel.firstData.wheelbase = binding.etWheelbase.text.toString().toDouble()
                 viewModel.firstData.antennaToFront = binding.etAntennaToFront.text.toString().toDouble()
                 viewModel.firstData.antennaHeight = binding.etAntennaHeight.text.toString().toDouble()
@@ -38,7 +39,7 @@ class FarmMachineryConfigFragment :
             }
 
         }
-        launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
 
             viewModel.getData().asFlow().collect {
                 binding.etWheelbase.setText("${it.wheelbase}")

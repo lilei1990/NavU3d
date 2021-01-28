@@ -20,7 +20,7 @@
         android:src="#9c9c9c" />
 
     <TextView
-        android:id="@+id/tvDistance"
+        android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_11"
@@ -47,7 +47,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ivSignal"
-        app:layout_constraintTop_toBottomOf="@+id/tvDistance"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"
         android:text="上海崇明站点2" />
 
     <TextView
@@ -66,7 +66,7 @@
         android:text="地块:1号地" />
 
     <TextView
-        android:id="@+id/tvCreator"
+        android:id="@+id/tv_creator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_5"

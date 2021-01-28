@@ -42,6 +42,11 @@ ext {
             ThirdParty.smart.smart,
             ThirdParty.smart.head,
             ThirdParty.utils.blankj_utilcode,
+            ThirdParty.skin.support,
+            ThirdParty.skin.support_appcompat,
+            ThirdParty.skin.support_design,
+            ThirdParty.skin.support_cardview,
+            ThirdParty.skin.support_constraint_layout,
 
     ]
 

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/teal_200"
     app:layoutDescription="@xml/activity_u3d_scene"
-    tools:context=".ui.activity.U3dActivity">
+    tools:context=".ui.activity.u3d.U3dActivity">
 
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/mlRoot"
@@ -36,7 +36,7 @@
             app:layout_constraintLeft_toLeftOf="parent">
 
             <com.amap.api.maps.TextureMapView
-                android:id="@+id/map"
+                android:id="@+id/gd_map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
@@ -69,20 +69,45 @@
         app:layout_constraintTop_toBottomOf="@+id/incTopBar" />
 
     <ScrollView
-        android:id="@+id/scrollView"
+        android:id="@+id/sv_menu"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/dp_1_5"
         android:layout_marginRight="@dimen/dp_6"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/incTopBar">
 
         <LinearLayout
-            android:id="@+id/llMenu"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <include
+                android:id="@+id/bt1"
+                layout="@layout/item_activity_main_button" />
+
+            <include
+                android:id="@+id/bt2"
+                layout="@layout/item_activity_main_button" />
+
+            <include
+                android:id="@+id/bt3"
+                layout="@layout/item_activity_main_button" />
+
+            <include
+                android:id="@+id/bt4"
+                layout="@layout/item_activity_main_button" />
+
+
+            <include
+                android:id="@+id/bt5"
+                layout="@layout/item_activity_main_button" />
+
+
+            <include
+                android:id="@+id/bt6"
+                layout="@layout/item_activity_main_button" />
         </LinearLayout>
     </ScrollView>
 

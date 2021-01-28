@@ -12,6 +12,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tvNight"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginTop="58dp"
+
+        android:text="夜间模式"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/incTitleBar" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/scDayNight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBottom_toBottomOf="@+id/tvNight"
+        app:layout_constraintTop_toTopOf="@+id/tvNight" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,6 +47,7 @@
             android:layout_marginLeft="@dimen/dp_6"
             android:layout_marginRight="@dimen/dp_6"
             android:text="@string/farm_tools_config" />
+
         <Button
             android:id="@+id/btFarmMachineryConfig"
             android:layout_width="@dimen/dp_101"

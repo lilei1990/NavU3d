@@ -2,6 +2,7 @@ package com.huida.navu3d.ui.fragment.farmTools
 
 import android.os.Bundle
 import androidx.lifecycle.asFlow
+import androidx.lifecycle.lifecycleScope
 import com.huida.navu3d.bean.FarmToolsData
 import com.huida.navu3d.common.initBackClick
 import com.huida.navu3d.common.initConfirmClick
@@ -29,7 +30,7 @@ class FarmToolsConfigFragment :
     override fun init(savedInstanceState: Bundle?) {
         binding.incTitleBar.initBackClick()
         binding.incTitleBar.initConfirmClick {
-            launch(Dispatchers.IO) {
+            lifecycleScope.launch(Dispatchers.IO) {
                 viewModel.firstData.width = binding.etWide.text.toString().toDouble()
                 viewModel.firstData.offset = binding.etOffset.text.toString().toDouble()
                 viewModel.firstData.centerToSuspension = binding.etBackCenter.text.toString().toDouble()
@@ -38,7 +39,7 @@ class FarmToolsConfigFragment :
             }
 
         }
-        launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
 
             viewModel.getFarmToolsData().asFlow().collect {
                 binding.etWide.setText("${it.width}")

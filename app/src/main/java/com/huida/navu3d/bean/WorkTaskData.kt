@@ -16,7 +16,7 @@ import java.sql.Time
 class WorkTaskData {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "sortId")
-    var sortId: Long = 0
+    var sortId: Int = 0
     //创建时间
     @ColumnInfo(name = "date")
     var date: Long = System.currentTimeMillis()
@@ -28,7 +28,7 @@ class WorkTaskData {
     var creator: String = ""
     //作业类型
     @ColumnInfo(name = "area")
-    var type: Int = 0
+    var area: Int = 0
     //农具
     @ColumnInfo(name = "farmTools")
     var farmTools: Int = 0

@@ -16,7 +16,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!--GPS定位 之前不显示蓝点-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    >
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
     <uses-permission android:name="android.permission.READ_LOGS" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -26,9 +29,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!--//高德地图-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="71330155f8dfe9ebafdd4622265dd947" />
+        <service android:name="com.amap.api.location.APSService" />
 
         <activity
             android:name=".ui.activity.SplashActivity"
@@ -43,7 +48,7 @@
             android:name=".ui.activity.MainActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".ui.activity.U3dActivity"
+            android:name=".ui.activity.u3d.U3dActivity"
             android:screenOrientation="landscape" />
     </application>
 

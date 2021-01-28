@@ -14,21 +14,22 @@ interface WorkTaskDao {
      * 增加一条
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAudio(audioBean: WorkTaskData)
+    fun insert(audioBean: WorkTaskData)
     /**
      * 删除一条
      */
     @Delete
-    fun deleteAudio(audioBean: WorkTaskData)
+    fun delete(audioBean: WorkTaskData)
     /**
      * 查询一个
      */
     @Query("SELECT * FROM work_task WHERE name=:name")
-    fun findAudioById(name: String): WorkTaskData?
+    fun findById(name: String): WorkTaskData?
 
     /**
      * 返回所有的数据,结果为LiveData
+     * desc =降序排序
      */
-    @Query("SELECT * FROM work_task")
-    fun getAllAudios(): MutableList<WorkTaskData>?
+    @Query("SELECT * FROM work_task order by sortId desc")
+    fun getAlls(): MutableList<WorkTaskData>?
 }

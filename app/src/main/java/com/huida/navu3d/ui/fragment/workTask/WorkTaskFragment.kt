@@ -5,37 +5,40 @@ import android.view.View
 import android.widget.DatePicker
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.databinding.FragmentTaskListBinding
 import com.lei.base_core.base.BaseVmFragment
 import com.lei.base_core.common.clickNoRepeat
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.internal.MainDispatcherFactory
 
 
-class TaskListFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskListBinding::inflate) {
+class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskListBinding::inflate) {
     private lateinit var workTaskListAdapter: WorkTaskListAdapter
-    private val dataList = ArrayList<WorkTaskData>()
+    private val viewModel by lazy { getFragmentViewModel(WorkTaskViewModel::class.java) }
 
 
     companion object {
         fun newInstance() =
-            TaskListFragment()
+            WorkTaskFragment()
     }
-
-    private lateinit var viewModel: TaskListViewModel
 
 
     override fun init(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(TaskListViewModel::class.java)
+
         initTab()
         initTitleBar()
         initRecycleView()
+        loadWorkListData()
     }
 
     /**
@@ -43,11 +46,16 @@ class TaskListFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskLis
      */
     private fun initTitleBar() {
         binding.incTitleBar.clConfirm.clickNoRepeat {
-            ToastUtils.showLong("保存")
-
+            viewModel.workTaskData.name = binding.incNew.etTaskName.text.toString()
+            viewModel.workTaskData.creator = binding.incNew.etCreator.text.toString()
+            lifecycleScope.launch(Dispatchers.IO) {
+                //添加到数据库,更新列表
+                viewModel.addFarmToolsData()
+                loadWorkListData()
+            }
+            binding.clContinueTask.performClick()
         }
         binding.incTitleBar.clBack.clickNoRepeat {
-            ToastUtils.showLong("返回")
             Navigation.findNavController(it).popBackStack()
         }
 
@@ -95,7 +103,6 @@ class TaskListFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskLis
         binding.incNew.spArea.attachDataSource(arrayListOf)
         binding.incNew.spFarmTools.attachDataSource(arrayListOf)
 
-
     }
 
     /**
@@ -103,33 +110,32 @@ class TaskListFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskLis
      */
     private fun initRecycleView() {
         binding.rvContinue.layoutManager = LinearLayoutManager(activity)
-
         workTaskListAdapter =
             WorkTaskListAdapter(
-                getContext(),
+                activity,
                 R.layout.item_task,
                 arrayListOf()
             );
+        binding.rvContinue.adapter = workTaskListAdapter
 
-//        //订阅列表数据5s过后展示数据
-        launch() {
-//            delay(5000L)
-            activity?.let {
-                viewModel.loadInitData().observe(it, Observer {
-                    workTaskListAdapter =
-                        WorkTaskListAdapter(
-                            getContext(),
-                            R.layout.item_task,
-                            it
-                        );
-                    binding.rvContinue.adapter = workTaskListAdapter
-//                    dataList.addAll(it)
+
+    }
+
+    /**
+     * 加载列表数据
+     */
+    private fun loadWorkListData() {
+        lifecycleScope.launch(Dispatchers.IO) {
+           val loadInitData = viewModel.loadInitData()
+            lifecycleScope.launch(Dispatchers.Main) {
+                loadInitData.observe(this@WorkTaskFragment, Observer{
+                    workTaskListAdapter.datas.clear()
+                    workTaskListAdapter.datas.addAll(it)
                     workTaskListAdapter.notifyDataSetChanged()
                 })
             }
         }
     }
-
 
 
 }

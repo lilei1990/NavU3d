@@ -5,18 +5,15 @@ import android.os.Bundle
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.PermissionUtils.SimpleCallback
 import com.huida.navu3d.R
-import com.huida.navu3d.bean.WorkTaskData
-import com.huida.navu3d.constants.Constants
+import com.huida.navu3d.common.Constants
 import com.huida.navu3d.databinding.ActivitySplashBinding
-import com.huida.navu3d.db.AppDataBase
+
 import com.lei.base_core.base.BaseVmActivity
 import com.lei.base_core.helper.PermissionHelper
 import com.lei.base_core.utils.PrefUtils
 import com.lei.base_core.utils.StatusUtils
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 /**
@@ -32,18 +29,7 @@ class SplashActivity : BaseVmActivity<ActivitySplashBinding>(ActivitySplashBindi
         changeTheme()
         super.onCreate(savedInstanceState)
 
-        launch {
-            val bean = withContext(Dispatchers.IO) {
-                val audioBean = WorkTaskData()
-                audioBean.name = "ssswe"
-                AppDataBase.getInstance()
-                    .collectWorkTaskDao()
-                    .insertAudio(audioBean)
-                AppDataBase.getInstance()
-                    .collectWorkTaskDao()
-                    .findAudioById("ssswe")
-            }
-        }
+
     }
 
     override fun init(savedInstanceState: Bundle?) {
