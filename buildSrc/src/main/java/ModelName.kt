@@ -11,4 +11,5 @@ object ModelName {
     const val UnityLib = ":unityLibrary"
     const val App = ":App"
     const val BaseLib = ":base_lib"
+    const val NMEA = ":nmea_parser"
 }

@@ -10,6 +10,7 @@ import com.amap.api.maps.LocationSource
 import com.amap.api.maps.model.*
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.Operator
 import com.esri.core.geometry.OperatorFactoryLocal
 import com.esri.core.geometry.OperatorOffset
@@ -25,10 +26,17 @@ class MapViewModel : ViewModel() {
     val mLocationStyle = MutableLiveData<MyLocationStyle>()
     val mMarker = MutableLiveData<MarkerOptions>()
     private val location by lazy { Location() }
-    var currenLocation = LatLng(0.0, 0.0)
+
+    //当前坐标
+    var mCurrenLocation = LatLng(0.0, 0.0)
+
+    //A点坐标
     var A = LatLng(39.97617053371078, 116.3499049793749)
+
+    //B点坐标
     var B = LatLng(39.977652209132174, 116.34821304891533)
     fun setA() {
+        A = mCurrenLocation
         val options = MarkerOptions()
         options.draggable(true)
             .snippet("DefaultMarker")
@@ -36,9 +44,12 @@ class MapViewModel : ViewModel() {
         options.position(A)
         options.isFlat = true
         mMarker.postValue(options)
+        ToastUtils.showLong(A.toString())
     }
 
     fun setB() {
+        B = LatLng(mCurrenLocation.latitude + 0.001, mCurrenLocation.longitude + 0.001)
+//        B=mCurrenLocation
         val options = MarkerOptions()
         options.draggable(true)
             .snippet("DefaultMarker")
@@ -46,9 +57,24 @@ class MapViewModel : ViewModel() {
         options.position(B)
         options.isFlat = true
         mMarker.postValue(options)
+        ToastUtils.showLong(B.toString())
     }
 
     fun setLine(aMap: AMap) {
+        val latLngs: MutableList<LatLng> = ArrayList()
+
+        latLngs.add(A)
+        latLngs.add(B)
+        aMap.addPolyline(
+            PolylineOptions().addAll(latLngs).width(10f).color(Color.argb(255, 1, 255, 1))
+        )
+
+    }
+
+    /**
+     * 画左侧的线
+     */
+    fun DerwLeftLine(aMap: AMap) {
 
         //偏移操作
         val offseter = OperatorFactoryLocal
@@ -56,8 +82,8 @@ class MapViewModel : ViewModel() {
             .getOperator(Operator.Type.Offset) as OperatorOffset
 
         val line = Polyline()
-        line.startPath(A.latitude*1.001, A.longitude*1.001)
-        line.lineTo(B.latitude*0.999, B.longitude*0.999)
+        line.startPath(A.latitude * 1.001, A.longitude * 1.001)
+        line.lineTo(B.latitude * 0.999, B.longitude * 0.999)
         for (i in 0..50) {
             val polyline = offseter.execute(
                 line,
@@ -80,6 +106,20 @@ class MapViewModel : ViewModel() {
                 PolylineOptions().addAll(latLngs).width(10f).color(Color.argb(255, 1, 255, 1))
             )
         }
+    }
+
+    /**
+     * 画右侧的线
+     */
+    fun DerwRightLine(aMap: AMap) {
+        //偏移操作
+        val offseter = OperatorFactoryLocal
+            .getInstance()
+            .getOperator(Operator.Type.Offset) as OperatorOffset
+
+        val line = Polyline()
+        line.startPath(A.latitude * 1.001, A.longitude * 1.001)
+        line.lineTo(B.latitude * 0.999, B.longitude * 0.999)
         for (i in 0..50) {
             val polyline = offseter.execute(
                 line,
@@ -102,18 +142,16 @@ class MapViewModel : ViewModel() {
                 PolylineOptions().addAll(latLngs).width(10f).color(Color.argb(255, 1, 255, 1))
             )
         }
-
-
     }
 
     /**
      * 设置定位蓝点的Style
      */
-    fun getLocationStyle(): MutableLiveData<MyLocationStyle> {
+    fun initLocationStyle(): MutableLiveData<MyLocationStyle> {
         if (mLocationStyle.value == null) {
             val myLocationStyle: MyLocationStyle =
                 MyLocationStyle() //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-            myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW);//连续定位、且将视角移动到地图中心点，定位蓝点跟随设备移动。（1秒1次定位）
+            myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位蓝点跟随设备移动。（1秒1次定位）
 //            myLocationStyle.interval(2000) //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
             myLocationStyle.showMyLocation(false)
 //        binding.map.map.uiSettings.isZoomControlsEnabled = false//禁用放大缩小
@@ -130,8 +168,8 @@ class MapViewModel : ViewModel() {
     fun startLoaction(context: Context) {
         location.activate(context, object : LocationSource.OnLocationChangedListener {
             override fun onLocationChanged(p0: android.location.Location) {
-                LogUtils.e("${p0.latitude},${p0.longitude}")
-                currenLocation = LatLng(p0.latitude, p0.longitude)
+//                LogUtils.e("${p0.latitude},${p0.longitude}")
+                mCurrenLocation = LatLng(p0.latitude, p0.longitude)
             }
 
         })
@@ -152,7 +190,7 @@ class MapViewModel : ViewModel() {
         options.draggable(true)
             .snippet("DefaultMarker")
 
-        options.position(currenLocation)
+        options.position(mCurrenLocation)
         options.icon(BitmapDescriptorFactory.fromResource(R.mipmap.car))
         options.isFlat = true
         mMarker.postValue(options)
@@ -163,7 +201,6 @@ class MapViewModel : ViewModel() {
         val moveMarker = SmoothMoveMarker(aMap)
         // 设置滑动的图标
         moveMarker.setDescriptor(BitmapDescriptorFactory.fromResource(R.mipmap.car))
-        // 获取轨迹坐标点
         // 获取轨迹坐标点
         val points: List<LatLng> = readLatLngs()
         moveMarker.setPoints(points) //设置平滑移动的轨迹list

@@ -53,75 +53,12 @@ public class SensitivityTestView extends SurfaceView implements SurfaceHolder.Ca
 
     }
 
-    public void runCart(int x, int y, int i) {
-        width = getWidth();
-        height = getHeight();
-        interval = i;
-        cartx = x;
-        carty = y;
-//        doDrawLine(x.toInt(), y.toInt());
-    }
-
-    //小车坐标
-    int cartx = 0;
-    int carty = 0;
 
 
-    //导航线区间
-    int interval = 0;
-    int widthCart = 20;
-
-    public void doDrawLine(int linex, int endx) {
+    public void doDrawLine( ArrayList<Polyline> mPoints) {
         mCanvas = mHolder.lockCanvas(); // 获得画布对象，开始对画布画画
         mCanvas.drawRGB(0, 0, 0); // 把画布填充为黑色
-        int i1 = height - 4;
-        for (int i = 1; i < 11; i++) {
-            mCanvas.drawLine(i * linex, 0, i * linex + endx, 1000, p);
-            mCanvas.drawText("n." + i, i * interval + 4, i1, p);
-        }
 
-        Matrix mMatrix = new Matrix();
-        mMatrix.postRotate(
-                1F,
-                0F,
-                0F
-        );
-        mCanvas.concat(mMatrix);
-        mCanvas.drawCircle(5 * interval, carty, r, p); // 画一个圆
-        mHolder.unlockCanvasAndPost(mCanvas); // 完成画画，把画布显示在屏幕上
-    }
-
-    public void doDrawLine(ArrayList<XY> xies) {
-        mCanvas = mHolder.lockCanvas(); // 获得画布对象，开始对画布画画
-        mCanvas.drawRGB(0, 0, 0); // 把画布填充为黑色
-        for (XY xy : xies) {
-            mCanvas.drawLine(xy.x, xy.y, xy.ex, xy.ey, p);
-        }
-//        mCanvas.drawCircle(5 * interval, carty, r, p); // 画一个圆
-        mHolder.unlockCanvasAndPost(mCanvas); // 完成画画，把画布显示在屏幕上
-
-    }
-
-    public void doDrawPoint() {
-        mCanvas = mHolder.lockCanvas(); // 获得画布对象，开始对画布画画
-        mCanvas.drawRGB(0, 0, 0); // 把画布填充为黑色
-        MultiPoint mPoint = createMultipoint1();
-        int pointCount = mPoint.getPointCount();
-        for (int i = 0; i < pointCount; i++) {
-            Point point = mPoint.getPoint(i);
-            float x = (float) point.getX();
-            float y = (float) point.getY();
-            mCanvas.drawPoint(x, y, p);
-            Log.d("TAG----", "x: " + x + "--y:" + y);
-        }
-        mHolder.unlockCanvasAndPost(mCanvas); // 完成画画，把画布显示在屏幕上
-
-    }
-
-    public void doDrawLine() {
-        mCanvas = mHolder.lockCanvas(); // 获得画布对象，开始对画布画画
-        mCanvas.drawRGB(0, 0, 0); // 把画布填充为黑色
-        ArrayList<Polyline> mPoints = createPolyline1();
         Path path = new Path();
 
         p.setStyle(Paint.Style.STROKE);
@@ -143,35 +80,6 @@ public class SensitivityTestView extends SurfaceView implements SurfaceHolder.Ca
         mCanvas.drawPath(path, p);
         mHolder.unlockCanvasAndPost(mCanvas); // 完成画画，把画布显示在屏幕上
 
-    }
-
-    static MultiPoint createMultipoint1() {
-
-        MultiPoint mPoint = new MultiPoint();
-
-        for (int i = 0; i < 50; i++) {
-            mPoint.add(Math.random() * 1500, Math.random() * 900);
-        }
-
-        return mPoint;
-    }
-
-    static ArrayList<Polyline> createPolyline1() {
-
-        //偏移操作
-        OperatorOffset offseter = (OperatorOffset) OperatorFactoryLocal
-                .getInstance().getOperator(Operator.Type.Offset);
-        ArrayList<Polyline> polylines = new ArrayList<>();
-        Polyline line = new Polyline();
-        line.startPath(Math.random() * 1500, Math.random() * 900);
-        line.lineTo(Math.random() * 1500, Math.random() * 900);
-        for (int i = 0; i < 13; i++) {
-            Polyline polyline = (Polyline) offseter.execute(line, null, 100 * i, OperatorOffset.JoinType.Round, 0, 180, null);
-            polylines.add(polyline);
-        }
-
-
-        return polylines;
     }
 
     @Override

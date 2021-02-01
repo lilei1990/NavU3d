@@ -1,7 +1,12 @@
 package com.huida.navu3d.utils;
 
+import android.content.Context;
+
+import com.amap.api.maps.CoordinateConverter;
+import com.amap.api.maps.model.LatLng;
+
 public enum GeoConvert {
-	INSTANCE;
+    INSTANCE;
 
     private static final double sm_a = 6378137.0;
     private static final double sm_b = 6356752.314;
@@ -212,5 +217,15 @@ public enum GeoConvert {
                 + (epsilon_ * Math.sin(8.0 * y_));
 
         return result;
+    }
+
+    public  LatLng gaoDeConvert(LatLng sourceLatLng, Context context) {
+        CoordinateConverter converter = new CoordinateConverter(context);
+        // CoordType.GPS 待转换坐标类型
+        converter.from(CoordinateConverter.CoordType.GPS);
+        // sourceLatLng待转换坐标点 LatLng类型
+        converter.coord(sourceLatLng);
+        // 执行转换操作
+        return converter.convert();
     }
 }

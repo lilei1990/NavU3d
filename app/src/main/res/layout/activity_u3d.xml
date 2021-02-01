@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:kongqw="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/clRoot"
     android:layout_width="match_parent"
@@ -20,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/dp_6"
-            android:layout_marginBottom="@dimen/dp_45"
+            android:layout_marginBottom="@dimen/dp_200"
             android:background="@drawable/selector_button_main"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
@@ -30,10 +31,10 @@
             android:layout_width="@dimen/dp_50"
             android:layout_height="@dimen/dp_50"
             android:layout_marginLeft="@dimen/dp_6"
-            android:layout_marginBottom="@dimen/dp_45"
+            android:layout_marginBottom="@dimen/dp_150"
             android:background="@drawable/selector_button_main"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent">
+            app:layout_constraintLeft_toLeftOf="parent" >
 
             <com.amap.api.maps.TextureMapView
                 android:id="@+id/gd_map"
@@ -48,7 +49,7 @@
         android:layout_width="@dimen/dp_50"
         android:layout_height="@dimen/dp_50"
         android:layout_marginLeft="@dimen/dp_6"
-        android:layout_marginBottom="@dimen/dp_45"
+        android:layout_marginBottom="@dimen/dp_150"
         android:background="@color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
@@ -108,8 +109,28 @@
             <include
                 android:id="@+id/bt6"
                 layout="@layout/item_activity_main_button" />
+
+            <include
+                android:id="@+id/bt7"
+                layout="@layout/item_activity_main_button" />
+
+            <include
+                android:id="@+id/bt8"
+                layout="@layout/item_activity_main_button" />
         </LinearLayout>
     </ScrollView>
+
+    <com.kongqw.rockerlibrary.view.RockerView
+        android:id="@+id/rockerView"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        kongqw:areaBackground="#1B9C9C9C"
+        kongqw:rockerBackground="#B79C9C9C"
+        kongqw:rockerRadius="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clBottom"

@@ -16,8 +16,8 @@ import com.lei.base_core.BaseApp
  * 数据库基本类
  */
 @Database(
-    entities = [WorkTaskData::class, FarmToolsData::class, FarmMachineryData::class],
-    version = 5,
+    entities = [WorkTaskData::class, FarmToolsData::class, FarmMachineryData::class, PointXYData::class],
+    version = 9,
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -32,6 +32,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun collectWorkTaskDao(): WorkTaskDao
     abstract fun collectFarmToolsDao(): FarmToolsDao
     abstract fun collectFarmMachineryDao(): FarmMachineryDao
+    abstract fun collectPointXYDao(): PointXYDao
 
     companion object {
         @Volatile

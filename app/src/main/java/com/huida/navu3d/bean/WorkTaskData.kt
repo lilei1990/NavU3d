@@ -1,9 +1,6 @@
 package com.huida.navu3d.bean
 
-import androidx.room.ColumnInfo
-import androidx.room.Database
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import java.sql.Time
 
 /**
@@ -17,21 +14,27 @@ class WorkTaskData {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "sortId")
     var sortId: Int = 0
+
     //创建时间
     @ColumnInfo(name = "date")
     var date: Long = System.currentTimeMillis()
+
     //地块名称
     @ColumnInfo(name = "name")
     var name: String = ""
+
     //创建者
     @ColumnInfo(name = "creator")
     var creator: String = ""
+
     //作业类型
     @ColumnInfo(name = "area")
     var area: Int = 0
+
     //农具
     @ColumnInfo(name = "farmTools")
     var farmTools: Int = 0
+
     //参考线
     //历史轨迹
     //标记,引导标记

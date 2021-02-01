@@ -1,11 +1,17 @@
 package com.huida.navu3d.ui.activity
 
 import android.os.Bundle
+import android.util.Log
+import com.esri.core.geometry.*
 import com.huida.navu3d.common.Constants
 import com.huida.navu3d.databinding.ActivityMainBinding
 import com.lei.base_core.base.BaseVmActivity
 import com.lei.base_core.utils.PrefUtils
 import com.lei.base_core.utils.StatusUtils
+
+
+
+
 
 /**
  * 作者 : lei
@@ -13,90 +19,88 @@ import com.lei.base_core.utils.StatusUtils
  * 邮箱 :416587959@qq.com
  * 描述 : 入口activity
  */
-class MainActivity : BaseVmActivity<ActivityMainBinding>(ActivityMainBinding::inflate)
-     {
-//    private val mStartDistance = -1 //初始小车位置(米)
-//    var angle = 30.0
-//
-//
-//    //平行线的间隔宽
-//    val interval = 250
-//    val lineLengt = 3000
+class MainActivity : BaseVmActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+//    //偏移操作
+//    val offseter = OperatorFactoryLocal
+//        .getInstance()
+//        .getOperator(Operator.Type.Offset) as OperatorOffset
     override fun init(savedInstanceState: Bundle?) {
+    val geomList: ArrayList<Geometry> = createAllPolylines()
+    val inputGeoms = SimpleGeometryCursor(geomList)
+    val spatialRef = SpatialReference.create(102382)
+    val distances = doubleArrayOf(120.0, 50.0)
 
-
-}
-//        binding.glsv.init()
-//        var converter = CoordinateConverter(this)
-//        // CoordType.GPS 待转换坐标类型
-//        converter.from(CoordinateConverter.CoordType.GPS)
-//// sourceLatLng待转换坐标点 DPoint类型  116.397564,39.90694
-//        val dPoint = DPoint()
-//        dPoint.latitude=39.90694
-//        dPoint.longitude=116.397564
-//        converter.coord(dPoint)
-//// 执行转换操作
-//        val desLatLng: DPoint = converter.convert()
-//
-//        binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-//            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-//                angle = progress.toDouble()
-//                binding.tvProgress.text = "$progress"
-//            }
-//
-//            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-//
-//            }
-//
-//            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-//
-//            }
-//
-//        })
-//        launch {
-//            delay(2000)
-//            val width = binding.glsv.width
-//            val height = binding.glsv.height
-//            while (true) {
-//                delay(1000)
-//                binding.glsv.doDrawLine()
-//            }
-
-//            while (true) {
-//                delay(200)
-//                //x轴间隔
-//                val a = interval / Math.sin(Math.toRadians(angle))
-//                //y轴的高度
-//                val b = lineLengt * Math.sin(Math.toRadians(angle))
-//                //ex轴偏移量
-//                val bx = lineLengt * Math.cos(Math.toRadians(angle)) - a
-//                Log.d("TAG---", "a:$a b:$b bx:$bx ")
-//                var xies = ArrayList<XY>()
-//                for (i in 1..10) {
-//                    var xy = XY()
-//                    xy.x = (i * a).toFloat()
-//                    xy.y = 0.0F
-//                    xy.ex = (i * a + bx).toFloat()
-//                    xy.ey = b.toFloat()
-//                    xies.add(xy)
-//                }
-//
-//
-//                binding.glsv.doDrawLine(xies as ArrayList<XY>?)
-//            }
-//        }
-         /**
-          * 沉浸式状态,随主题改变
-          */
-         override fun setSystemInvadeBlack() {
-             val theme = PrefUtils.getBoolean(Constants.SP_THEME_KEY, false)
-             if (theme) {
-                 StatusUtils.setSystemStatus(this, true, false)
-             } else {
-                 StatusUtils.setSystemStatus(this, true, true)
-             }
-         }
+    val outputGeoms =
+        OperatorBuffer.local().execute(inputGeoms, spatialRef, distances, false, null)
+    var geom: Geometry? = null
+    while (outputGeoms.next().also { geom = it } != null) {
+        Log.d("TAGlilei", "${geom.toString()}")
     }
+}
+
+    fun createAllPolylines(): ArrayList<Geometry> {
+
+        // Create a list of input geometries.
+        val geomList =
+            ArrayList<Geometry>(5)
+
+        // Create a list of coordinates to use for creating the polylines.
+        val coords = arrayOf(
+            doubleArrayOf(-11686713.0, 4828005.0),
+            doubleArrayOf(-11687175.0, 4828005.0),
+            doubleArrayOf(-11687337.0, 4827898.0),
+            doubleArrayOf(-11687461.0, 4828009.0),
+            doubleArrayOf(-11687461.0, 4828250.0),
+            doubleArrayOf(-11687421.0, 4828250.0),
+            doubleArrayOf(-11687305.0, 4828331.0),
+            doubleArrayOf(-11687143.0, 4828237.0),
+            doubleArrayOf(-11686716.0, 4828237.0),
+            doubleArrayOf(-11686713.0, 4828237.0),
+            doubleArrayOf(-11686713.0, 4828005.0)
+        )
+        geomList.add(createPolyline(coords))
+        val coords2 = arrayOf(
+            doubleArrayOf(-11686998.0, 4828712.0),
+            doubleArrayOf(-11686998.0, 4828240.0)
+        )
+        geomList.add(createPolyline(coords2))
+        coords2[0][0] = (-11686998).toDouble()
+        coords2[0][1] = 4828001.0
+        coords2[1][0] = (-11686998).toDouble()
+        coords2[1][1] = 4827533.0
+        geomList.add(createPolyline(coords2))
+        coords2[0][0] = (-11687848).toDouble()
+        coords2[0][1] = 4828618.0
+        coords2[1][0] = (-11687480).toDouble()
+        coords2[1][1] = 4828251.0
+        geomList.add(createPolyline(coords2))
+        coords2[0][0] = (-11688017).toDouble()
+        coords2[0][1] = 4828250.0
+        coords2[1][0] = (-11687461).toDouble()
+        coords2[1][1] = 4828250.0
+        geomList.add(createPolyline(coords2))
+        return geomList
+    }
+    fun createPolyline(pts: Array<DoubleArray>): Polyline{
+        val line = Polyline()
+        line.startPath(pts[0][0], pts[0][1])
+        for (i in 1 until pts.size) line.lineTo(pts[i][0], pts[i][1])
+        return line
+    }
+
+//        binding.glsv.init()
+    /**
+     * 沉浸式状态,随主题改变
+     */
+    override fun setSystemInvadeBlack() {
+        val theme = PrefUtils.getBoolean(Constants.SP_THEME_KEY, false)
+        if (theme) {
+            StatusUtils.setSystemStatus(this, true, false)
+        } else {
+            StatusUtils.setSystemStatus(this, true, true)
+        }
+    }
+}
 
 
 

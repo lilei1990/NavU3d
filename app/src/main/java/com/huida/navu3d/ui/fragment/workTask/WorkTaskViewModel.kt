@@ -15,6 +15,7 @@ class WorkTaskViewModel : ViewModel() {
         AppDataBase.getInstance()
             .collectWorkTaskDao()
     }
+
      val workTaskDatas = MutableLiveData<ArrayList<WorkTaskData>>()
     //存放某一块数据,页面数据
     val workTaskData = WorkTaskData()

@@ -15,11 +15,11 @@ ext {
             //定位功能
             'com.amap.api:location:5.2.0',
             'com.tencent.bugly:crashreport:latest.release',
-             "com.esri.geometry:esri-geometry-api:2.2.3",
-
+            "com.esri.geometry:esri-geometry-api:2.2.3",
+            "com.github.kongqw:AndroidRocker:1.0.1"
     ]
 //    depProject = [ModelName.BaseCore]
-    depProject = [ModelName.BaseCore, ModelName.UnityLib]
+    depProject = [ModelName.BaseCore, ModelName.UnityLib, ModelName.NMEA]
 }
 configPluginApp project
 configAndroidDomain project
