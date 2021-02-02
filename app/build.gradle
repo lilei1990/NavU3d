@@ -16,7 +16,8 @@ ext {
             'com.amap.api:location:5.2.0',
             'com.tencent.bugly:crashreport:latest.release',
             "com.esri.geometry:esri-geometry-api:2.2.3",
-            "com.github.kongqw:AndroidRocker:1.0.1"
+            "com.github.kongqw:AndroidRocker:1.0.1",
+            "org.litepal.guolindev:core:3.2.3"
     ]
 //    depProject = [ModelName.BaseCore]
     depProject = [ModelName.BaseCore, ModelName.UnityLib, ModelName.NMEA]

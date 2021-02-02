@@ -10,11 +10,12 @@ import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
 import com.huida.navu3d.bean.CurrentWorkTask
 import com.huida.navu3d.bean.PointXYData
-import com.huida.navu3d.db.AppDataBase
 import com.huida.navu3d.ui.activity.DomeManager
 import com.huida.navu3d.utils.GeoConvert
+import org.litepal.LitePal.find
 import java.util.*
 import kotlin.math.roundToInt
+
 
 class U3dViewModel : ViewModel() {
     //当前坐标
@@ -56,8 +57,6 @@ class U3dViewModel : ViewModel() {
 
     //速度,距离数据
     private val pointAB by lazy {
-        AppDataBase.getInstance()
-            .collectPointXYDao()
     }
 
     /**
@@ -116,22 +115,16 @@ class U3dViewModel : ViewModel() {
             satelliteCount = "${it.satelliteCount}"
             DataSatelliteCount.postValue(satelliteCount)
             val p = Point(pointXY.X, pointXY.Y)
-
-            mParalleMaplLine.sortWith(
-                compareBy(
-                    { ParallelLine.getPointToCurveDis(p, it) },
-                    { ParallelLine.getPointToCurveDis(p, it) })
-            )
+            //排序
             mParalleMaplLine.sortWith(
                 Comparator { o1, o2 ->
-                    (ParallelLine.getPointToCurveDis(p, o2) - ParallelLine.getPointToCurveDis(
+                    -((ParallelLine.getPointToCurveDis(p, o2) - ParallelLine.getPointToCurveDis(
                         p,
                         o1
-                    )).roundToInt()
+                    ))*100).roundToInt()
                 }
             )
             if (mParalleMaplLine.size > 0) {
-
                 offsetLineDistance = ParallelLine.getPointToCurveDis(p, mParalleMaplLine[0]).roundToInt()
             }
             DataOffsetLineDistance.postValue(offsetLineDistance)
@@ -208,16 +201,18 @@ class U3dViewModel : ViewModel() {
      * 查询上次设置的Ab点
      */
     fun findByPointAB() {
-        pointAB.findByType(CurrentWorkTask.task.sortId, 1)?.apply {
-            A = this
-            DataMarkerA.postValue(markPoint(A))
-            ToastUtils.showLong(A.toString())
-        }
-        pointAB.findByType(CurrentWorkTask.task.sortId, 2)?.apply {
-            B = this
-            DataMarkerA.postValue(markPoint(B))
-            ToastUtils.showLong(B.toString())
-        }
+//        find<T>(PointXYData::class.java, id)
+//
+//        pointAB.findByType(CurrentWorkTask.task.sortId, 1)?.apply {
+//            A = this
+//            DataMarkerA.postValue(markPoint(A))
+//            ToastUtils.showLong(A.toString())
+//        }
+//        pointAB.findByType(CurrentWorkTask.task.sortId, 2)?.apply {
+//            B = this
+//            DataMarkerA.postValue(markPoint(B))
+//            ToastUtils.showLong(B.toString())
+//        }
 
     }
 

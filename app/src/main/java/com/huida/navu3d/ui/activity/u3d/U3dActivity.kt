@@ -1,9 +1,7 @@
 package com.huida.navu3d.ui.activity.u3d
 
 import android.graphics.Color
-import android.icu.lang.UCharacter.getDirection
 import android.os.Bundle
-import android.util.Log
 import android.widget.LinearLayout
 import androidx.lifecycle.observe
 import com.amap.api.maps.AMap
@@ -16,18 +14,12 @@ import com.amap.api.maps.model.animation.Animation
 import com.amap.api.maps.model.animation.ScaleAnimation
 import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.R
-import com.huida.navu3d.bean.CurrentWorkTask
 import com.huida.navu3d.databinding.ActivityU3dBinding
-import com.huida.navu3d.db.AppDataBase
 import com.huida.navu3d.ui.activity.DomeManager
-import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
 import com.kongqw.rockerlibrary.view.RockerView
 import com.kongqw.rockerlibrary.view.RockerView.OnShakeListener
 import com.lei.base_core.common.clickNoRepeat
 import com.unity3d.player.IUnityPlayerLifecycleEvents
-import com.unity3d.splash.services.core.api.Intent
-import kotlinx.android.synthetic.main.include_activity_main_top.*
-import kotlinx.android.synthetic.main.include_activity_main_top.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

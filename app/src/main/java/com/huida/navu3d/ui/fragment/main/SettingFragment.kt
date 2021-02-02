@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.navigation.Navigation
 import com.blankj.utilcode.util.SPUtils
 import com.huida.navu3d.R
-import com.huida.navu3d.common.Constants
+import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.common.initBackClick
 import com.huida.navu3d.databinding.FragmentSettingBinding
 import com.lei.base_core.base.BaseVmFragment

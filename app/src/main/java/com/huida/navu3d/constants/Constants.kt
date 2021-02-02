@@ -1,6 +1,4 @@
-package com.huida.navu3d.common
-
-import com.blankj.utilcode.util.SDCardUtils
+package com.huida.navu3d.constants
 
 /**
  * 作者 : lei
@@ -9,9 +7,9 @@ import com.blankj.utilcode.util.SDCardUtils
  * 描述 :
  */
 object Constants {
-    var pathRoot="${SDCardUtils.getSDCardPathByEnvironment()}/NavU3d/"
-    //数据库路径
-    var dataBasePath ="$pathRoot/dataBase.db"
+//    var pathRoot="${SDCardUtils.getSDCardPathByEnvironment()}/NavU3d/"
+//    //数据库路径
+//    var dataBasePath ="$pathRoot/dataBase.db"
 
 
     /**

@@ -2,6 +2,7 @@ package com.huida.navu3d
 
 import com.lei.base_core.BaseApp
 import com.tencent.bugly.crashreport.CrashReport
+import org.litepal.LitePal
 import skin.support.SkinCompatManager
 import skin.support.app.SkinAppCompatViewInflater
 import skin.support.app.SkinCardViewInflater
@@ -18,6 +19,7 @@ import skin.support.design.app.SkinMaterialViewInflater
 class App: BaseApp() {
     override fun onCreate() {
         super.onCreate()
+        LitePal.initialize(this);
         //初始化bugly
         CrashReport.initCrashReport(applicationContext, "9882dbea36", false);
         SkinCompatManager.withoutActivity(this)

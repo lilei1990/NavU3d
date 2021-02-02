@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.PermissionUtils.SimpleCallback
 import com.huida.navu3d.R
-import com.huida.navu3d.common.Constants
+import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.databinding.ActivitySplashBinding
 
 import com.lei.base_core.base.BaseVmActivity
