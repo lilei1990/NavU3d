@@ -37,7 +37,6 @@
         <mapping class="com.huida.navu3d.bean.LineXYData" />
         <mapping class="com.huida.navu3d.bean.PointXYData" />
         <mapping class="com.huida.navu3d.bean.WorkTaskData" />
-        <mapping class="com.huida.navu3d.bean.User" />
     </list>
 
     <!--

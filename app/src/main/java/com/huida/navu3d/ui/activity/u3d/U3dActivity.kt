@@ -15,8 +15,6 @@ import com.amap.api.maps.model.animation.ScaleAnimation
 import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.bean.CurrentWorkTask
-import com.huida.navu3d.bean.PointXYData
-import com.huida.navu3d.bean.User
 import com.huida.navu3d.databinding.ActivityU3dBinding
 import com.huida.navu3d.ui.activity.DomeManager
 import com.kongqw.rockerlibrary.view.RockerView

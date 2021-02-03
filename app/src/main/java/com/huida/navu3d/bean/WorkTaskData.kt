@@ -1,7 +1,6 @@
 package com.huida.navu3d.bean
 
 import com.blankj.utilcode.util.ToastUtils
-import org.litepal.annotation.Column
 import org.litepal.crud.LitePalSupport
 
 /**
