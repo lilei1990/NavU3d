@@ -5,14 +5,11 @@ import androidx.lifecycle.ViewModel
 import com.amap.api.maps.AMap
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MarkerOptions
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
-import com.huida.navu3d.bean.CurrentWorkTask
 import com.huida.navu3d.bean.PointXYData
 import com.huida.navu3d.ui.activity.DomeManager
 import com.huida.navu3d.utils.GeoConvert
-import org.litepal.LitePal.find
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -82,7 +79,7 @@ class U3dViewModel : ViewModel() {
      */
     fun setPointB() {
         B = mCurrenLatLng
-        DataMarkerA.postValue(markPoint(B))
+        DataMarkerB.postValue(markPoint(B))
         ToastUtils.showLong(B.toString())
 
     }
@@ -108,7 +105,7 @@ class U3dViewModel : ViewModel() {
             pointXY.lngGC102 = convertGaode.longitude
             pointXY.X = convertUTM[0]
             pointXY.Y = convertUTM[1]
-            LogUtils.e(pointXY.toString())
+//            LogUtils.e(pointXY.toString())
             mPointXYData.add(pointXY)
             mCurrenLatLng = pointXY
             DataPointXY.postValue(mPointXYData)

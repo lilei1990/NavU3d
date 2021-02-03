@@ -14,6 +14,9 @@ import com.amap.api.maps.model.animation.Animation
 import com.amap.api.maps.model.animation.ScaleAnimation
 import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.R
+import com.huida.navu3d.bean.CurrentWorkTask
+import com.huida.navu3d.bean.PointXYData
+import com.huida.navu3d.bean.User
 import com.huida.navu3d.databinding.ActivityU3dBinding
 import com.huida.navu3d.ui.activity.DomeManager
 import com.kongqw.rockerlibrary.view.RockerView
@@ -30,7 +33,7 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
     val viewModel by lazy { getActivityViewModel(U3dViewModel::class.java)!! }
     val mapViewModel by lazy { getActivityViewModel(MapViewModel::class.java)!! }
 
-
+    val taskWorkby by lazy { CurrentWorkTask.task }
     override fun init(savedInstanceState: Bundle?) {
 
         binding.apply {
@@ -46,6 +49,14 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
     }
 
     override fun observe() {
+        taskWorkby?.apply {
+//            this.getPointA()?.apply {
+//
+//            }
+//            this.getPointB()?.apply {
+//
+//            }
+        }
         viewModel.DataOffsetLineDistance.observe(this) {
             binding.incTopBar.tvLength.text = "${it}"
         }
@@ -65,7 +76,12 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
             binding.gdMap.map.myLocationStyle = it //设置定位蓝点的Style
         }
         viewModel.DataMarkerA.observe(this) {
-
+            taskWorkby?.apply {
+                viewModel.A.save()
+//                this.setPointA(viewModel.A)
+                pointAB?.add(viewModel.A)
+                this.save()
+            }
             val cameraPosition =
                 CameraPosition(LatLng(it.position.latitude, it.position.longitude), 15f, 0f, 30f)
             val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
@@ -78,6 +94,12 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
 
         }
         viewModel.DataMarkerB.observe(this) {
+            taskWorkby?.apply {
+                viewModel.B.save()
+                pointAB?.add(viewModel.B)
+//                this.setPointA(viewModel.A)
+                this.save()
+            }
             val markerAnimation: Animation = ScaleAnimation(0f, 1f, 0f, 1f) //初始化生长效果动画
             markerAnimation.setDuration(1000) //设置动画时间 单位毫秒
             val marker = binding.gdMap.map.addMarker(it)
@@ -112,30 +134,6 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
                 binding.gdMap.map.addPolyline(
                     PolylineOptions().addAll(latLngs).width(5f).color(Color.argb(255, 1, 255, 1))
                 )
-//                val ls: MutableList<Geometry> = ArrayList()
-//                ls.add(pathStart)
-//                ls.add(pathEnd)
-//                val inputGeoms = SimpleGeometryCursor(ls)
-//                val spatialRef = SpatialReference.create(102382)
-//                val distances = doubleArrayOf(5.0, 0.001)
-//                val outputGeoms =
-//                    OperatorBuffer.local().execute(inputGeoms, null, distances, false, null)
-//                var geom: Geometry? = null
-//                // 声明 多边形参数对象
-//                val polygonOptions = PolygonOptions()
-//                val las: MutableList<LatLng> = ArrayList()
-//                while (outputGeoms.next().also { geom = it } != null) {
-//                    LogUtils.e(spatialRef, geom)
-//                    val point = (geom as Polygon).getPoint(0)
-//
-//                    las.add(LatLng(point.x, point.y))
-//                    polygonOptions.add(LatLng(point.x, point.y))
-//                    binding.gdMap.map.addPolygon(
-//                        polygonOptions.strokeWidth(15f) .strokeColor(Color.argb(250, 1, 0, 0)) // 边框颜色
-//                            .fillColor(Color.argb(250, 1, 0, 0)) // 多边形的填充色
-//                    )
-//                }
-//
             }
         }
 
