@@ -118,11 +118,12 @@ class U3dViewModel : ViewModel() {
                     -((ParallelLine.getPointToCurveDis(p, o2) - ParallelLine.getPointToCurveDis(
                         p,
                         o1
-                    ))*100).roundToInt()
+                    )) * 100).roundToInt()
                 }
             )
             if (mParalleMaplLine.size > 0) {
-                offsetLineDistance = ParallelLine.getPointToCurveDis(p, mParalleMaplLine[0]).roundToInt()
+                offsetLineDistance =
+                    ParallelLine.getPointToCurveDis(p, mParalleMaplLine[0]).roundToInt()
             }
             DataOffsetLineDistance.postValue(offsetLineDistance)
         }

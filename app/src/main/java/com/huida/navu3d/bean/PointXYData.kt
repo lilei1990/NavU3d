@@ -10,12 +10,12 @@ import org.litepal.crud.LitePalSupport
  * 最大的体会就是数据算法的重要性
  *      你们所学的公式,90%都用不到
  */
+
+
 class PointXYData : LitePalSupport() {
     //0是定位点,1是A点,2是B点,3是线的点,4是引导线的点
     var type: Int = 0
 
-    //    //关联id 1是A点,2是B点关联worktaskid,线的时候关联线的id
-//    var workTask: WorkTaskData? = null
     var lat = 0.0
     var lng = 0.0
 
@@ -26,9 +26,17 @@ class PointXYData : LitePalSupport() {
     //Utm
     var X = 0.0
     var Y = 0.0
-//
+
+    //
+//    companion object {
+//        val A = 0x00000000
+//        val B = 0x00000001
+//        val B = 0x00000002
+//    }
+
     override fun toString(): String {
         return "PointXY(lat=$lat, lng=$lng, latGC102=$latGC102, lngGC102=$lngGC102, X=$X, Y=$Y)"
     }
+
 
 }

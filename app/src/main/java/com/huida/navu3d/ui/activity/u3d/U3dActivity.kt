@@ -75,10 +75,10 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
         }
         viewModel.DataMarkerA.observe(this) {
             taskWorkby?.apply {
-                viewModel.A.save()
-//                this.setPointA(viewModel.A)
-                pointAB?.add(viewModel.A)
-                this.save()
+//                viewModel.A.save()
+                this.setPointA(viewModel.A)
+//                pointAB?.add(viewModel.A)
+
             }
             val cameraPosition =
                 CameraPosition(LatLng(it.position.latitude, it.position.longitude), 15f, 0f, 30f)
@@ -93,10 +93,8 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
         }
         viewModel.DataMarkerB.observe(this) {
             taskWorkby?.apply {
-                viewModel.B.save()
-                pointAB?.add(viewModel.B)
-//                this.setPointA(viewModel.A)
-                this.save()
+                this.setPointB(viewModel.B)
+
             }
             val markerAnimation: Animation = ScaleAnimation(0f, 1f, 0f, 1f) //初始化生长效果动画
             markerAnimation.setDuration(1000) //设置动画时间 单位毫秒
