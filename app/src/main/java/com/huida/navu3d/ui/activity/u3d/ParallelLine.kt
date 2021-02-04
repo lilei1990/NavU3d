@@ -3,6 +3,7 @@ package com.huida.navu3d.ui.activity.u3d
 import android.util.Log
 import com.amap.api.maps.model.LatLng
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
 import com.huida.navu3d.bean.PointXYData
 import com.huida.navu3d.utils.GeoConvert
@@ -20,6 +21,7 @@ object ParallelLine {
     val offseter = OperatorFactoryLocal
         .getInstance()
         .getOperator(Operator.Type.Offset) as OperatorOffset
+
     //平行线的间隔
     val lineOffset = 10
 
@@ -123,7 +125,8 @@ object ParallelLine {
      * 直接更改B点的坐标
      */
     fun extLine(A: PointXYData, B: PointXYData, length: Int) {
-        val distance = distanceOfTwoPoints(A, B)
+        var distance = distanceOfTwoPoints(A, B)
+
         //算出变化后和之前比例
         var b = (length + distance) / distance
         //计算和延长的坐标Y

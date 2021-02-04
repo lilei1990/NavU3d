@@ -31,7 +31,7 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
     val viewModel by lazy { getActivityViewModel(U3dViewModel::class.java)!! }
     val mapViewModel by lazy { getActivityViewModel(MapViewModel::class.java)!! }
 
-    val taskWorkby by lazy { CurrentWorkTask.task }
+
     override fun init(savedInstanceState: Bundle?) {
 
         binding.apply {
@@ -39,22 +39,13 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
             initButton()
             initMap(savedInstanceState)
             initRockView()
-            launch(Dispatchers.IO) {
-                viewModel.findByPointAB()
-            }
+
         }
 
     }
 
     override fun observe() {
-        taskWorkby?.apply {
-//            this.getPointA()?.apply {
-//
-//            }
-//            this.getPointB()?.apply {
-//
-//            }
-        }
+
         viewModel.DataOffsetLineDistance.observe(this) {
             binding.incTopBar.tvLength.text = "${it}"
         }
@@ -74,12 +65,6 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
             binding.gdMap.map.myLocationStyle = it //设置定位蓝点的Style
         }
         viewModel.DataMarkerA.observe(this) {
-            taskWorkby?.apply {
-//                viewModel.A.save()
-                this.setPointA(viewModel.A)
-//                pointAB?.add(viewModel.A)
-
-            }
             val cameraPosition =
                 CameraPosition(LatLng(it.position.latitude, it.position.longitude), 15f, 0f, 30f)
             val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
@@ -92,10 +77,7 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
 
         }
         viewModel.DataMarkerB.observe(this) {
-            taskWorkby?.apply {
-                this.setPointB(viewModel.B)
 
-            }
             val markerAnimation: Animation = ScaleAnimation(0f, 1f, 0f, 1f) //初始化生长效果动画
             markerAnimation.setDuration(1000) //设置动画时间 单位毫秒
             val marker = binding.gdMap.map.addMarker(it)

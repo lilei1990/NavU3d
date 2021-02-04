@@ -27,12 +27,7 @@ class PointXYData : LitePalSupport() {
     var X = 0.0
     var Y = 0.0
 
-    //
-//    companion object {
-//        val A = 0x00000000
-//        val B = 0x00000001
-//        val B = 0x00000002
-//    }
+
 
     override fun toString(): String {
         return "PointXY(lat=$lat, lng=$lng, latGC102=$latGC102, lngGC102=$lngGC102, X=$X, Y=$Y)"

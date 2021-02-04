@@ -42,6 +42,7 @@ class WorkTaskData : LitePalSupport() {
      * 获取A点数据
      */
     fun getPointA(): PointXYData? {
+
         return pointAB!![0]
     }
 

@@ -7,7 +7,9 @@ import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MarkerOptions
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
+import com.huida.navu3d.bean.CurrentWorkTask
 import com.huida.navu3d.bean.PointXYData
+import com.huida.navu3d.constants.Constants.EXTEND_LINE
 import com.huida.navu3d.ui.activity.DomeManager
 import com.huida.navu3d.utils.GeoConvert
 import java.util.*
@@ -20,11 +22,9 @@ class U3dViewModel : ViewModel() {
 
     //A点坐标
     val DataMarkerA = MutableLiveData<MarkerOptions>()
-    var A = PointXYData()
 
     //B点坐标
     val DataMarkerB = MutableLiveData<MarkerOptions>()
-    var B = PointXYData()
 
 
     //平行线数据
@@ -51,6 +51,7 @@ class U3dViewModel : ViewModel() {
     //与最近导航线偏移距离
     val DataOffsetLineDistance = MutableLiveData<Int>()
     var offsetLineDistance = 0
+    val taskWorkby by lazy { CurrentWorkTask.task }
 
     //速度,距离数据
     private val pointAB by lazy {
@@ -60,9 +61,26 @@ class U3dViewModel : ViewModel() {
      * 设置A点
      */
     fun setPointA() {
-        A = mCurrenLatLng
+        val A = mCurrenLatLng
+        taskWorkby?.apply {
+            this.setPointA(A)
+        }
         DataMarkerA.postValue(markPoint(A))
         ToastUtils.showLong(A.toString())
+    }
+
+    /**
+     * 设置B点
+     */
+    fun setPointB() {
+        val B = mCurrenLatLng
+        taskWorkby?.apply {
+            this.setPointB(B)
+
+        }
+        DataMarkerB.postValue(markPoint(B))
+        ToastUtils.showLong(B.toString())
+
     }
 
     private fun markPoint(point: PointXYData): MarkerOptions {
@@ -72,16 +90,6 @@ class U3dViewModel : ViewModel() {
         options.position(LatLng(point.latGC102, point.lngGC102))
         options.isFlat = true
         return options
-    }
-
-    /**
-     * 设置B点
-     */
-    fun setPointB() {
-        B = mCurrenLatLng
-        DataMarkerB.postValue(markPoint(B))
-        ToastUtils.showLong(B.toString())
-
     }
 
 
@@ -170,13 +178,30 @@ class U3dViewModel : ViewModel() {
      * 画平行线
      */
     fun DrawMapParallelLine() {
+        when (taskWorkby.pointAB?.size!!) {
+            0 -> {
+                ToastUtils.showLong("请添加A点")
+                return
+            }
+            1 -> {
+                ToastUtils.showLong("请添加B点")
+                return
+            }
+        }
         if (mParalleMaplLine.size > 0) {
             ToastUtils.showLong("导航线已经生成!")
             return
         }
+        val A = taskWorkby.pointAB?.get(0)!!
+        val B = taskWorkby.pointAB?.get(1)!!
         val pointData: MutableList<PointXYData> = ArrayList()
         //延长
-        val length = 450
+        val length = EXTEND_LINE
+        val distance = ParallelLine.distanceOfTwoPoints(A, B)
+        if (distance == 0.0) {
+            ToastUtils.showLong("AB点重合,请重新设置AB点")
+            return
+        }
         //分别延长AB两点
         ParallelLine.extLine(A, B, length)
         ParallelLine.extLine(B, A, length)
@@ -195,29 +220,4 @@ class U3dViewModel : ViewModel() {
 //        )
     }
 
-    /**
-     * 查询上次设置的Ab点
-     */
-    fun findByPointAB() {
-//        find<T>(PointXYData::class.java, id)
-//
-//        pointAB.findByType(CurrentWorkTask.task.sortId, 1)?.apply {
-//            A = this
-//            DataMarkerA.postValue(markPoint(A))
-//            ToastUtils.showLong(A.toString())
-//        }
-//        pointAB.findByType(CurrentWorkTask.task.sortId, 2)?.apply {
-//            B = this
-//            DataMarkerA.postValue(markPoint(B))
-//            ToastUtils.showLong(B.toString())
-//        }
-
-    }
-
-    /**
-     * 保存Ab点
-     */
-    fun insertPointAB() {
-//        pointAB.insert()
-    }
 }
