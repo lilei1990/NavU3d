@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/base_core" />
             <option value="$PROJECT_DIR$/buildSrc" />
+            <option value="$PROJECT_DIR$/geometryLib" />
             <option value="$PROJECT_DIR$/nmea_parser" />
             <option value="$PROJECT_DIR$/skin" />
             <option value="$PROJECT_DIR$/unityLibrary" />

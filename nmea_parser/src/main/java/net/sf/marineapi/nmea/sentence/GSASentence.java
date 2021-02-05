@@ -25,7 +25,7 @@ import net.sf.marineapi.nmea.util.GpsFixStatus;
 
 /**
  * Precision of GPS fix and list of active satellites. Dilution of precision
- * (DOP) is an indication of the effect of satellite geometry on the accuracy of
+ * (DOP) is an indication of the effect of satellite com.geometry on the accuracy of
  * the fix. It is a unitless number where smaller is better.
  * <p>
  * Example:<br>

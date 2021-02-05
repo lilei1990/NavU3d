@@ -12,4 +12,5 @@ object ModelName {
     const val App = ":App"
     const val BaseLib = ":base_lib"
     const val NMEA = ":nmea_parser"
+    const val GEOMETRY_LIB = ":geometryLib"
 }

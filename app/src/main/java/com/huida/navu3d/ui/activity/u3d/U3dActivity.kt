@@ -27,19 +27,15 @@ import kotlinx.coroutines.launch
 
 class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
     IUnityPlayerLifecycleEvents {
-
     val viewModel by lazy { getActivityViewModel(U3dViewModel::class.java)!! }
     val mapViewModel by lazy { getActivityViewModel(MapViewModel::class.java)!! }
 
-
     override fun init(savedInstanceState: Bundle?) {
-
         binding.apply {
             initU3dLayout()
             initButton()
             initMap(savedInstanceState)
             initRockView()
-
         }
 
     }

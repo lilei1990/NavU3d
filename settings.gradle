@@ -1,3 +1,4 @@
+include ':geometryLib'
 include ':nmea_parser'
 include ':skin'
 include ':app'
