@@ -7,8 +7,8 @@ import com.huida.navu3d.R
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.common.initBackClick
 import com.huida.navu3d.databinding.FragmentSettingBinding
-import com.lei.base_core.base.BaseVmFragment
-import com.lei.base_core.common.clickNoRepeat
+import com.lei.core.base.BaseVmFragment
+import com.lei.core.common.clickNoRepeat
 import com.lilei.pwdpie.fragment.main.MainViewModel
 
 /**

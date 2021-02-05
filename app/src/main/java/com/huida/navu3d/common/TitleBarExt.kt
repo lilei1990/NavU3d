@@ -3,7 +3,7 @@ package com.huida.navu3d.common
 import android.view.View
 import androidx.navigation.Navigation
 import com.huida.navu3d.databinding.TitleBarBinding
-import com.lei.base_core.common.clickNoRepeat
+import com.lei.core.common.clickNoRepeat
 
 /**
  * 作者 : lei

@@ -5,9 +5,9 @@ import androidx.navigation.Navigation
 import com.blankj.utilcode.util.AppUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.databinding.FragmentMainMenuBinding
-import com.lei.base_core.base.BaseVmFragment
-import com.lei.base_core.common.clickNoRepeat
-import com.lei.base_core.common.showBarB
+import com.lei.core.base.BaseVmFragment
+import com.lei.core.common.clickNoRepeat
+import com.lei.core.common.showBarB
 import com.lilei.pwdpie.fragment.main.MainViewModel
 
 /**

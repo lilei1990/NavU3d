@@ -7,6 +7,7 @@ ext {
             Plugins.kotlin_kapt,
 
     ]
+    depProject=[]
     deps = [
             'com.github.arcadefire:nice-spinner:1.4.4',
             'com.zhy:base-rvadapter:3.0.3',
@@ -25,28 +26,37 @@ ext {
 //    depProject = [ModelName.BaseCore]
     depProject = [ModelName.BaseCore, ModelName.UnityLib, ModelName.NMEA, ModelName.GEOMETRY_LIB]
 }
-configPluginApp project
-configAndroidDomain project
-configDependencies project
-configDepProject project
-android {
 
-    signingConfigs {
-        release {
-            keyAlias 'autopilot'
-            storeFile file('../resources/huanguo.keystore')
-            storePassword 'vwqUyg0zZPbLzyNo'
-            keyPassword 'vwqUyg0zZPbLzyNo'
-        }
-        debug {
-            keyAlias 'autopilot'
-            storeFile file('../resources/huanguo.keystore')
-            storePassword 'vwqUyg0zZPbLzyNo'
-            keyPassword 'vwqUyg0zZPbLzyNo'
-        }
-    }
 
+//根据模式配置插件
+if (!isModule.toBoolean()) {
+    applyPluginApp project
+} else {
+    applyPluginLib project
 }
+
+//configPluginApp project
+//configAndroidDomain project
+//configDependencies project
+//configDepProject project
+//android {
+//
+//    signingConfigs {
+//        release {
+//            keyAlias 'autopilot'
+//            storeFile file('../resources/huanguo.keystore')
+//            storePassword 'vwqUyg0zZPbLzyNo'
+//            keyPassword 'vwqUyg0zZPbLzyNo'
+//        }
+//        debug {
+//            keyAlias 'autopilot'
+//            storeFile file('../resources/huanguo.keystore')
+//            storePassword 'vwqUyg0zZPbLzyNo'
+//            keyPassword 'vwqUyg0zZPbLzyNo'
+//        }
+//    }
+//
+//}
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])

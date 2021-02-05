@@ -1,9 +1,7 @@
 package com.huida.navu3d
 
-import android.os.Build
-import android.webkit.WebView
 import com.facebook.stetho.Stetho
-import com.lei.base_core.BaseApp
+import com.lei.core.BaseApp
 import com.tencent.bugly.crashreport.CrashReport
 import org.litepal.LitePal
 import skin.support.SkinCompatManager

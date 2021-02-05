@@ -1,7 +1,8 @@
+include ':lib:core'
 include ':lib:geometry'
 include ':lib:nmea'
 include ':lib:skin'
 include ':app'
-include ':lib:base'
+//include ':lib:core'
 include ':lib:unity3d'
 //rootProject.name = "NavU3d"

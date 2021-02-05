@@ -1,0 +1,58 @@
+ext {
+    appName = "主app"
+    plugin = [
+            Plugins.library,
+            Plugins.kotlin_android,
+            Plugins.kotlin_android_extensions,
+            Plugins.kotlin_kapt,
+
+    ]
+    depProject=[]
+    deps = [
+            Kotlin.jdk7,
+            Kotlin.coroutines.core,
+            Kotlin.coroutines.android,
+            Android.viewpager2,
+            Android.paging,
+            Android.legacy,
+            Android.constraintlayout,
+            Android.appcompat,
+            Android.coreKtx,
+            Android.multidex,
+            Android.material,
+            //lifecycle相关包括liveData、viewModel
+            Android.lifecycle.extensions,
+            Android.lifecycle.liveDataKtx,
+            Android.lifecycle.viewModelKtx,
+            //navigation相关
+            Android.navigation.fragmentKtx,
+            Android.navigation.uiKtx,
+            Android.room.roomRuntime,
+            Android.room.roomKtx,
+            ThirdParty.okhttp,
+            ThirdParty.rxjava,
+            ThirdParty.rxAndroid,
+            ThirdParty.eventBus,
+            ThirdParty.aviUi,
+            ThirdParty.banner,
+            ThirdParty.retrofit.retrofit,
+            ThirdParty.retrofit.scalars,
+            ThirdParty.retrofit.gson,
+            ThirdParty.glide.glide,
+            ThirdParty.glide.transformations,
+            ThirdParty.smart.smart,
+            ThirdParty.smart.head,
+            ThirdParty.utils.blankj_utilcode,
+            ThirdParty.skin.support,
+            ThirdParty.skin.support_appcompat,
+            ThirdParty.skin.support_design,
+            ThirdParty.skin.support_cardview,
+            ThirdParty.skin.support_constraint_layout,
+    ]
+
+}
+configPluginApp project
+configAndroidDomain project
+configDependencies project
+//有问题
+//applyPluginLib project

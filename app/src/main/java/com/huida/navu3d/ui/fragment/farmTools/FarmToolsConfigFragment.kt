@@ -3,11 +3,10 @@ package com.huida.navu3d.ui.fragment.farmTools
 import android.os.Bundle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
-import com.huida.navu3d.bean.FarmToolsData
 import com.huida.navu3d.common.initBackClick
 import com.huida.navu3d.common.initConfirmClick
 import com.huida.navu3d.databinding.FragmentFarmToolsConfigBinding
-import com.lei.base_core.base.BaseVmFragment
+import com.lei.core.base.BaseVmFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

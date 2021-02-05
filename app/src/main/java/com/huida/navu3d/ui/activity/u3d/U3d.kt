@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.lei.base_core.base.BaseVmActivity
+import com.lei.core.base.BaseVmActivity
 import com.unity3d.player.IUnityPlayerLifecycleEvents
 import com.unity3d.player.UnityPlayer
 

@@ -6,8 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import com.huida.navu3d.common.initBackClick
 import com.huida.navu3d.common.initConfirmClick
 import com.huida.navu3d.databinding.FragmentFarmMachineryConfigBinding
-import com.huida.navu3d.ui.fragment.farmTools.FarmToolsConfigViewModel
-import com.lei.base_core.base.BaseVmFragment
+import com.lei.core.base.BaseVmFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

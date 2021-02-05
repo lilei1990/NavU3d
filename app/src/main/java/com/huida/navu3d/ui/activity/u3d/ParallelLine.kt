@@ -1,13 +1,10 @@
 package com.huida.navu3d.ui.activity.u3d
 
-import android.util.Log
 import com.amap.api.maps.model.LatLng
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
 import com.huida.navu3d.bean.PointXYData
 import com.huida.navu3d.utils.GeoConvert
-import com.lei.base_core.BaseApp
+import com.lei.core.BaseApp
 import java.util.*
 
 /**

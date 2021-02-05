@@ -14,15 +14,12 @@ import com.amap.api.maps.model.animation.Animation
 import com.amap.api.maps.model.animation.ScaleAnimation
 import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.R
-import com.huida.navu3d.bean.CurrentWorkTask
 import com.huida.navu3d.databinding.ActivityU3dBinding
 import com.huida.navu3d.ui.activity.DomeManager
 import com.kongqw.rockerlibrary.view.RockerView
 import com.kongqw.rockerlibrary.view.RockerView.OnShakeListener
-import com.lei.base_core.common.clickNoRepeat
+import com.lei.core.common.clickNoRepeat
 import com.unity3d.player.IUnityPlayerLifecycleEvents
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),

@@ -1,82 +1,41 @@
-import sun.rmi.runtime.Log
+
 
 ext {
-    //app配置
-    configAndroidDomain = this.&configAndroidDomain
-    //Dependencies配置
-    configDepProject = this.&configDepProject
-    configDependencies = this.&configDependencies
-    configPluginApp = this.&configPluginApp
-    configApp = this.&configApp
-}
-//application插件配置
-def configApp(Project pro) {
-    println "==============日志输出=============="
-    def appName = pro.appName
-    println "项目名称:"+name
-    println "App名称:"+appName
-    def plugin = pro.plugin
-    def deps = pro.deps
-    def depProject = pro.depProject
-    plugin.each {
-        println "插件:"+it
-        pro.apply plugin: it
-    }
-    //判断是否主app还是lib
-    if (pro.plugins.hasPlugin("com.android.application")) {
-        configAppAndroidDomain(pro)
-    } else {
-        configLibAndroidDomain(pro)
-    }
-    //依赖第三方库
-    pro.dependencies {
-        api fileTree(dir: 'libs', include: ['*.jar'])
-        testImplementation 'junit:junit:4.12'
-        def name = pro.deps
-        deps.each {
-            println "依赖:"+it+
-            api(it)
-        }
-    }
-    //依赖本地项目
-    pro.dependencies {
-        def name = pro.depProject
-        name.each {
-            implementation project(it)
-        }
-    }
-}
-//application插件配置
-def configPluginApp(Project pro) {
-    def name = pro.plugin
-    name.each {
-        pro.apply plugin: it
-    }
-}
-/**
- * app Domain配置
- * @param pro
- * @return
- */
-def configAndroidDomain(Project pro) {
-    println "==============日志输出=============="
-    println "com.android.application:" + pro.plugins.hasPlugin("com.android.application")
-    //判断是否主app还是lib
-    if (pro.plugins.hasPlugin("com.android.application")) {
-        configAppAndroidDomain(pro)
-    } else {
-        configLibAndroidDomain(pro)
-    }
+    applyPluginApp = this.&ApplyPluginApp
+    applyPluginLib = this.&ApplyPluginLib
+//    Android = this.&Android
+//    Dependencies = this.Dependencies
 }
 
+def ApplyPluginApp(Project pro) {
+    pro.apply plugin: Plugins.application
+    pro.apply plugin: Plugins.kotlin_android
+//        apply plugin: Plugins.kotlin_android_extensions 已经停止维护,用viewbinding取代
+    pro.apply plugin: Plugins.kotlin_kapt
+    //lib不需要指定appid
+    pro.android.defaultConfig.applicationId Version.applicationId
+    pro.android.kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    Apply(pro)
 
-def configAppAndroidDomain(Project pro) {
-    configField(pro)
+}
+
+def ApplyPluginLib(Project pro) {
+    pro.apply plugin: Plugins.library
+    Apply(pro)
+}
+
+def Apply(Project pro) {
+    Android(pro)
     configSigning(pro)
+    DepProject(pro)
+    Deps(pro)
+}
+def Android(Project pro) {
     pro.android {
         compileSdkVersion Version.compileSdkVersion
         defaultConfig {
-            applicationId Version.applicationId
             minSdkVersion Version.minSdkVersion
             targetSdkVersion Version.targetSdkVersion
             versionCode Version.versionCode
@@ -85,39 +44,30 @@ def configAppAndroidDomain(Project pro) {
             ndk {
                 abiFilters 'armeabi-v7a'
             }
+//            javaCompileOptions {
+//                annotationProcessorOptions {
+//                    arguments = [moduleName: project.getName()]
+//                }
+//            }
         }
-        buildTypes {
-            release {
-                minifyEnabled true
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            }
-        }
-        //配置资源路径
-        configSourceSets(pro.android)
-
-        lintOptions {
-            abortOnError false
-        }
-        viewBinding {
-            enabled = true
-        }
+        //java版本
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
             targetCompatibility JavaVersion.VERSION_1_8
         }
-        kotlinOptions {
-            jvmTarget = '1.8'
-        }
-    }
-}
-/**
- * 配置资源路径
- * @param android
- * @return
- */
-def configSourceSets(android) {
-    android.sourceSets {
-        main {
+        //资源配置路径
+        sourceSets {
+            main {
+                if (isModule.toBoolean()) {
+                    manifest.srcFile 'src/main/module/AndroidManifest.xml'
+                } else {
+                    manifest.srcFile 'src/main/AndroidManifest.xml'
+                    //集成开发模式下排除debug文件夹中的所有Java文件
+                    java {
+                        exclude 'debug/**'
+                    }
+                }
+
 //            res.srcDirs = [
 //                    'src/main/res',
 //                    'src/main/res/layout',
@@ -127,19 +77,110 @@ def configSourceSets(android) {
 //                    'src/main/res/layout/other',
 //                    'src/main/res/layout/values'
 //            ]
-            jniLibs.srcDirs = ['libs']
-
+                jniLibs.srcDirs = ['libs']
+            }
         }
+
+        //混淆
+        buildTypes {
+            release {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+        }
+        viewBinding {
+            enabled = true
+        }
+        lintOptions {
+            // true--关闭lint报告的分析进度
+            quiet true
+            // true--错误发生后停止gradle构建
+            abortOnError false
+            // true--只报告error
+            ignoreWarnings true
+            // true--忽略有错误的文件的全/绝对路径(默认是true)
+            //absolutePaths true
+            // true--检查所有问题点，包含其他默认关闭项
+            checkAllWarnings true
+            // true--所有warning当做error
+            warningsAsErrors true
+            // 关闭指定问题检查
+            disable 'TypographyFractions', 'TypographyQuotes'
+            // 打开指定问题检查
+            enable 'RtlHardcoded', 'RtlCompat', 'RtlEnabled'
+            // 仅检查指定问题
+            check 'NewApi', 'InlinedApi'
+            // true--error输出文件不包含源码行号
+            noLines true
+            // true--显示错误的所有发生位置，不截取
+            showAll true
+            // 回退lint设置(默认规则)
+//            lintConfig file("default-lint.xml")
+            // true--生成txt格式报告(默认false)
+            textReport true
+            // 重定向输出；可以是文件或'stdout'
+            textOutput 'stdout'
+            // true--生成XML格式报告
+            xmlReport false
+            // 指定xml报告文档(默认lint-results.xml)
+            xmlOutput file("lint-report.xml")
+            // true--生成HTML报告(带问题解释，源码位置，等)
+            htmlReport true
+            // html报告可选路径(构建器默认是lint-results.html )
+            htmlOutput file("lint-report.html")
+            //  true--所有正式版构建执行规则生成崩溃的lint检查，如果有崩溃问题将停止构建
+            checkReleaseBuilds true
+            // 在发布版本编译时检查(即使不包含lint目标)，指定问题的规则生成崩溃
+            fatal 'NewApi', 'InlineApi'
+            // 指定问题的规则生成错误
+            error 'Wakelock', 'TextViewEdits'
+            // 指定问题的规则生成警告
+            warning 'ResourceAsColor'
+            // 忽略指定问题的规则(同关闭检查)
+            ignore 'TypographyQuotes'
+        }
+
     }
 }
+
+
 /**
- * 配置app信息键值对
+ * 添加依赖model
  * @param pro
  * @return
  */
-def configField(Project pro) {
-    pro.android.defaultConfig {
-        resValue "string", "app_name", pro.appName
+def DepProject(Project pro) {
+    pro.dependencies {
+        def depP = pro.ext.depProject
+        if (depP.size > 0) {
+            depP.each {
+                println("依赖-project------------" + it + "-------\n")
+                implementation project(it)
+            }
+        } else {
+            println("无依赖-project-------------------\n")
+        }
+    }
+}
+
+/**
+ * 添加依赖model
+ * @param pro
+ * @return
+ */
+def Deps(Project pro) {
+    pro.dependencies {
+        api fileTree(dir: 'libs', include: ['*.jar'])
+        def dep = pro.deps
+        if (dep.size > 0) {
+            dep.each {
+                println("依赖-Deps------------" + it + "-------\n")
+                api(it)
+            }
+        } else {
+            println("无依赖-Deps-------------------\n")
+        }
+
     }
 }
 /**
@@ -148,7 +189,7 @@ def configField(Project pro) {
  * @return
  */
 def configSigning(Project pro) {
-    File signPropertiesFile = file('sign/keystore.properties')
+    File signPropertiesFile = file('../resources/keystore.properties')
     if (!signPropertiesFile.exists()) return
     pro.android {
         Properties properties = new Properties()
@@ -160,77 +201,14 @@ def configSigning(Project pro) {
                 keyAlias properties['keyAlias']
                 keyPassword properties['keyPassword']
             }
-        }
-        buildTypes.release.signingConfig signingConfigs.release
-    }
-}
-/**
- * Android构建配置
- * @param pro
- * @return
- */
-def configLibAndroidDomain(Project pro) {
-    pro.android {
-        compileSdkVersion Version.compileSdkVersion
-        defaultConfig {
-            minSdkVersion Version.minSdkVersion
-            versionCode Version.versionCode
-            versionName Version.versionName
-            multiDexEnabled true
-        }
-
-//        buildTypes {
-//            release {
-//                minifyEnabled false
-////            consumerProguardFiles 'proguard-rules.pro'
-//                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            }
-//        }
-        configSourceSets(pro.android)
-        lintOptions {
-            abortOnError false
-        }
-        viewBinding {
-            enabled = true
-        }
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
-        }
-        testOptions.unitTests.all {
-            testLogging {
-                events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+            debug {
+                storeFile file(properties['keystore'])
+                storePassword properties['storePassword']
+                keyAlias properties['keyAlias']
+                keyPassword properties['keyPassword']
             }
         }
+
     }
 }
 
-/**
- * 添加依赖model
- * @param pro
- * @return
- */
-def configDepProject(Project pro) {
-    pro.dependencies {
-        def name = pro.depProject
-        name.each {
-            implementation project(it)
-        }
-    }
-}
-
-/**
- * 添加依赖model
- * @param pro
- * @return
- */
-def configDependencies(Project pro) {
-    pro.dependencies {
-        api fileTree(dir: 'libs', include: ['*.jar'])
-        testImplementation 'junit:junit:4.12'
-        def name = pro.deps
-        name.each {
-            api(it)
-        }
-    }
-}

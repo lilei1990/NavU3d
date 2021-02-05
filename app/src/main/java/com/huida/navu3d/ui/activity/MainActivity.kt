@@ -1,13 +1,11 @@
 package com.huida.navu3d.ui.activity
 
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.databinding.ActivityMainBinding
-import com.lei.base_core.base.BaseVmActivity
-import com.lei.base_core.utils.PrefUtils
-import com.lei.base_core.utils.StatusUtils
-import org.litepal.tablemanager.Connector
+import com.lei.core.base.BaseVmActivity
+import com.lei.core.utils.PrefUtils
+import com.lei.core.utils.StatusUtils
 
 
 /**

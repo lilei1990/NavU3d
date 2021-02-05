@@ -5,21 +5,15 @@ import android.view.View
 import android.widget.DatePicker
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.R
-import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.databinding.FragmentTaskListBinding
-import com.lei.base_core.base.BaseVmFragment
-import com.lei.base_core.common.clickNoRepeat
+import com.lei.core.base.BaseVmFragment
+import com.lei.core.common.clickNoRepeat
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.internal.MainDispatcherFactory
 
 
 class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskListBinding::inflate) {
