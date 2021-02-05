@@ -1,7 +1,7 @@
-include ':geometryLib'
-include ':nmea_parser'
-include ':skin'
+include ':lib:geometry'
+include ':lib:nmea'
+include ':lib:skin'
 include ':app'
-include ':base_core'
-include ':unityLibrary'
-rootProject.name = "NavU3d"
+include ':lib:base'
+include ':lib:unity3d'
+//rootProject.name = "NavU3d"

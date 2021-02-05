@@ -7,10 +7,10 @@ import javax.lang.model.type.UnionType
  * 描述 :
  */
 object ModelName {
-    const val BaseCore = ":base_core"
-    const val UnityLib = ":unityLibrary"
+    const val BaseCore = ":lib:base"
+    const val UnityLib = ":lib:unity3d"
     const val App = ":App"
-    const val BaseLib = ":base_lib"
-    const val NMEA = ":nmea_parser"
-    const val GEOMETRY_LIB = ":geometryLib"
+    const val BaseLib = ":lib:base_lib"
+    const val NMEA = ":lib:nmea"
+    const val GEOMETRY_LIB = ":lib:geometry"
 }

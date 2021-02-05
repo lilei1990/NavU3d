@@ -23,9 +23,7 @@ package net.sf.marineapi.nmea.parser;
 import net.sf.marineapi.nmea.sentence.GSTSentence;
 import net.sf.marineapi.nmea.sentence.SentenceId;
 import net.sf.marineapi.nmea.sentence.TalkerId;
-import net.sf.marineapi.nmea.parser.SentenceParser;
 import net.sf.marineapi.nmea.util.Time;
-import net.sf.marineapi.nmea.util.Units;
 
 /**
  * GST sentence parser.

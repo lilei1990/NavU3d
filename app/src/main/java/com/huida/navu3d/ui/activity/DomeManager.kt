@@ -1,13 +1,10 @@
 package com.huida.navu3d.ui.activity
 
-import android.util.Log
 import net.sf.marineapi.nmea.parser.SentenceFactory
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
-import kotlin.reflect.KFunction0
-import kotlin.reflect.KFunction1
 
 /**
  * 作者 : lei
