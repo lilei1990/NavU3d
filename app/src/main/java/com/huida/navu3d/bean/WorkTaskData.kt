@@ -35,6 +35,8 @@ class WorkTaskData : LitePalSupport() {
     var pointAB: ArrayList<PointXYData>? = ArrayList()
     //平行线数据,包含AB点
     var navLineData: NavLineData? = null
+    //轨迹数据
+    var LineXYDatas:ArrayList<LineXYData>? =  ArrayList()
 
 
     //参考线

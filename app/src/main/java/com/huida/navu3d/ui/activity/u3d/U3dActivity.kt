@@ -3,6 +3,7 @@ package com.huida.navu3d.ui.activity.u3d
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.LinearLayout
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
 import com.amap.api.maps.AMap
 import com.amap.api.maps.model.*
@@ -22,7 +23,6 @@ import com.unity3d.player.IUnityPlayerLifecycleEvents
 class U3dActivity : U3dExtActivity<ActivityU3dBinding>(ActivityU3dBinding::inflate),
         IUnityPlayerLifecycleEvents {
     val viewModel by lazy { getActivityViewModel(U3dViewModel::class.java)!! }
-    val mapViewModel by lazy { getActivityViewModel(MapViewModel::class.java)!! }
 
     override fun init(savedInstanceState: Bundle?) {
         binding.apply {
@@ -50,9 +50,6 @@ class U3dActivity : U3dExtActivity<ActivityU3dBinding>(ActivityU3dBinding::infla
         }
         viewModel.DataSpeed.observe(this) {
             binding.incTopBar.tvSpeed.text = it
-        }
-        mapViewModel.mLocationStyle.observe(this) {
-            binding.gdMap.map.myLocationStyle = it //设置定位蓝点的Style
         }
         viewModel.DataMarkerA.observe(this) {
 
@@ -191,28 +188,35 @@ class U3dActivity : U3dExtActivity<ActivityU3dBinding>(ActivityU3dBinding::infla
             viewModel!!.stop()
         }
         binding.bt.clickNoRepeat {
-            mapViewModel.getMarker(this)
-            mapViewModel.getCarMarker(binding.gdMap.map)
+//            mapViewModel.getMarker(this)
+//            mapViewModel.getCarMarker(binding.gdMap.map)
         }
 
     }
 
 
     fun initMap(savedInstanceState: Bundle?) {
-        mapViewModel.initLocationStyle()
-
-
-
-        binding.gdMap.map.uiSettings.zoomPosition = 20
-
+        binding.gdMap.map.myLocationStyle = initLocationStyle() //设置定位蓝点的Style
         //设置卫星地图
         binding.gdMap.map.mapType = AMap.MAP_TYPE_SATELLITE
         binding.gdMap.onCreate(savedInstanceState);
-        //开启定位
-        mapViewModel.startLoaction(this)
+//        //开启定位
+//        mapViewModel.startLoaction(this)
 
     }
-
+    /**
+     * 设置定位蓝点的Style
+     */
+    fun initLocationStyle(): MyLocationStyle {
+            val myLocationStyle: MyLocationStyle =
+                    MyLocationStyle() //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+            myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位蓝点跟随设备移动。（1秒1次定位）
+//            myLocationStyle.interval(2000) //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+            myLocationStyle.showMyLocation(false)
+//        binding.map.map.uiSettings.isZoomControlsEnabled = false//禁用放大缩小
+//        binding.map.map.uiSettings.isZoomGesturesEnabled = false
+        return myLocationStyle
+    }
     private fun initU3dLayout() {
         val bottomView = findViewById<LinearLayout>(R.id.llBottom)
         val topView = findViewById<LinearLayout>(R.id.llTop)

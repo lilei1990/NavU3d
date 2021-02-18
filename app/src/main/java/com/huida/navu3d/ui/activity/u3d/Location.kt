@@ -14,7 +14,7 @@ import com.blankj.utilcode.util.LogUtils
  * 作者 : lei
  * 时间 : 2021/01/27.
  * 邮箱 :416587959@qq.com
- * 描述 :
+ * 描述 : 地图定位
  */
 class Location : AMapLocationListener {
     var mListener: OnLocationChangedListener? = null

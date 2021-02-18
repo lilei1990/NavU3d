@@ -1,11 +1,14 @@
 package com.huida.navu3d.utils
 
+import android.content.Context
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.CoordinateConverter
+import com.amap.api.maps.LocationSource
 import com.amap.api.maps.model.CameraPosition
 import com.amap.api.maps.model.LatLng
 import com.esri.core.geometry.Point
+import com.huida.navu3d.ui.activity.u3d.Location
 import com.lei.core.BaseApp
 
 /**
@@ -56,5 +59,6 @@ object GaoDeUtils {
 
         return latlngGaode
     }
+
 
 }
