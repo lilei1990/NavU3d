@@ -20,7 +20,7 @@ import com.unity3d.player.UnityPlayer
  * 描述 :这一层只处理u3d的逻辑
  */
 
-abstract class U3d<VB : ViewBinding>(inflate: (LayoutInflater) -> VB) : BaseVmActivity<VB>(inflate),
+abstract class U3dExtActivity<VB : ViewBinding>(inflate: (LayoutInflater) -> VB) : BaseVmActivity<VB>(inflate),
     IUnityPlayerLifecycleEvents {
     // don't change the name of this variable; referenced from native code
     var mUnityPlayer: UnityPlayer? = null

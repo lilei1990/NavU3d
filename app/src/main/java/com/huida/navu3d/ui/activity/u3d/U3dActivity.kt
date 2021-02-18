@@ -19,7 +19,7 @@ import com.lei.core.common.clickNoRepeat
 import com.unity3d.player.IUnityPlayerLifecycleEvents
 
 
-class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
+class U3dActivity : U3dExtActivity<ActivityU3dBinding>(ActivityU3dBinding::inflate),
         IUnityPlayerLifecycleEvents {
     val viewModel by lazy { getActivityViewModel(U3dViewModel::class.java)!! }
     val mapViewModel by lazy { getActivityViewModel(MapViewModel::class.java)!! }
