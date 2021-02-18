@@ -39,24 +39,24 @@ if (!isModule.toBoolean()) {
 //configAndroidDomain project
 //configDependencies project
 //configDepProject project
-//android {
-//
-//    signingConfigs {
-//        release {
-//            keyAlias 'autopilot'
-//            storeFile file('../resources/huanguo.keystore')
-//            storePassword 'vwqUyg0zZPbLzyNo'
-//            keyPassword 'vwqUyg0zZPbLzyNo'
-//        }
-//        debug {
-//            keyAlias 'autopilot'
-//            storeFile file('../resources/huanguo.keystore')
-//            storePassword 'vwqUyg0zZPbLzyNo'
-//            keyPassword 'vwqUyg0zZPbLzyNo'
-//        }
-//    }
-//
-//}
+android {
+
+    signingConfigs {
+        release {
+            keyAlias 'autopilot'
+            storeFile file('../resources/huanguo.keystore')
+            storePassword 'vwqUyg0zZPbLzyNo'
+            keyPassword 'vwqUyg0zZPbLzyNo'
+        }
+        debug {
+            keyAlias 'autopilot'
+            storeFile file('../resources/huanguo.keystore')
+            storePassword 'vwqUyg0zZPbLzyNo'
+            keyPassword 'vwqUyg0zZPbLzyNo'
+        }
+    }
+
+}
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])

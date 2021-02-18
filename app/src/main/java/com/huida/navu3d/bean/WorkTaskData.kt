@@ -33,6 +33,8 @@ class WorkTaskData : LitePalSupport() {
 
     //ab点
     var pointAB: ArrayList<PointXYData>? = ArrayList()
+    //平行线数据,包含AB点
+    var navLineData: NavLineData? = null
 
 
     //参考线
@@ -52,8 +54,6 @@ class WorkTaskData : LitePalSupport() {
         pointAB!![0].type = PointType.A
         pointAB!![0].X = pointXYData.X
         pointAB!![0].Y = pointXYData.Y
-        pointAB!![0].latGC102 = pointXYData.latGC102
-        pointAB!![0].lngGC102 = pointXYData.lngGC102
         pointAB!![0].lng = pointXYData.lng
         pointAB!![0].lat = pointXYData.lat
         pointAB!![0].save()
@@ -74,8 +74,6 @@ class WorkTaskData : LitePalSupport() {
         pointAB!![1].type = PointType.B
         pointAB!![1].X = pointXYData.X
         pointAB!![1].Y = pointXYData.Y
-        pointAB!![1].latGC102 = pointXYData.latGC102
-        pointAB!![1].lngGC102 = pointXYData.lngGC102
         pointAB!![1].lng = pointXYData.lng
         pointAB!![1].lat = pointXYData.lat
         pointAB!![1].save()

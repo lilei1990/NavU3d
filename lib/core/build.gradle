@@ -55,4 +55,5 @@ configPluginApp project
 configAndroidDomain project
 configDependencies project
 //有问题
+
 //applyPluginLib project

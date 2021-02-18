@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.model.LatLng;
+import com.huida.navu3d.bean.PointXYData;
 
 public enum GeoConvert {
     INSTANCE;
@@ -219,7 +220,7 @@ public enum GeoConvert {
         return result;
     }
 
-    public  LatLng gaoDeConvert(LatLng sourceLatLng, Context context) {
+    public LatLng gaoDeConvert(LatLng sourceLatLng, Context context) {
         CoordinateConverter converter = new CoordinateConverter(context);
         // CoordType.GPS 待转换坐标类型
         converter.from(CoordinateConverter.CoordType.GPS);
@@ -228,4 +229,5 @@ public enum GeoConvert {
         // 执行转换操作
         return converter.convert();
     }
+
 }

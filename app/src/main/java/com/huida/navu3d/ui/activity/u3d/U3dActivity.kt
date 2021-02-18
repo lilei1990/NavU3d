@@ -6,16 +6,14 @@ import android.widget.LinearLayout
 import androidx.lifecycle.observe
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
-import com.amap.api.maps.model.CameraPosition
-import com.amap.api.maps.model.LatLng
-import com.amap.api.maps.model.Polyline
-import com.amap.api.maps.model.PolylineOptions
+import com.amap.api.maps.model.*
 import com.amap.api.maps.model.animation.Animation
 import com.amap.api.maps.model.animation.ScaleAnimation
 import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.databinding.ActivityU3dBinding
 import com.huida.navu3d.ui.activity.DomeManager
+import com.huida.navu3d.utils.GaoDeConvert
 import com.kongqw.rockerlibrary.view.RockerView
 import com.kongqw.rockerlibrary.view.RockerView.OnShakeListener
 import com.lei.core.common.clickNoRepeat
@@ -85,7 +83,7 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
             }
             val latLngs = ArrayList<LatLng>()
             for (pointXY in it) {
-                latLngs.add(LatLng(pointXY.latGC102, pointXY.lngGC102))
+                latLngs.add( GaoDeConvert.convert(LatLng(pointXY.lat, pointXY.lng)))
             }
             addPolyline = binding.gdMap.map.addPolyline(
                 PolylineOptions().addAll(latLngs).width(5f).color(Color.argb(255, 1, 255, 1))
@@ -95,8 +93,9 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
         }
 
         viewModel.DataParallelLine.observe(this) {
-            for (polyline in it) {
+            for ((key, polyline) in it) {
                 val latLngs: MutableList<LatLng> = ArrayList()
+
                 for (i in 0 until polyline.pointCount) {
                     val point = polyline.getPoint(i)
                     latLngs.add(ParallelLine.utmToGaoDe(point))
@@ -105,6 +104,10 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
                 binding.gdMap.map.addPolyline(
                     PolylineOptions().addAll(latLngs).width(5f).color(Color.argb(255, 1, 255, 1))
                 )
+                val textOptions = TextOptions()
+                textOptions.position(latLngs[0])
+                textOptions.text("编号:${key}")
+                binding.gdMap.map.addText(textOptions)
             }
         }
 

@@ -8,10 +8,13 @@ import com.amap.api.maps.model.MarkerOptions
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
 import com.huida.navu3d.bean.CurrentWorkTask
+import com.huida.navu3d.bean.NavLineData
 import com.huida.navu3d.bean.PointXYData
 import com.huida.navu3d.constants.Constants.EXTEND_LINE
 import com.huida.navu3d.ui.activity.DomeManager
+import com.huida.navu3d.utils.GaoDeConvert
 import com.huida.navu3d.utils.GeoConvert
+import com.huida.navu3d.utils.PointConvert
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -28,8 +31,8 @@ class U3dViewModel : ViewModel() {
 
 
     //平行线数据
-    val DataParallelLine = MutableLiveData<MutableList<Polyline>>()
-    val mParalleMaplLine: MutableList<Polyline> = ArrayList()
+    val DataParallelLine = MutableLiveData<MutableMap<Int,Polyline>>()
+    val mParalleMaplLine: MutableMap<Int,Polyline> = mutableMapOf<Int,Polyline>()
 
 
     //经纬度数据,轨迹
@@ -86,8 +89,9 @@ class U3dViewModel : ViewModel() {
     private fun markPoint(point: PointXYData): MarkerOptions {
         val options = MarkerOptions()
         options.draggable(true)
-            .snippet("DefaultMarker")
-        options.position(LatLng(point.latGC102, point.lngGC102))
+                .snippet("DefaultMarker")
+
+        options.position(GaoDeConvert.convert(LatLng(point.lat, point.lng)))
         options.isFlat = true
         return options
     }
@@ -103,17 +107,7 @@ class U3dViewModel : ViewModel() {
             val position = it.position
             val latitude = position.latitude
             val longitude = position.longitude
-            val pointXY = PointXYData()
-            val convertUTM = GeoConvert.INSTANCE.convertLatLonToUTM(latitude, longitude)
-            val convertGaode =
-                GeoConvert.INSTANCE.gaoDeConvert(LatLng(latitude, longitude), u3dActivity)
-            pointXY.lat = latitude
-            pointXY.lng = longitude
-            pointXY.latGC102 = convertGaode.latitude
-            pointXY.lngGC102 = convertGaode.longitude
-            pointXY.X = convertUTM[0]
-            pointXY.Y = convertUTM[1]
-//            LogUtils.e(pointXY.toString())
+            val pointXY = PointConvert.convertPoint(latitude, longitude)
             mPointXYData.add(pointXY)
             mCurrenLatLng = pointXY
             DataPointXY.postValue(mPointXYData)
@@ -121,22 +115,24 @@ class U3dViewModel : ViewModel() {
             DataSatelliteCount.postValue(satelliteCount)
             val p = Point(pointXY.X, pointXY.Y)
             //排序
-            mParalleMaplLine.sortWith(
-                Comparator { o1, o2 ->
-                    -((ParallelLine.getPointToCurveDis(p, o2) - ParallelLine.getPointToCurveDis(
-                        p,
-                        o1
-                    )) * 100).roundToInt()
-                }
-            )
-            if (mParalleMaplLine.size > 0) {
-                offsetLineDistance =
-                    ParallelLine.getPointToCurveDis(p, mParalleMaplLine[0]).roundToInt()
-            }
-            DataOffsetLineDistance.postValue(offsetLineDistance)
+
+//            mParalleMaplLine.sortWith(
+//                    Comparator { o1, o2 ->
+//                        -((ParallelLine.getPointToCurveDis(p, o2) - ParallelLine.getPointToCurveDis(
+//                                p,
+//                                o1
+//                        )) * 100).roundToInt()
+//                    }
+//            )
+//            if (mParalleMaplLine.size > 0) {
+//                //计算偏移的距离
+//                offsetLineDistance =
+//                        ParallelLine.getPointToCurveDis(p, mParalleMaplLine[0]).roundToInt()
+//            }
+//            DataOffsetLineDistance.postValue(offsetLineDistance)
         }
         DomeManager.setVTGListen {
-            speed = "${(it.speedKmh * 100).roundToInt() / 100.00}Km/h"
+            speed = "${(it.speedKmh * 100).roundToInt() / 1000.00}Km/h"
             steerAngle = "${it.trueCourse}°"
             DataSpeed.postValue(speed)
             DataSteerAngle.postValue(steerAngle)
@@ -171,8 +167,8 @@ class U3dViewModel : ViewModel() {
 
     //补点操作
     var densifier = OperatorFactoryLocal
-        .getInstance()
-        .getOperator(Operator.Type.DensifyByLength) as OperatorDensifyByLength
+            .getInstance()
+            .getOperator(Operator.Type.DensifyByLength) as OperatorDensifyByLength
 
     /**
      * 画平行线
@@ -207,7 +203,12 @@ class U3dViewModel : ViewModel() {
         ParallelLine.extLine(B, A, length)
         pointData.add(A)
         pointData.add(B)
-        mParalleMaplLine.addAll(ParallelLine.budileUtmLine(pointData))
+        val navLineData = NavLineData()
+        navLineData.startX = A.X
+        navLineData.startY = A.Y
+        navLineData.endX = B.X
+        navLineData.endY = B.Y
+        mParalleMaplLine.putAll(navLineData.budileUtmLine())
         DataParallelLine.postValue(mParalleMaplLine)
     }
 

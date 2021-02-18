@@ -22,99 +22,7 @@ object ParallelLine {
     //平行线的间隔
     val lineOffset = 10
 
-    /**
-     * 创建地图用的数据,平行线,
-     *
-     */
-    fun budileMapLine(pointData: MutableList<PointXYData>): MutableList<Polyline> {
 
-        val mParallelLine: MutableList<Polyline> = ArrayList()
-        if (pointData.size < 1) return mParallelLine
-
-        val line = Polyline()
-        for ((index, e) in pointData.withIndex()) {
-            if (index == 0) {
-                line.startPath(pointData[index].latGC102, pointData[index].lngGC102)
-            }
-            line.lineTo(pointData[index].latGC102, pointData[index].lngGC102)
-        }
-
-        for (i in -5..5) {
-            var polyline = offseter.execute(
-                line,
-                null,
-                0.000500 * i.toDouble(),
-                OperatorOffset.JoinType.Round,
-                0.0,
-                180.0,
-                null
-            ) as Polyline
-
-
-            var polyline1 = offseter.execute(
-                line,
-                null,
-                -0.000500 * i.toDouble(),
-                OperatorOffset.JoinType.Round,
-                0.0,
-                180.0,
-                null
-            ) as Polyline
-
-            mParallelLine.add(polyline)
-            mParallelLine.add(polyline1)
-
-        }
-        return mParallelLine
-    }
-
-    /**
-     * 创建Utm用的数据,平行线,
-     * 必要用转换工具来回转换,数据精度失真
-     */
-    fun budileUtmLine(pointData: MutableList<PointXYData>): MutableList<Polyline> {
-
-        val mParallelLine: MutableList<Polyline> = ArrayList()
-        if (pointData.size < 1) return mParallelLine
-
-        val line = Polyline()
-        for ((index, e) in pointData.withIndex()) {
-            if (index == 0) {
-                line.startPath(pointData[index].X, pointData[index].Y)
-            }
-            line.lineTo(pointData[index].X, pointData[index].Y)
-        }
-
-        for (i in -5..5) {
-            var polyline = offseter.execute(
-                line,
-                null,
-                lineOffset * i.toDouble(),
-                OperatorOffset.JoinType.Round,
-                0.0,
-                180.0,
-                null
-            ) as Polyline
-//            for (i in 0 until polyline.pointCount) {
-//                val point = polyline.getPoint(i)
-//            }
-
-            var polyline1 = offseter.execute(
-                line,
-                null,
-                -lineOffset * i.toDouble(),
-                OperatorOffset.JoinType.Round,
-                0.0,
-                180.0,
-                null
-            ) as Polyline
-
-            mParallelLine.add(polyline)
-            mParallelLine.add(polyline1)
-
-        }
-        return mParallelLine
-    }
 
     /**
      * 延长线
@@ -132,11 +40,7 @@ object ParallelLine {
         val latlng = GeoConvert.INSTANCE.convertUTMToLatLon(B.X, B.Y)
         B.lat = latlng[0]
         B.lng = latlng[1]
-        val latlngGaode =
-            convertGaoDe(B)
 
-        B.latGC102 = latlngGaode.latitude
-        B.lngGC102 = latlngGaode.longitude
     }
 
     fun convertGaoDe(B: PointXYData): LatLng {
