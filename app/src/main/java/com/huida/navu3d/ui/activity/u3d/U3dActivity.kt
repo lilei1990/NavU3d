@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.lifecycle.observe
 import com.amap.api.maps.AMap
-import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
 import com.amap.api.maps.model.animation.Animation
 import com.amap.api.maps.model.animation.ScaleAnimation
@@ -13,7 +12,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.databinding.ActivityU3dBinding
 import com.huida.navu3d.ui.activity.DomeManager
-import com.huida.navu3d.utils.GaoDeConvert
+import com.huida.navu3d.utils.GaoDeUtils
 import com.kongqw.rockerlibrary.view.RockerView
 import com.kongqw.rockerlibrary.view.RockerView.OnShakeListener
 import com.lei.core.common.clickNoRepeat
@@ -21,7 +20,7 @@ import com.unity3d.player.IUnityPlayerLifecycleEvents
 
 
 class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
-    IUnityPlayerLifecycleEvents {
+        IUnityPlayerLifecycleEvents {
     val viewModel by lazy { getActivityViewModel(U3dViewModel::class.java)!! }
     val mapViewModel by lazy { getActivityViewModel(MapViewModel::class.java)!! }
 
@@ -56,10 +55,8 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
             binding.gdMap.map.myLocationStyle = it //设置定位蓝点的Style
         }
         viewModel.DataMarkerA.observe(this) {
-            val cameraPosition =
-                CameraPosition(LatLng(it.position.latitude, it.position.longitude), 15f, 0f, 30f)
-            val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
-            binding.gdMap.map.moveCamera(cameraUpdate)
+
+            GaoDeUtils.moveCameraLatLng(binding.gdMap.map,LatLng(it.position.latitude, it.position.longitude), 20f, 0f, 30f)
             val markerAnimation: Animation = ScaleAnimation(0f, 1f, 0f, 1f) //初始化生长效果动画
             markerAnimation.setDuration(1000) //设置动画时间 单位毫秒
             val marker = binding.gdMap.map.addMarker(it)
@@ -83,10 +80,10 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
             }
             val latLngs = ArrayList<LatLng>()
             for (pointXY in it) {
-                latLngs.add( GaoDeConvert.convert(LatLng(pointXY.lat, pointXY.lng)))
+                latLngs.add(GaoDeUtils.convertGPS(LatLng(pointXY.lat, pointXY.lng)))
             }
             addPolyline = binding.gdMap.map.addPolyline(
-                PolylineOptions().addAll(latLngs).width(5f).color(Color.argb(255, 1, 255, 1))
+                    PolylineOptions().addAll(latLngs).width(5f).color(Color.argb(255, 1, 255, 1))
             )
 
 
@@ -98,11 +95,11 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
 
                 for (i in 0 until polyline.pointCount) {
                     val point = polyline.getPoint(i)
-                    latLngs.add(ParallelLine.utmToGaoDe(point))
+                    latLngs.add(GaoDeUtils.utmToGaoDe(point))
                 }
 
                 binding.gdMap.map.addPolyline(
-                    PolylineOptions().addAll(latLngs).width(5f).color(Color.argb(255, 1, 255, 1))
+                        PolylineOptions().addAll(latLngs).width(5f).color(Color.argb(255, 1, 255, 1))
                 )
                 val textOptions = TextOptions()
                 textOptions.position(latLngs[0])
@@ -116,51 +113,51 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
     private fun initRockView() {
         binding.rockerView.setCallBackMode(RockerView.CallBackMode.CALL_BACK_MODE_MOVE);
         binding.rockerView.setOnShakeListener(
-            RockerView.DirectionMode.DIRECTION_8,
-            object : OnShakeListener {
-                override fun onStart() {
-
-                }
-
-                override fun direction(direction: RockerView.Direction) {
-                    LogUtils.e("摇动方向 : $direction")
-                    when (direction) {
-                        RockerView.Direction.DIRECTION_LEFT -> {
-                            DomeManager.setAngle(-5.0)
-                        }
-                        RockerView.Direction.DIRECTION_RIGHT -> {
-                            DomeManager.setAngle(5.0)
-                        }
-                        RockerView.Direction.DIRECTION_UP -> {
-                            DomeManager.setSpeedDistance(0.005)
-                        }
-                        RockerView.Direction.DIRECTION_DOWN -> {
-                            DomeManager.setSpeedDistance(-0.005)
-                        }
-                        RockerView.Direction.DIRECTION_UP_LEFT -> {
-                            DomeManager.setAngle(-5.0)
-                            DomeManager.setSpeedDistance(0.005)
-                        }
-                        RockerView.Direction.DIRECTION_UP_RIGHT -> {
-                            DomeManager.setAngle(5.0)
-                            DomeManager.setSpeedDistance(0.005)
-                        }
-                        RockerView.Direction.DIRECTION_DOWN_LEFT -> {
-                            DomeManager.setAngle(-5.0)
-                            DomeManager.setSpeedDistance(-0.005)
-                        }
-                        RockerView.Direction.DIRECTION_DOWN_RIGHT -> {
-                            DomeManager.setAngle(5.0)
-                            DomeManager.setSpeedDistance(-0.005)
-                        }
+                RockerView.DirectionMode.DIRECTION_8,
+                object : OnShakeListener {
+                    override fun onStart() {
 
                     }
-                }
 
-                override fun onFinish() {
+                    override fun direction(direction: RockerView.Direction) {
+                        LogUtils.e("摇动方向 : $direction")
+                        when (direction) {
+                            RockerView.Direction.DIRECTION_LEFT -> {
+                                DomeManager.setAngle(-5.0)
+                            }
+                            RockerView.Direction.DIRECTION_RIGHT -> {
+                                DomeManager.setAngle(5.0)
+                            }
+                            RockerView.Direction.DIRECTION_UP -> {
+                                DomeManager.setSpeedDistance(0.005)
+                            }
+                            RockerView.Direction.DIRECTION_DOWN -> {
+                                DomeManager.setSpeedDistance(-0.005)
+                            }
+                            RockerView.Direction.DIRECTION_UP_LEFT -> {
+                                DomeManager.setAngle(-5.0)
+                                DomeManager.setSpeedDistance(0.005)
+                            }
+                            RockerView.Direction.DIRECTION_UP_RIGHT -> {
+                                DomeManager.setAngle(5.0)
+                                DomeManager.setSpeedDistance(0.005)
+                            }
+                            RockerView.Direction.DIRECTION_DOWN_LEFT -> {
+                                DomeManager.setAngle(-5.0)
+                                DomeManager.setSpeedDistance(-0.005)
+                            }
+                            RockerView.Direction.DIRECTION_DOWN_RIGHT -> {
+                                DomeManager.setAngle(5.0)
+                                DomeManager.setSpeedDistance(-0.005)
+                            }
 
-                }
-            })
+                        }
+                    }
+
+                    override fun onFinish() {
+
+                    }
+                })
     }
 
     private fun initButton() {
@@ -206,9 +203,9 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
 
 
 
-        binding.gdMap.map.uiSettings.isMyLocationButtonEnabled = true;//设置默认定位按钮是否显示，非必需设置。
-        // 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-        binding.gdMap.map.isMyLocationEnabled = true
+        binding.gdMap.map.uiSettings.zoomPosition = 20
+
+        //设置卫星地图
         binding.gdMap.map.mapType = AMap.MAP_TYPE_SATELLITE
         binding.gdMap.onCreate(savedInstanceState);
         //开启定位
@@ -235,6 +232,7 @@ class U3dActivity : U3d<ActivityU3dBinding>(ActivityU3dBinding::inflate),
                 binding.mlRoot.bringChildToFront(topView)
             }
         }
+        binding.btSwitch.performClick()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

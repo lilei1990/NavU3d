@@ -4,10 +4,8 @@ import com.esri.core.geometry.Operator
 import com.esri.core.geometry.OperatorFactoryLocal
 import com.esri.core.geometry.OperatorOffset
 import com.esri.core.geometry.Polyline
-import com.huida.navu3d.ui.activity.u3d.ParallelLine
+import com.huida.navu3d.utils.GeometryUtils
 import org.litepal.crud.LitePalSupport
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * 作者 : lei
@@ -51,6 +49,8 @@ class NavLineData : LitePalSupport() {
             //编号和线的坐标
             mapOf.put(i+index , polyline)
         }
+
+
         return mapOf
     }
 

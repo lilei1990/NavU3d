@@ -220,14 +220,6 @@ public enum GeoConvert {
         return result;
     }
 
-    public LatLng gaoDeConvert(LatLng sourceLatLng, Context context) {
-        CoordinateConverter converter = new CoordinateConverter(context);
-        // CoordType.GPS 待转换坐标类型
-        converter.from(CoordinateConverter.CoordType.GPS);
-        // sourceLatLng待转换坐标点 LatLng类型
-        converter.coord(sourceLatLng);
-        // 执行转换操作
-        return converter.convert();
-    }
+
 
 }

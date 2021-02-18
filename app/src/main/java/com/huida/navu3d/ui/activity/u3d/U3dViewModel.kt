@@ -1,5 +1,6 @@
 package com.huida.navu3d.ui.activity.u3d
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.amap.api.maps.AMap
@@ -12,8 +13,8 @@ import com.huida.navu3d.bean.NavLineData
 import com.huida.navu3d.bean.PointXYData
 import com.huida.navu3d.constants.Constants.EXTEND_LINE
 import com.huida.navu3d.ui.activity.DomeManager
-import com.huida.navu3d.utils.GaoDeConvert
-import com.huida.navu3d.utils.GeoConvert
+import com.huida.navu3d.utils.GaoDeUtils
+import com.huida.navu3d.utils.GeometryUtils
 import com.huida.navu3d.utils.PointConvert
 import java.util.*
 import kotlin.math.roundToInt
@@ -90,8 +91,7 @@ class U3dViewModel : ViewModel() {
         val options = MarkerOptions()
         options.draggable(true)
                 .snippet("DefaultMarker")
-
-        options.position(GaoDeConvert.convert(LatLng(point.lat, point.lng)))
+        options.position(GaoDeUtils.convertGPS(LatLng(point.lat, point.lng)))
         options.isFlat = true
         return options
     }
@@ -114,22 +114,16 @@ class U3dViewModel : ViewModel() {
             satelliteCount = "${it.satelliteCount}"
             DataSatelliteCount.postValue(satelliteCount)
             val p = Point(pointXY.X, pointXY.Y)
-            //排序
+            //计算偏移的距离
+            val polyline = mParalleMaplLine.get(3)
+            polyline?.apply {
+                //计算偏移的距离
+                offsetLineDistance = (GeometryUtils.getPointToCurveDis(p, this)*100).roundToInt()
+                Log.d("TAG_lilei", "偏移距离: "+offsetLineDistance)
+            }
 
-//            mParalleMaplLine.sortWith(
-//                    Comparator { o1, o2 ->
-//                        -((ParallelLine.getPointToCurveDis(p, o2) - ParallelLine.getPointToCurveDis(
-//                                p,
-//                                o1
-//                        )) * 100).roundToInt()
-//                    }
-//            )
-//            if (mParalleMaplLine.size > 0) {
-//                //计算偏移的距离
-//                offsetLineDistance =
-//                        ParallelLine.getPointToCurveDis(p, mParalleMaplLine[0]).roundToInt()
-//            }
-//            DataOffsetLineDistance.postValue(offsetLineDistance)
+
+            DataOffsetLineDistance.postValue(offsetLineDistance)
         }
         DomeManager.setVTGListen {
             speed = "${(it.speedKmh * 100).roundToInt() / 1000.00}Km/h"
@@ -193,14 +187,14 @@ class U3dViewModel : ViewModel() {
         val pointData: MutableList<PointXYData> = ArrayList()
         //延长
         val length = EXTEND_LINE
-        val distance = ParallelLine.distanceOfTwoPoints(A, B)
+        val distance = GeometryUtils.distanceOfTwoPoints(A, B)
         if (distance == 0.0) {
             ToastUtils.showLong("AB点重合,请重新设置AB点")
             return
         }
         //分别延长AB两点
-        ParallelLine.extLine(A, B, length)
-        ParallelLine.extLine(B, A, length)
+        GeometryUtils.extLine(A, B, length)
+        GeometryUtils.extLine(B, A, length)
         pointData.add(A)
         pointData.add(B)
         val navLineData = NavLineData()

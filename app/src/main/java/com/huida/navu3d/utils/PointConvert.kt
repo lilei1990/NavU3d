@@ -15,12 +15,10 @@ object PointConvert {
     fun convertPoint(latitude: Double, longitude: Double): PointXYData {
         val pointXY = PointXYData()
         val convertUTM = GeoConvert.INSTANCE.convertLatLonToUTM(latitude, longitude)
-        val convertGaode =
-                GeoConvert.INSTANCE.gaoDeConvert(LatLng(latitude, longitude), BaseApp.getContext())
+
         pointXY.lat = latitude
         pointXY.lng = longitude
-//        pointXY.latGC102 = convertGaode.latitude
-//        pointXY.lngGC102 = convertGaode.longitude
+
         pointXY.X = convertUTM[0]
         pointXY.Y = convertUTM[1]
         return pointXY

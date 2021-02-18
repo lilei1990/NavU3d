@@ -1,9 +1,5 @@
 package com.huida.navu3d
 
-import com.esri.core.geometry.Point
-import com.huida.navu3d.ui.activity.u3d.ParallelLine
-import com.huida.navu3d.utils.GeoConvert
-
 /**
  * 作者 : lei
  * 时间 : 2021/01/28.

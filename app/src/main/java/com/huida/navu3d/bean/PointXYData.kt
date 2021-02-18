@@ -19,19 +19,9 @@ class PointXYData : LitePalSupport() {
     var lat = 0.0
     var lng = 0.0
 
-//    //高德用的
-//    var latGC102 = 0.0
-//    var lngGC102 = 0.0
-
     //Utm
     var X = 0.0
     var Y = 0.0
-
-
-
-//    override fun toString(): String {
-//        return "PointXY(lat=$lat, lng=$lng, latGC102=$latGC102, lngGC102=$lngGC102, X=$X, Y=$Y)"
-//    }
 
 
 }
