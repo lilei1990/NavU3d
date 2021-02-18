@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+/**
+ * nmea数据生成类
+ */
 public enum NmeaBuilder {
     INSTANCE;
 

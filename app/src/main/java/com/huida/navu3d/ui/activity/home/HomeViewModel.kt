@@ -1,4 +1,4 @@
-package com.huida.navu3d.ui.activity.u3d
+package com.huida.navu3d.ui.activity.home
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -20,7 +20,7 @@ import java.util.*
 import kotlin.math.roundToInt
 
 
-class U3dViewModel : ViewModel() {
+class HomeViewModel : ViewModel() {
     //当前坐标
     var mCurrenLatLng = PointXYData()
 

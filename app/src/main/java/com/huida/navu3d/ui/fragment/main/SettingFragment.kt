@@ -9,7 +9,6 @@ import com.huida.navu3d.common.initBackClick
 import com.huida.navu3d.databinding.FragmentSettingBinding
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
-import com.lilei.pwdpie.fragment.main.MainViewModel
 
 /**
  * 设置界面
@@ -19,7 +18,7 @@ class SettingFragment : BaseVmFragment<FragmentSettingBinding>(FragmentSettingBi
         fun newInstance() = SettingFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: MainMenuViewModel
 
     override fun init(savedInstanceState: Bundle?) {
         binding.incTitleBar.initBackClick()

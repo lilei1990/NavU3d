@@ -48,7 +48,7 @@
             android:name=".ui.activity.MainActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".ui.activity.u3d.HomeActivity"
+            android:name=".ui.activity.home.HomeActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

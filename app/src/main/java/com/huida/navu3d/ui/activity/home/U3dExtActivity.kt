@@ -1,4 +1,4 @@
-package com.huida.navu3d.ui.activity.u3d
+package com.huida.navu3d.ui.activity.home
 
 import android.content.ComponentCallbacks2
 import android.content.Intent

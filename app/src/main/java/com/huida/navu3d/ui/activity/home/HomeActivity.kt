@@ -1,4 +1,4 @@
-package com.huida.navu3d.ui.activity.u3d
+package com.huida.navu3d.ui.activity.home
 
 import android.graphics.Color
 import android.os.Bundle
@@ -21,7 +21,7 @@ import com.unity3d.player.IUnityPlayerLifecycleEvents
 
 class HomeActivity : U3dExtActivity<ActivityHomeBinding>(ActivityHomeBinding::inflate),
         IUnityPlayerLifecycleEvents {
-    val viewModel by lazy { getActivityViewModel(U3dViewModel::class.java)!! }
+    val viewModel by lazy { getActivityViewModel(HomeViewModel::class.java)!! }
 
     override fun init(savedInstanceState: Bundle?) {
         binding.apply {

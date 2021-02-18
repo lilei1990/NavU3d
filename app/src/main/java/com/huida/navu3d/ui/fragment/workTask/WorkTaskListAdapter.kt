@@ -5,7 +5,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.bean.CurrentWorkTask
-import com.huida.navu3d.ui.activity.u3d.HomeActivity
+import com.huida.navu3d.ui.activity.home.HomeActivity
 import com.huida.navu3d.bean.WorkTaskData
 import com.zhy.adapter.recyclerview.CommonAdapter
 import com.zhy.adapter.recyclerview.base.ViewHolder

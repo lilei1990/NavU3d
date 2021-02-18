@@ -8,7 +8,6 @@ import com.huida.navu3d.databinding.FragmentMainMenuBinding
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
 import com.lei.core.common.showBarB
-import com.lilei.pwdpie.fragment.main.MainViewModel
 
 /**
  * 作者 : lei
@@ -22,7 +21,7 @@ class MainMenuFragment : BaseVmFragment<FragmentMainMenuBinding>(FragmentMainMen
         fun newInstance() = MainMenuFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: MainMenuViewModel
 
     override fun init(savedInstanceState: Bundle?) {
         binding.btStart.clickNoRepeat {

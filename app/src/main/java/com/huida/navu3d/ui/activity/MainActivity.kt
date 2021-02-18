@@ -15,10 +15,7 @@ import com.lei.core.utils.StatusUtils
  * 描述 : 入口activity
  */
 class MainActivity : BaseVmActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
-    //    //偏移操作
-//    val offseter = OperatorFactoryLocal
-//        .getInstance()
-//        .getOperator(Operator.Type.Offset) as OperatorOffset
+
     override fun init(savedInstanceState: Bundle?) {
 //        val db: SQLiteDatabase = Connector.getDatabase()
     }
