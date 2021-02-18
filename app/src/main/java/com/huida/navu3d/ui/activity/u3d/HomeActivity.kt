@@ -3,7 +3,6 @@ package com.huida.navu3d.ui.activity.u3d
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.LinearLayout
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
 import com.amap.api.maps.AMap
 import com.amap.api.maps.model.*
@@ -11,7 +10,7 @@ import com.amap.api.maps.model.animation.Animation
 import com.amap.api.maps.model.animation.ScaleAnimation
 import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.R
-import com.huida.navu3d.databinding.ActivityU3dBinding
+import com.huida.navu3d.databinding.ActivityHomeBinding
 import com.huida.navu3d.ui.activity.DomeManager
 import com.huida.navu3d.utils.GaoDeUtils
 import com.kongqw.rockerlibrary.view.RockerView
@@ -20,7 +19,7 @@ import com.lei.core.common.clickNoRepeat
 import com.unity3d.player.IUnityPlayerLifecycleEvents
 
 
-class U3dActivity : U3dExtActivity<ActivityU3dBinding>(ActivityU3dBinding::inflate),
+class HomeActivity : U3dExtActivity<ActivityHomeBinding>(ActivityHomeBinding::inflate),
         IUnityPlayerLifecycleEvents {
     val viewModel by lazy { getActivityViewModel(U3dViewModel::class.java)!! }
 

@@ -100,7 +100,7 @@ class U3dViewModel : ViewModel() {
     /**
      * 开始
      */
-    fun start(u3dActivity: U3dActivity) {
+    fun start(u3dActivity: HomeActivity) {
         DomeManager.reset()
         DomeManager.start()
         DomeManager.setGGAListen {

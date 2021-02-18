@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/teal_200"
     app:layoutDescription="@xml/activity_u3d_scene"
-    tools:context=".ui.activity.u3d.U3dActivity">
+    tools:context=".ui.activity.u3d.HomeActivity">
     <LinearLayout
         android:id="@+id/llMap"
         android:translationZ="10dp"
