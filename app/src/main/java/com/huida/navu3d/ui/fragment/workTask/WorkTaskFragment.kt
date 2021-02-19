@@ -18,12 +18,12 @@ import kotlinx.coroutines.*
 
 class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskListBinding::inflate) {
     private lateinit var workTaskListAdapter: WorkTaskListAdapter
-    private val viewModel by lazy { getFragmentViewModel(WorkTaskViewModel::class.java) }
+    private val workTaskViewModel by lazy { getActivityViewModel(WorkTaskViewModel::class.java) }
 
 
     companion object {
         fun newInstance() =
-            WorkTaskFragment()
+                WorkTaskFragment()
     }
 
 
@@ -40,11 +40,11 @@ class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskLis
      */
     private fun initTitleBar() {
         binding.incTitleBar.clConfirm.clickNoRepeat {
-            viewModel.workTaskData.name = binding.incNew.etTaskName.text.toString()
-            viewModel.workTaskData.creator = binding.incNew.etCreator.text.toString()
+            workTaskViewModel.workTaskData.name = binding.incNew.etTaskName.text.toString()
+            workTaskViewModel.workTaskData.creator = binding.incNew.etCreator.text.toString()
             lifecycleScope.launch(Dispatchers.IO) {
                 //添加到数据库,更新列表
-                viewModel.addFarmToolsData()
+                workTaskViewModel.addFarmToolsData()
                 loadWorkListData()
             }
             binding.clContinueTask.performClick()
@@ -77,7 +77,7 @@ class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskLis
             activity?.let {
                 val builder = AlertDialog.Builder(it)
                 val view: View =
-                    layoutInflater.inflate(R.layout.dialog_data_picker, null) as LinearLayout
+                        layoutInflater.inflate(R.layout.dialog_data_picker, null) as LinearLayout
                 var datePicker = view.findViewById<DatePicker>(R.id.datePicker)
 
                 builder.setView(view)
@@ -105,11 +105,13 @@ class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskLis
     private fun initRecycleView() {
         binding.rvContinue.layoutManager = LinearLayoutManager(activity)
         workTaskListAdapter =
-            WorkTaskListAdapter(
-                activity,
-                R.layout.item_task,
-                arrayListOf()
-            );
+                WorkTaskListAdapter(
+                        activity,
+                        R.layout.item_task,
+                        arrayListOf(),
+                        workTaskViewModel
+                );
+
         binding.rvContinue.adapter = workTaskListAdapter
 
 
@@ -119,17 +121,11 @@ class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskLis
      * 加载列表数据
      */
     private fun loadWorkListData() {
-        lifecycleScope.launch(Dispatchers.IO) {
-           val loadInitData = viewModel.loadInitData()
-            lifecycleScope.launch(Dispatchers.Main) {
-                loadInitData.observe(this@WorkTaskFragment, Observer{
-                    workTaskListAdapter.datas.clear()
-                    workTaskListAdapter.datas.addAll(it)
-                    workTaskListAdapter.notifyDataSetChanged()
-                })
-            }
-        }
+        val loadInitData = workTaskViewModel.loadInitData()
+        loadInitData.observe(this@WorkTaskFragment, Observer {
+            workTaskListAdapter.datas.clear()
+            workTaskListAdapter.datas.addAll(it)
+            workTaskListAdapter.notifyDataSetChanged()
+        })
     }
-
-
 }

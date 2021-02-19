@@ -3,6 +3,8 @@ package com.huida.navu3d.ui.activity
 import android.os.Bundle
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.databinding.ActivityMainBinding
+import com.huida.navu3d.ui.activity.home.HomeViewModel
+import com.huida.navu3d.ui.activity.home.U3dExtActivity
 import com.lei.core.base.BaseVmActivity
 import com.lei.core.utils.PrefUtils
 import com.lei.core.utils.StatusUtils
@@ -14,10 +16,9 @@ import com.lei.core.utils.StatusUtils
  * 邮箱 :416587959@qq.com
  * 描述 : 入口activity
  */
-class MainActivity : BaseVmActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
-
+class MainActivity : U3dExtActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     override fun init(savedInstanceState: Bundle?) {
-//        val db: SQLiteDatabase = Connector.getDatabase()
+
     }
 
 

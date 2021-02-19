@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
+import com.huida.navu3d.ui.activity.U3dViewModel
 import com.lei.core.base.BaseVmActivity
 import com.unity3d.player.IUnityPlayerLifecycleEvents
 import com.unity3d.player.UnityPlayer
@@ -22,8 +23,9 @@ import com.unity3d.player.UnityPlayer
 
 abstract class U3dExtActivity<VB : ViewBinding>(inflate: (LayoutInflater) -> VB) : BaseVmActivity<VB>(inflate),
     IUnityPlayerLifecycleEvents {
+    val u3dViewModel by lazy { getActivityViewModel(U3dViewModel::class.java)!! }
     // don't change the name of this variable; referenced from native code
-    var mUnityPlayer: UnityPlayer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         initUnityPlayer()
         super.onCreate(savedInstanceState)
@@ -39,9 +41,10 @@ abstract class U3dExtActivity<VB : ViewBinding>(inflate: (LayoutInflater) -> VB)
             ViewGroup.LayoutParams.FILL_PARENT,
             ViewGroup.LayoutParams.FILL_PARENT
         )
-        mUnityPlayer = UnityPlayer(this, this)
-        mUnityPlayer!!.layoutParams = lp
-        mUnityPlayer!!.requestFocus()
+
+        u3dViewModel.mUnityPlayer= UnityPlayer(this, this)
+        u3dViewModel.mUnityPlayer!!.layoutParams = lp
+        u3dViewModel.mUnityPlayer!!.requestFocus()
 
     }
 
@@ -62,12 +65,12 @@ abstract class U3dExtActivity<VB : ViewBinding>(inflate: (LayoutInflater) -> VB)
      */
     override fun onNewIntent(intent: Intent?) {
         setIntent(intent)
-        mUnityPlayer!!.newIntent(intent)
+        u3dViewModel.mUnityPlayer!!.newIntent(intent)
     }
 
     // Quit Unity
     override fun onDestroy() {
-        mUnityPlayer!!.destroy()
+        u3dViewModel.mUnityPlayer!!.destroy()
         super.onDestroy()
         //在activity执行onDestroy时执行mMapView.onDestroy()，销毁地图
 //        binding.map.onDestroy();
@@ -76,7 +79,7 @@ abstract class U3dExtActivity<VB : ViewBinding>(inflate: (LayoutInflater) -> VB)
     // Pause Unity
     override fun onPause() {
         super.onPause()
-        mUnityPlayer!!.pause()
+        u3dViewModel.mUnityPlayer!!.pause()
         //在activity执行onPause时执行mMapView.onPause ()，暂停地图的绘制
 //        binding.map.onPause();
     }
@@ -84,7 +87,7 @@ abstract class U3dExtActivity<VB : ViewBinding>(inflate: (LayoutInflater) -> VB)
     // Resume Unity
     override fun onResume() {
         super.onResume()
-        mUnityPlayer!!.resume()
+        u3dViewModel.mUnityPlayer!!.resume()
         //在activity执行onResume时执行mMapView.onResume ()，重新绘制加载地图
 //        binding.map.onResume();
     }
@@ -92,52 +95,52 @@ abstract class U3dExtActivity<VB : ViewBinding>(inflate: (LayoutInflater) -> VB)
     // Low Memory Unity
     override fun onLowMemory() {
         super.onLowMemory()
-        mUnityPlayer!!.lowMemory()
+        u3dViewModel.mUnityPlayer!!.lowMemory()
     }
 
     // Trim Memory Unity
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
         if (level == ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL) {
-            mUnityPlayer!!.lowMemory()
+            u3dViewModel.mUnityPlayer!!.lowMemory()
         }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        mUnityPlayer!!.configurationChanged(newConfig)
+        u3dViewModel.mUnityPlayer!!.configurationChanged(newConfig)
     }
 
     // Notify Unity of the focus change.
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        mUnityPlayer!!.windowFocusChanged(hasFocus)
+        u3dViewModel.mUnityPlayer!!.windowFocusChanged(hasFocus)
     }
 
     // For some reason the multiple keyevent type is not supported by the ndk.
     // Force event injection by overriding dispatchKeyEvent().
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        return if (event.action == KeyEvent.ACTION_MULTIPLE) mUnityPlayer!!.injectEvent(
+        return if (event.action == KeyEvent.ACTION_MULTIPLE)  u3dViewModel.mUnityPlayer!!.injectEvent(
             event
         ) else super.dispatchKeyEvent(event)
     }
 
     // Pass any events not handled by (unfocused) views straight to UnityPlayer
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        return mUnityPlayer!!.injectEvent(event)
+        return  u3dViewModel.mUnityPlayer!!.injectEvent(event)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        return mUnityPlayer!!.injectEvent(event)
+        return  u3dViewModel.mUnityPlayer!!.injectEvent(event)
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return mUnityPlayer!!.injectEvent(event)
+        return  u3dViewModel.mUnityPlayer!!.injectEvent(event)
     }
 
     /*API12*/
     override fun onGenericMotionEvent(event: MotionEvent?): Boolean {
-        return mUnityPlayer!!.injectEvent(event)
+        return  u3dViewModel.mUnityPlayer!!.injectEvent(event)
     }
 
 }

@@ -8,11 +8,12 @@ import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MarkerOptions
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
-import com.huida.navu3d.bean.CurrentWorkTask
 import com.huida.navu3d.bean.NavLineData
 import com.huida.navu3d.bean.PointXYData
+import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.constants.Constants.EXTEND_LINE
 import com.huida.navu3d.ui.activity.DomeManager
+import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
 import com.huida.navu3d.utils.GaoDeUtils
 import com.huida.navu3d.utils.GeometryUtils
 import com.huida.navu3d.utils.PointConvert
@@ -32,8 +33,8 @@ class HomeViewModel : ViewModel() {
 
 
     //平行线数据
-    val DataParallelLine = MutableLiveData<MutableMap<Int,Polyline>>()
-    val mParalleMaplLine: MutableMap<Int,Polyline> = mutableMapOf<Int,Polyline>()
+    val DataParallelLine = MutableLiveData<MutableMap<Int, Polyline>>()
+    val mParalleMaplLine: MutableMap<Int, Polyline> = mutableMapOf<Int, Polyline>()
 
 
     //经纬度数据,轨迹
@@ -55,7 +56,7 @@ class HomeViewModel : ViewModel() {
     //与最近导航线偏移距离
     val DataOffsetLineDistance = MutableLiveData<Int>()
     var offsetLineDistance = 0
-    val taskWorkby by lazy { CurrentWorkTask.task }
+    var taskWorkby: WorkTaskData? = null
 
     //速度,距离数据
     private val pointAB by lazy {
@@ -64,11 +65,11 @@ class HomeViewModel : ViewModel() {
     /**
      * 设置A点
      */
-    fun setPointA() {
+    fun setPointA(workTaskViewModel: WorkTaskViewModel) {
         val A = mCurrenLatLng
-        taskWorkby?.apply {
-            this.setPointA(A)
-        }
+//        taskWorkby?.apply {
+//            this.setPointA(A)
+//        }
         DataMarkerA.postValue(markPoint(A))
         ToastUtils.showLong(A.toString())
     }
@@ -76,12 +77,12 @@ class HomeViewModel : ViewModel() {
     /**
      * 设置B点
      */
-    fun setPointB() {
+    fun setPointB(workTaskViewModel: WorkTaskViewModel) {
         val B = mCurrenLatLng
-        taskWorkby?.apply {
-            this.setPointB(B)
-
-        }
+//        taskWorkby?.apply {
+//            this.setPointB(B)
+//
+//        }
         DataMarkerB.postValue(markPoint(B))
         ToastUtils.showLong(B.toString())
 
@@ -100,7 +101,7 @@ class HomeViewModel : ViewModel() {
     /**
      * 开始
      */
-    fun start(u3dActivity: HomeActivity) {
+    fun start() {
         DomeManager.reset()
         DomeManager.start()
         DomeManager.setGGAListen {
@@ -118,8 +119,8 @@ class HomeViewModel : ViewModel() {
             val polyline = mParalleMaplLine.get(3)
             polyline?.apply {
                 //计算偏移的距离
-                offsetLineDistance = (GeometryUtils.getPointToCurveDis(p, this)*100).roundToInt()
-                Log.d("TAG_lilei", "偏移距离: "+offsetLineDistance)
+                offsetLineDistance = (GeometryUtils.getPointToCurveDis(p, this) * 100).roundToInt()
+                Log.d("TAG_lilei", "偏移距离: " + offsetLineDistance)
             }
 
 
@@ -167,8 +168,8 @@ class HomeViewModel : ViewModel() {
     /**
      * 画平行线
      */
-    fun DrawMapParallelLine() {
-        when (taskWorkby.pointAB?.size!!) {
+    fun DrawMapParallelLine(workTaskViewModel: WorkTaskViewModel) {
+        when (taskWorkby?.pointAB?.size!!) {
             0 -> {
                 ToastUtils.showLong("请添加A点")
                 return
@@ -182,8 +183,8 @@ class HomeViewModel : ViewModel() {
             ToastUtils.showLong("导航线已经生成!")
             return
         }
-        val A = taskWorkby.pointAB?.get(0)!!
-        val B = taskWorkby.pointAB?.get(1)!!
+        val A = taskWorkby?.pointAB?.get(0)!!
+        val B = taskWorkby?.pointAB?.get(1)!!
         val pointData: MutableList<PointXYData> = ArrayList()
         //延长
         val length = EXTEND_LINE
