@@ -12,9 +12,10 @@ import com.huida.navu3d.bean.NavLineData
 import com.huida.navu3d.bean.PointXYData
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.constants.Constants.EXTEND_LINE
-import com.huida.navu3d.ui.activity.DomeManager
+import com.huida.navu3d.ui.activity.NameProviderManager
 import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
 import com.huida.navu3d.utils.GaoDeUtils
+import com.huida.navu3d.utils.GeoConvert
 import com.huida.navu3d.utils.GeometryUtils
 import com.huida.navu3d.utils.PointConvert
 import java.util.*
@@ -58,6 +59,7 @@ class HomeViewModel : ViewModel() {
     var offsetLineDistance = 0
     var taskWorkby: WorkTaskData? = null
 
+
     //速度,距离数据
     private val pointAB by lazy {
     }
@@ -67,9 +69,11 @@ class HomeViewModel : ViewModel() {
      */
     fun setPointA(workTaskViewModel: WorkTaskViewModel) {
         val A = mCurrenLatLng
-//        taskWorkby?.apply {
-//            this.setPointA(A)
-//        }
+        taskWorkby?.navLineData?.apply {
+            setStart(A)
+            save()
+        }
+        taskWorkby?.save()
         DataMarkerA.postValue(markPoint(A))
         ToastUtils.showLong(A.toString())
     }
@@ -77,15 +81,16 @@ class HomeViewModel : ViewModel() {
     /**
      * 设置B点
      */
+
     fun setPointB(workTaskViewModel: WorkTaskViewModel) {
         val B = mCurrenLatLng
-//        taskWorkby?.apply {
-//            this.setPointB(B)
-//
-//        }
+        taskWorkby?.navLineData?.apply {
+            setEnd(B)
+            save()
+        }
+        taskWorkby?.save()
         DataMarkerB.postValue(markPoint(B))
         ToastUtils.showLong(B.toString())
-
     }
 
     private fun markPoint(point: PointXYData): MarkerOptions {
@@ -102,9 +107,9 @@ class HomeViewModel : ViewModel() {
      * 开始
      */
     fun start() {
-        DomeManager.reset()
-        DomeManager.start()
-        DomeManager.setGGAListen {
+        NameProviderManager.reset()
+        NameProviderManager.start()
+        NameProviderManager.setGGAListen {
             val position = it.position
             val latitude = position.latitude
             val longitude = position.longitude
@@ -126,7 +131,7 @@ class HomeViewModel : ViewModel() {
 
             DataOffsetLineDistance.postValue(offsetLineDistance)
         }
-        DomeManager.setVTGListen {
+        NameProviderManager.setVTGListen {
             speed = "${(it.speedKmh * 100).roundToInt() / 1000.00}Km/h"
             steerAngle = "${it.trueCourse}°"
             DataSpeed.postValue(speed)
@@ -140,7 +145,7 @@ class HomeViewModel : ViewModel() {
      * 停止
      */
     fun stop() {
-        DomeManager.stop()
+        NameProviderManager.stop()
 
     }
 
@@ -169,42 +174,42 @@ class HomeViewModel : ViewModel() {
      * 画平行线
      */
     fun DrawMapParallelLine(workTaskViewModel: WorkTaskViewModel) {
-        when (taskWorkby?.pointAB?.size!!) {
-            0 -> {
-                ToastUtils.showLong("请添加A点")
+//        A ?: return ToastUtils.showLong("请添加A点")
+//        B ?: return ToastUtils.showLong("请添加B点")
+        val mA =  taskWorkby?.navLineData!!.getStart()
+        val mB =  taskWorkby?.navLineData!!.getEnd()
+        taskWorkby?.navLineData?.apply {
+            setStart(mA)
+            setEnd(mB)
+            save()
+            taskWorkby?.save()
+        }
+        mParalleMaplLine.clear()
+        PointConvert.convertPoint(mA.lat, mA.lng)
+        taskWorkby?.navLineData?.apply {
+            val pointData: MutableList<PointXYData> = ArrayList()
+            //延长
+            val length = EXTEND_LINE
+            val distance = GeometryUtils.distanceOfTwoPoints(mA, mB)
+            if (distance == 0.0) {
+                ToastUtils.showLong("AB点重合,请重新设置AB点")
                 return
             }
-            1 -> {
-                ToastUtils.showLong("请添加B点")
-                return
-            }
+            //分别延长AB两点
+            GeometryUtils.extLine(mA, mB, length)
+            GeometryUtils.extLine(mB, mA, length)
+            pointData.add(mA)
+            pointData.add(mB)
+            val navLineData = NavLineData()
+            navLineData.startX = mA.X
+            navLineData.startY = mA.Y
+            navLineData.endX = mB.X
+            navLineData.endY = mB.Y
+            mParalleMaplLine.putAll(navLineData.budileUtmLine())
+            DataParallelLine.postValue(mParalleMaplLine)
         }
-        if (mParalleMaplLine.size > 0) {
-            ToastUtils.showLong("导航线已经生成!")
-            return
-        }
-        val A = taskWorkby?.pointAB?.get(0)!!
-        val B = taskWorkby?.pointAB?.get(1)!!
-        val pointData: MutableList<PointXYData> = ArrayList()
-        //延长
-        val length = EXTEND_LINE
-        val distance = GeometryUtils.distanceOfTwoPoints(A, B)
-        if (distance == 0.0) {
-            ToastUtils.showLong("AB点重合,请重新设置AB点")
-            return
-        }
-        //分别延长AB两点
-        GeometryUtils.extLine(A, B, length)
-        GeometryUtils.extLine(B, A, length)
-        pointData.add(A)
-        pointData.add(B)
-        val navLineData = NavLineData()
-        navLineData.startX = A.X
-        navLineData.startY = A.Y
-        navLineData.endX = B.X
-        navLineData.endY = B.Y
-        mParalleMaplLine.putAll(navLineData.budileUtmLine())
-        DataParallelLine.postValue(mParalleMaplLine)
+
+
     }
 
     /**

@@ -33,66 +33,17 @@ class WorkTaskData : LitePalSupport() {
 
     //ab点
     var pointAB: ArrayList<PointXYData>? = ArrayList()
+
     //平行线数据,包含AB点
-    var navLineData: NavLineData? = null
+    var navLineData: NavLineData? = NavLineData()
     //轨迹数据
-    var LineXYDatas:ArrayList<LineXYData>? =  ArrayList()
+
+    var LineXYDatas: ArrayList<LineXYData>? = null
 
 
     //参考线
     //历史轨迹
     //标记,引导标记
-    /**
-     * 获取A点数据
-     */
-    fun getPointA(): PointXYData? {
-
-        return pointAB!![0]
-    }
-
-    fun setPointA(pointXYData: PointXYData) {
-        //如果数据为空就初始化两个初始值
-        checkPointAB()
-        pointAB!![0].type = PointType.A
-        pointAB!![0].X = pointXYData.X
-        pointAB!![0].Y = pointXYData.Y
-        pointAB!![0].lng = pointXYData.lng
-        pointAB!![0].lat = pointXYData.lat
-        pointAB!![0].save()
-        save()
-    }
-
-    /**
-     * 获取B点数据
-     */
-    fun getPointB(): PointXYData? {
-
-        return pointAB!![1]
-    }
-
-    fun setPointB(pointXYData: PointXYData) {
-        //如果数据为空就初始化两个初始值
-        checkPointAB()
-        pointAB!![1].type = PointType.B
-        pointAB!![1].X = pointXYData.X
-        pointAB!![1].Y = pointXYData.Y
-        pointAB!![1].lng = pointXYData.lng
-        pointAB!![1].lat = pointXYData.lat
-        pointAB!![1].save()
-        save()
-    }
-
-    /**
-     * 检查ab点的值 如果数据为空就初始化两个初始值
-     */
-    private fun checkPointAB() {
-        pointAB?.apply {
-            if (size == 0) {
-                add(PointXYData())
-                add(PointXYData())
-            }
-        }
-    }
 
 
 }

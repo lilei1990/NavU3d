@@ -10,7 +10,7 @@ import com.amap.api.maps.model.animation.Animation
 import com.amap.api.maps.model.animation.ScaleAnimation
 import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.databinding.FragmentHomeBinding
-import com.huida.navu3d.ui.activity.DomeManager
+import com.huida.navu3d.ui.activity.NameProviderManager
 import com.huida.navu3d.ui.activity.U3dViewModel
 import com.huida.navu3d.ui.activity.home.HomeViewModel
 import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
@@ -191,32 +191,32 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
                         LogUtils.e("摇动方向 : $direction")
                         when (direction) {
                             RockerView.Direction.DIRECTION_LEFT -> {
-                                DomeManager.setAngle(-5.0)
+                                NameProviderManager.setAngle(-5.0)
                             }
                             RockerView.Direction.DIRECTION_RIGHT -> {
-                                DomeManager.setAngle(5.0)
+                                NameProviderManager.setAngle(5.0)
                             }
                             RockerView.Direction.DIRECTION_UP -> {
-                                DomeManager.setSpeedDistance(0.005)
+                                NameProviderManager.setSpeedDistance(0.005)
                             }
                             RockerView.Direction.DIRECTION_DOWN -> {
-                                DomeManager.setSpeedDistance(-0.005)
+                                NameProviderManager.setSpeedDistance(-0.005)
                             }
                             RockerView.Direction.DIRECTION_UP_LEFT -> {
-                                DomeManager.setAngle(-5.0)
-                                DomeManager.setSpeedDistance(0.005)
+                                NameProviderManager.setAngle(-5.0)
+                                NameProviderManager.setSpeedDistance(0.005)
                             }
                             RockerView.Direction.DIRECTION_UP_RIGHT -> {
-                                DomeManager.setAngle(5.0)
-                                DomeManager.setSpeedDistance(0.005)
+                                NameProviderManager.setAngle(5.0)
+                                NameProviderManager.setSpeedDistance(0.005)
                             }
                             RockerView.Direction.DIRECTION_DOWN_LEFT -> {
-                                DomeManager.setAngle(-5.0)
-                                DomeManager.setSpeedDistance(-0.005)
+                                NameProviderManager.setAngle(-5.0)
+                                NameProviderManager.setSpeedDistance(-0.005)
                             }
                             RockerView.Direction.DIRECTION_DOWN_RIGHT -> {
-                                DomeManager.setAngle(5.0)
-                                DomeManager.setSpeedDistance(-0.005)
+                                NameProviderManager.setAngle(5.0)
+                                NameProviderManager.setSpeedDistance(-0.005)
                             }
 
                         }

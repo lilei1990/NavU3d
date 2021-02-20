@@ -15,11 +15,15 @@ import org.litepal.crud.LitePalSupport
  */
 class NavLineData : LitePalSupport() {
     //索引,所在的位置
-    var index: Int = 3
+    var index: Int = 0
     var startX: Double = 0.0
     var startY: Double = 0.0
+    var startLat = 0.0
+    var startLng = 0.0
     var endX: Double = 0.0
     var endY: Double = 0.0
+    var endLat = 0.0
+    var endLng = 0.0
 
     //平行线的间隔
     val lineOffset = 10
@@ -47,12 +51,49 @@ class NavLineData : LitePalSupport() {
                     null
             ) as Polyline
             //编号和线的坐标
-            mapOf.put(i+index , polyline)
+            mapOf.put(i + index, polyline)
         }
 
 
         return mapOf
     }
 
+    /**
+     * 设置开始点
+     */
+    fun setStart(mA: PointXYData) {
+        startX = mA.X
+        startY = mA.Y
+        startLat = mA.lat
+        startLng = mA.lng
 
+    }
+
+    fun getStart(): PointXYData {
+        val mA = PointXYData()
+        mA.X = startX
+        mA.Y = startY
+        mA.lat = startLat
+        mA.lng = startLng
+        return mA
+    }
+
+    /**
+     * 设置结束点
+     */
+    fun setEnd(mB: PointXYData) {
+        endX = mB.X
+        endY = mB.Y
+        endLat = mB.lat
+        endLng = mB.lng
+    }
+
+    fun getEnd(): PointXYData {
+        val mB = PointXYData()
+        mB.X = endX
+        mB.Y = endY
+        mB.lat = endLat
+        mB.lng = endLng
+        return mB
+    }
 }

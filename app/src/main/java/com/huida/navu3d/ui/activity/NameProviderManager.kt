@@ -10,15 +10,23 @@ import kotlin.concurrent.fixedRateTimer
  * 作者 : lei
  * 时间 : 2021/01/28.
  * 邮箱 :416587959@qq.com
- * 描述 :
+ * 描述 : name数据源提供者
  */
-object DomeManager {
+object NameProviderManager {
     var mNmeaBuilder = NmeaBuilder.INSTANCE
     val sf = SentenceFactory.getInstance()
     lateinit var mCallBackGGA: (GGASentence) -> Unit
     lateinit var mCallBackVTG: (VTGSentence) -> Unit
     lateinit var timer: Timer
+    val isDome = true
     fun start() {
+        if (isDome) {
+            runDome()
+        }
+
+    }
+
+    private fun runDome() {
         timer = fixedRateTimer("", false, 0, 1000) {
 
             var nmeaStr = mNmeaBuilder.doTick()
@@ -48,7 +56,6 @@ object DomeManager {
             }
 
         }
-
     }
 
     /**
