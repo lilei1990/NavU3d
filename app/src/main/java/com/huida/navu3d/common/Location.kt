@@ -1,4 +1,4 @@
-package com.huida.navu3d.ui.activity
+package com.huida.navu3d.common
 
 import android.content.Context
 import com.amap.api.location.AMapLocation

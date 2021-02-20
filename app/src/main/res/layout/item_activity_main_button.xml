@@ -8,7 +8,7 @@
     android:layout_marginTop="@dimen/dp_3"
     android:layout_marginBottom="@dimen/dp_3"
     android:background="@drawable/selector_button_main"
-    tools:context=".ui.activity.MainActivity">
+    tools:context=".ui.activity.main.MainActivity">
 
 
     <TextView

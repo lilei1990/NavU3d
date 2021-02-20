@@ -3,17 +3,14 @@ package com.huida.navu3d.ui.fragment.home
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.amap.api.maps.model.LatLng
-import com.amap.api.maps.model.MarkerOptions
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
 import com.huida.navu3d.bean.NavLineData
 import com.huida.navu3d.bean.PointXYData
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.constants.Constants.EXTEND_LINE
-import com.huida.navu3d.ui.activity.NameProviderManager
+import com.huida.navu3d.common.NameProviderManager
 import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
-import com.huida.navu3d.utils.GaoDeUtils
 import com.huida.navu3d.utils.GeometryUtils
 import com.huida.navu3d.utils.PointConvert
 import java.util.*
@@ -23,13 +20,6 @@ import kotlin.math.roundToInt
 class HomeViewModel : ViewModel() {
     //当前坐标
     var mCurrenLatLng = PointXYData()
-
-    //A点坐标
-    val DataMarkerA = MutableLiveData<MarkerOptions>()
-
-    //B点坐标
-    val DataMarkerB = MutableLiveData<MarkerOptions>()
-
 
     //平行线数据
     val DataParallelLine = MutableLiveData<MutableMap<Int, Polyline>>()
@@ -57,48 +47,42 @@ class HomeViewModel : ViewModel() {
     var offsetLineDistance = 0
     var taskWorkby: WorkTaskData? = null
 
+    //A点
+    val DataPointA = MutableLiveData<PointXYData>()
+    private var pointA: PointXYData?= null
 
-    //速度,距离数据
-    private val pointAB by lazy {
-    }
+    //B点
+    val DataPointB = MutableLiveData<PointXYData>()
+    private var pointB: PointXYData?= null
 
     /**
      * 设置A点
      */
-    fun setPointA(workTaskViewModel: WorkTaskViewModel) {
-        val A = mCurrenLatLng
+    fun setPointA() {
+        pointA = mCurrenLatLng
         taskWorkby?.navLineData?.apply {
-            setStart(A)
+            setStart(pointA!!)
             save()
         }
         taskWorkby?.save()
-        DataMarkerA.postValue(markPoint(A))
-        ToastUtils.showLong(A.toString())
+        DataPointA.postValue(pointA)
+
     }
 
     /**
      * 设置B点
      */
 
-    fun setPointB(workTaskViewModel: WorkTaskViewModel) {
-        val B = mCurrenLatLng
+    fun setPointB() {
+        pointB = mCurrenLatLng
         taskWorkby?.navLineData?.apply {
-            setEnd(B)
+            setEnd(pointB!!)
             save()
         }
         taskWorkby?.save()
-        DataMarkerB.postValue(markPoint(B))
-        ToastUtils.showLong(B.toString())
+        DataPointB.postValue(pointB)
     }
 
-    private fun markPoint(point: PointXYData): MarkerOptions {
-        val options = MarkerOptions()
-        options.draggable(true)
-                .snippet("DefaultMarker")
-        options.position(GaoDeUtils.convertGPS(LatLng(point.lat, point.lng)))
-        options.isFlat = true
-        return options
-    }
 
 
     /**
@@ -183,6 +167,7 @@ class HomeViewModel : ViewModel() {
             taskWorkby?.save()
         }
         mParalleMaplLine.clear()
+        //没有任何意义,仅仅是历史数据加载时更新zoom,确定utm区域
         PointConvert.convertPoint(mA.lat, mA.lng)
         taskWorkby?.navLineData?.apply {
             val pointData: MutableList<PointXYData> = ArrayList()

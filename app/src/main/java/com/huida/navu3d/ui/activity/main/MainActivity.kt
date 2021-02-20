@@ -1,8 +1,9 @@
-package com.huida.navu3d.ui.activity
+package com.huida.navu3d.ui.activity.main
 
 import android.os.Bundle
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.databinding.ActivityMainBinding
+import com.huida.navu3d.ui.activity.unity.U3dExtActivity
 import com.lei.core.utils.PrefUtils
 import com.lei.core.utils.StatusUtils
 

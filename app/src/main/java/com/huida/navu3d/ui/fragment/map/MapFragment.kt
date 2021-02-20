@@ -2,6 +2,7 @@ package com.huida.navu3d.ui.fragment.map
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.observe
 import com.amap.api.maps.AMap
 import com.amap.api.maps.model.*
@@ -9,7 +10,6 @@ import com.amap.api.maps.model.animation.Animation
 import com.amap.api.maps.model.animation.ScaleAnimation
 import com.huida.navu3d.databinding.FragmentMapBinding
 import com.huida.navu3d.ui.fragment.home.HomeViewModel
-import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
 import com.huida.navu3d.utils.GaoDeUtils
 import com.lei.core.base.BaseVmFragment
 
@@ -20,8 +20,8 @@ import com.lei.core.base.BaseVmFragment
  * 描述 : 主菜单界面
  */
 class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::inflate) {
+    private val mapViewModel by lazy { getFragmentViewModel(MapViewModel::class.java)!! }
     private val homeViewModel by lazy { getActivityViewModel(HomeViewModel::class.java)!! }
-    private val workTaskViewModel by lazy { getActivityViewModel(WorkTaskViewModel::class.java) }
     companion object {
         fun newInstance() = MapFragment()
     }
@@ -35,25 +35,27 @@ class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::infla
     }
 
     override fun observe() {
-
-        homeViewModel.DataMarkerA.observe(this) {
-
-            GaoDeUtils.moveCameraLatLng(binding.gdMap.map, LatLng(it.position.latitude, it.position.longitude), 20f, 0f, 30f)
+        //A点
+        homeViewModel.DataPointA.observe(this) {
+            mapViewModel.DataMarkerA?:mapViewModel.DataMarkerA?.remove()
+            val markPoint = mapViewModel.markPoint(it)
+            GaoDeUtils.moveCameraLatLng(binding.gdMap.map, LatLng(markPoint.position.latitude, markPoint.position.longitude), 20f, 0f, 30f)
             val markerAnimation: Animation = ScaleAnimation(0f, 1f, 0f, 1f) //初始化生长效果动画
             markerAnimation.setDuration(1000) //设置动画时间 单位毫秒
-            val marker = binding.gdMap.map.addMarker(it)
-            marker.setAnimation(markerAnimation)
-            marker.startAnimation();
-
+            mapViewModel.DataMarkerA = binding.gdMap.map.addMarker(markPoint)
+            mapViewModel.DataMarkerA!!.setAnimation(markerAnimation)
+            mapViewModel.DataMarkerA!!.startAnimation();
         }
-        homeViewModel.DataMarkerB.observe(this) {
-
+        //B点
+        homeViewModel.DataPointB.observe(this) {
+            mapViewModel.DataMarkerB?:mapViewModel.DataMarkerB?.remove()
+            val markPoint = mapViewModel.markPoint(it)
+            GaoDeUtils.moveCameraLatLng(binding.gdMap.map, LatLng(markPoint.position.latitude, markPoint.position.longitude), 20f, 0f, 30f)
             val markerAnimation: Animation = ScaleAnimation(0f, 1f, 0f, 1f) //初始化生长效果动画
             markerAnimation.setDuration(1000) //设置动画时间 单位毫秒
-            val marker = binding.gdMap.map.addMarker(it)
-            marker.setAnimation(markerAnimation)
-            marker.startAnimation();
-
+            mapViewModel.DataMarkerB = binding.gdMap.map.addMarker(markPoint)
+            mapViewModel.DataMarkerB!!.setAnimation(markerAnimation)
+            mapViewModel.DataMarkerB!!.startAnimation();
         }
         var addPolyline: Polyline? = null
         homeViewModel.DataPointXY.observe(this) {

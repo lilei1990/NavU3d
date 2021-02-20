@@ -1,4 +1,4 @@
-package com.huida.navu3d.ui.activity
+package com.huida.navu3d.ui.activity.unity
 
 import androidx.lifecycle.ViewModel
 import com.unity3d.player.UnityPlayer

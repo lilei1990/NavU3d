@@ -1,4 +1,4 @@
-package com.huida.navu3d.ui.activity
+package com.huida.navu3d.common
 
 import net.sf.marineapi.nmea.parser.SentenceFactory
 import net.sf.marineapi.nmea.sentence.GGASentence

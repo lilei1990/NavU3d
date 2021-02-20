@@ -1,12 +1,11 @@
 package com.huida.navu3d.ui.fragment.home
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
+import android.util.Log
 import androidx.lifecycle.observe
 import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.databinding.FragmentHomeBinding
-import com.huida.navu3d.ui.activity.NameProviderManager
-import com.huida.navu3d.ui.activity.U3dViewModel
+import com.huida.navu3d.common.NameProviderManager
 import com.huida.navu3d.ui.fragment.main.MainMenuFragment
 import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
 import com.kongqw.rockerlibrary.view.RockerView
@@ -33,9 +32,6 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 
 
     private fun initU3dLayout() {
-        val u3dViewModel = activity?.let { ViewModelProvider(it).get(U3dViewModel::class.java) }!!
-//        binding.llBottom.addView(u3dViewModel.mUnityPlayer)
-//        mUnityPlayer!!.requestFocus()
         //切换地图和u3d场景
         binding.btSwitch.clickNoRepeat {
             val progress = binding.mlRoot.progress
@@ -45,8 +41,6 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
             }
             if (progress == 1.0f) {
                 binding.mlRoot.transitionToStart()
-
-
                 binding.mlRoot.bringChildToFront(binding.llTop)
             }
         }
@@ -56,11 +50,11 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
     private fun initButton() {
         binding.bt1.tvText.text = "设置A点"
         binding.bt1.itemRoot.clickNoRepeat {
-            homeViewModel!!.setPointA(workTaskViewModel)
+            homeViewModel!!.setPointA()
         }
         binding.bt2.tvText.text = "设置B点"
         binding.bt2.itemRoot.clickNoRepeat {
-            homeViewModel!!.setPointB(workTaskViewModel)
+            homeViewModel!!.setPointB()
         }
         binding.bt3.tvText.text = "生成导航线"
         binding.bt3.itemRoot.clickNoRepeat {
@@ -91,21 +85,29 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
     }
 
     override fun observe() {
-
+        //与最近导航线偏移距离
         homeViewModel.DataOffsetLineDistance.observe(this) {
             binding.incTopBar.tvLength.text = "${it}"
         }
+        //卫星数
         homeViewModel.DataSatelliteCount.observe(this) {
             binding.incTopBar.tvStatellite.text = it
         }
+        //角度
         homeViewModel.DataSteerAngle.observe(this) {
             binding.incTopBar.tvRtk.text = it
         }
-        homeViewModel.DataSteerAngle.observe(this) {
-            binding.incTopBar.tvRtk.text = it
-        }
+        //速度
         homeViewModel.DataSpeed.observe(this) {
             binding.incTopBar.tvSpeed.text = it
+        }
+        //A点
+        homeViewModel.DataPointA.observe(this) {
+            Log.d("TAG_lilei", "observeA: ")
+        }
+        //B点
+        homeViewModel.DataPointB.observe(this) {
+            Log.d("TAG_lilei", "observeB: ")
         }
     }
 

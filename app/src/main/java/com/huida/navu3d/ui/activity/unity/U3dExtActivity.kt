@@ -1,4 +1,4 @@
-package com.huida.navu3d.ui.activity
+package com.huida.navu3d.ui.activity.unity
 
 import android.content.ComponentCallbacks2
 import android.content.Intent
@@ -17,7 +17,7 @@ import com.unity3d.player.UnityPlayer
  * 作者 : lei
  * 时间 : 2021/01/27.
  * 邮箱 :416587959@qq.com
- * 描述 :这一层只处理u3d的逻辑
+ * 描述 :这一层只处理u3d的逻辑 抽取,
  */
 
 abstract class U3dExtActivity<VB : ViewBinding>(inflate: (LayoutInflater) -> VB) : BaseVmActivity<VB>(inflate),

@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.PermissionUtils.SimpleCallback
 import com.huida.navu3d.R
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.databinding.ActivitySplashBinding
+import com.huida.navu3d.ui.activity.main.MainActivity
 
 import com.lei.core.base.BaseVmActivity
 import com.lei.core.helper.PermissionHelper

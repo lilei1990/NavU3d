@@ -2,7 +2,7 @@ package com.huida.navu3d.ui.fragment.unity
 
 import android.os.Bundle
 import com.huida.navu3d.databinding.FragmentUnityBinding
-import com.huida.navu3d.ui.activity.U3dViewModel
+import com.huida.navu3d.ui.activity.unity.U3dViewModel
 import com.lei.core.base.BaseVmFragment
 
 /**

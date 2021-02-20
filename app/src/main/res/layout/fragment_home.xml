@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/teal_200"
     app:layoutDescription="@xml/activity_u3d_scene"
-    tools:context=".ui.activity.MainActivity">
+    tools:context=".ui.activity.main.MainActivity">
 
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/mlRoot"
