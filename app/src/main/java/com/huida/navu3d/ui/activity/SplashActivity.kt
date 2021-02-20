@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 
 /**
  * 开屏页
- * 权限：https://www.cnblogs.com/blosaa/p/9584348.html
  */
 class SplashActivity : BaseVmActivity<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
 

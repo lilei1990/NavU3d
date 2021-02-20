@@ -1,9 +1,8 @@
-package com.huida.navu3d.ui.activity.home
+package com.huida.navu3d.ui.fragment.home
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.amap.api.maps.AMap
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MarkerOptions
 import com.blankj.utilcode.util.ToastUtils
@@ -15,7 +14,6 @@ import com.huida.navu3d.constants.Constants.EXTEND_LINE
 import com.huida.navu3d.ui.activity.NameProviderManager
 import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
 import com.huida.navu3d.utils.GaoDeUtils
-import com.huida.navu3d.utils.GeoConvert
 import com.huida.navu3d.utils.GeometryUtils
 import com.huida.navu3d.utils.PointConvert
 import java.util.*
@@ -208,14 +206,12 @@ class HomeViewModel : ViewModel() {
             mParalleMaplLine.putAll(navLineData.budileUtmLine())
             DataParallelLine.postValue(mParalleMaplLine)
         }
-
-
     }
 
     /**
      * 轨迹
      */
-    fun DrawTrack(aMap: AMap) {
+    fun DrawTrack() {
 //        aMap.addPolyline(
 //            PolylineOptions().addAll(latLngs).width(10f).color(Color.argb(255, 1, 255, 1))
 //        )

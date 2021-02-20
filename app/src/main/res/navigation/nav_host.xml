@@ -48,6 +48,6 @@
     <!--home-->
     <fragment
         android:id="@+id/home_fragment"
-        android:name="com.huida.navu3d.ui.fragment.main.HomeFragment" />
+        android:name="com.huida.navu3d.ui.fragment.home.HomeFragment" />
 
 </navigation>
