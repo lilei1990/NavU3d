@@ -1,11 +1,5 @@
 package com.huida.navu3d.utils;
 
-import android.content.Context;
-
-import com.amap.api.maps.CoordinateConverter;
-import com.amap.api.maps.model.LatLng;
-import com.huida.navu3d.bean.PointXYData;
-
 public enum GeoConvert {
     INSTANCE;
 

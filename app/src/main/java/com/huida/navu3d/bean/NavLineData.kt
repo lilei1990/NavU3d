@@ -4,7 +4,6 @@ import com.esri.core.geometry.Operator
 import com.esri.core.geometry.OperatorFactoryLocal
 import com.esri.core.geometry.OperatorOffset
 import com.esri.core.geometry.Polyline
-import com.huida.navu3d.utils.GeometryUtils
 import org.litepal.crud.LitePalSupport
 
 /**
@@ -61,7 +60,7 @@ class NavLineData : LitePalSupport() {
     /**
      * 设置开始点
      */
-    fun setStart(mA: PointXYData) {
+    fun setStart(mA: PointData) {
         startX = mA.X
         startY = mA.Y
         startLat = mA.lat
@@ -69,8 +68,8 @@ class NavLineData : LitePalSupport() {
 
     }
 
-    fun getStart(): PointXYData {
-        val mA = PointXYData()
+    fun getStart(): PointData {
+        val mA = PointData()
         mA.X = startX
         mA.Y = startY
         mA.lat = startLat
@@ -81,15 +80,15 @@ class NavLineData : LitePalSupport() {
     /**
      * 设置结束点
      */
-    fun setEnd(mB: PointXYData) {
+    fun setEnd(mB: PointData) {
         endX = mB.X
         endY = mB.Y
         endLat = mB.lat
         endLng = mB.lng
     }
 
-    fun getEnd(): PointXYData {
-        val mB = PointXYData()
+    fun getEnd(): PointData {
+        val mB = PointData()
         mB.X = endX
         mB.Y = endY
         mB.lat = endLat

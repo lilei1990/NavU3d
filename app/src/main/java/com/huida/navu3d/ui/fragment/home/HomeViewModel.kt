@@ -5,8 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
+import com.huida.navu3d.bean.LineData
 import com.huida.navu3d.bean.NavLineData
-import com.huida.navu3d.bean.PointXYData
+import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.constants.Constants.EXTEND_LINE
 import com.huida.navu3d.common.NameProviderManager
@@ -19,7 +20,7 @@ import kotlin.math.roundToInt
 
 class HomeViewModel : ViewModel() {
     //当前坐标
-    var mCurrenLatLng = PointXYData()
+    var mCurrenLatLng = PointData()
 
     //平行线数据
     val DataParallelLine = MutableLiveData<MutableMap<Int, Polyline>>()
@@ -27,8 +28,8 @@ class HomeViewModel : ViewModel() {
 
 
     //经纬度数据,轨迹
-    val DataPointXY = MutableLiveData<MutableList<PointXYData>>()
-    val mPointXYData: MutableList<PointXYData> = ArrayList()
+    val DataPointXY = MutableLiveData<MutableList<LineData>>()
+    val mLinesData: MutableList<LineData> = ArrayList()
 
     //速度
     val DataSpeed = MutableLiveData<String>()
@@ -48,12 +49,12 @@ class HomeViewModel : ViewModel() {
     var taskWorkby: WorkTaskData? = null
 
     //A点
-    val DataPointA = MutableLiveData<PointXYData>()
-    private var pointA: PointXYData?= null
+    val DataPointA = MutableLiveData<PointData>()
+    private var pointA: PointData?= null
 
     //B点
-    val DataPointB = MutableLiveData<PointXYData>()
-    private var pointB: PointXYData?= null
+    val DataPointB = MutableLiveData<PointData>()
+    private var pointB: PointData?= null
 
     /**
      * 设置A点
@@ -91,14 +92,25 @@ class HomeViewModel : ViewModel() {
     fun start() {
         NameProviderManager.reset()
         NameProviderManager.start()
+        val lineDbManage = LineDbManage()
+        lineDbManage.build(taskWorkby)
+
+//        //每次点start的时候就代表一个新的线段
+//        val lineXYData = LineXYData()
+//        taskWorkby?.LineXYDatas?.add(lineXYData)
+//        lineXYData.save()
+//        taskWorkby?.save()
+////        val concurrentHashMap = ConcurrentHashMap<String, PointXYData>()
+//        mLinesData.add(lineXYData)
         NameProviderManager.setGGAListen {
             val position = it.position
             val latitude = position.latitude
             val longitude = position.longitude
             val pointXY = PointConvert.convertPoint(latitude, longitude)
-            mPointXYData.add(pointXY)
+            //存储点
+            lineDbManage.savePoint(pointXY)
             mCurrenLatLng = pointXY
-            DataPointXY.postValue(mPointXYData)
+//            DataPointXY.postValue(mLinesData)
             satelliteCount = "${it.satelliteCount}"
             DataSatelliteCount.postValue(satelliteCount)
             val p = Point(pointXY.X, pointXY.Y)
@@ -122,6 +134,18 @@ class HomeViewModel : ViewModel() {
 
     }
 
+    /**
+     * 数据库存储
+     */
+    fun saveDb(lineXYData: LineData) {
+        //数据每一百个点存储一次,并且抽稀操作
+        if (lineXYData.points.size%100==0) {
+            for (point in lineXYData.points) {
+                point.save()
+            }
+            lineXYData.save()
+        }
+    }
 
     /**
      * 停止
@@ -170,7 +194,7 @@ class HomeViewModel : ViewModel() {
         //没有任何意义,仅仅是历史数据加载时更新zoom,确定utm区域
         PointConvert.convertPoint(mA.lat, mA.lng)
         taskWorkby?.navLineData?.apply {
-            val pointData: MutableList<PointXYData> = ArrayList()
+            val pointData: MutableList<PointData> = ArrayList()
             //延长
             val length = EXTEND_LINE
             val distance = GeometryUtils.distanceOfTwoPoints(mA, mB)

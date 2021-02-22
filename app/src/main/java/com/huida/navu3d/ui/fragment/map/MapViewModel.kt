@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.Marker
 import com.amap.api.maps.model.MarkerOptions
-import com.huida.navu3d.bean.PointXYData
+import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.utils.GaoDeUtils
 
 
@@ -23,7 +23,7 @@ class MapViewModel : ViewModel() {
 
 
 
-     fun markPoint(point: PointXYData): MarkerOptions {
+     fun markPoint(point: PointData): MarkerOptions {
         val options = MarkerOptions()
         options.draggable(true)
                 .snippet("DefaultMarker")

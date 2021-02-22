@@ -58,17 +58,19 @@ class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::infla
             mapViewModel.DataMarkerB!!.startAnimation();
         }
         var addPolyline: Polyline? = null
+        //轨迹线
         homeViewModel.DataPointXY.observe(this) {
-            addPolyline?.apply {
-                addPolyline?.remove()
-            }
-            val latLngs = ArrayList<LatLng>()
-            for (pointXY in it) {
-                latLngs.add(GaoDeUtils.convertGPS(LatLng(pointXY.lat, pointXY.lng)))
-            }
-            addPolyline = binding.gdMap.map.addPolyline(
-                    PolylineOptions().addAll(latLngs).width(5f).color(Color.argb(255, 1, 255, 1))
-            )
+//            addPolyline?.apply {
+//                addPolyline?.remove()
+//            }
+//            val latLngs = ArrayList<LatLng>()
+//            for (pointXY in it) {
+//                latLngs.add(GaoDeUtils.convertGPS(LatLng(pointXY.lat, pointXY.lng)))
+//            }
+//            PolylineOptions().add()
+//            addPolyline = binding.gdMap.map.addPolyline(
+//                    PolylineOptions().addAll(latLngs).width(5f).color(Color.argb(255, 1, 255, 1))
+//            )
 
 
         }

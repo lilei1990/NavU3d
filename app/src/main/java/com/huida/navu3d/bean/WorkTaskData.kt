@@ -1,8 +1,5 @@
 package com.huida.navu3d.bean
 
-import com.blankj.utilcode.util.ToastUtils
-import com.huida.navu3d.constants.PointType
-import org.litepal.LitePal
 import org.litepal.crud.LitePalSupport
 
 /**
@@ -32,13 +29,13 @@ class WorkTaskData : LitePalSupport() {
     var farmTools: Int = 0
 
     //ab点
-    var pointAB: ArrayList<PointXYData>? = ArrayList()
+    var pointAB: ArrayList<PointData>? = ArrayList()
 
     //平行线数据,包含AB点
     var navLineData: NavLineData? = NavLineData()
     //轨迹数据
 
-    var LineXYDatas: ArrayList<LineXYData>? = null
+    var LineXYDatas: ArrayList<LineData>? = null
 
 
     //参考线

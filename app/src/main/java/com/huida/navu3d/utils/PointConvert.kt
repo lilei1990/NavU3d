@@ -1,8 +1,6 @@
 package com.huida.navu3d.utils
 
-import com.amap.api.maps.model.LatLng
-import com.huida.navu3d.bean.PointXYData
-import com.lei.core.BaseApp
+import com.huida.navu3d.bean.PointData
 
 /**
  * 作者 : lei
@@ -12,8 +10,8 @@ import com.lei.core.BaseApp
  */
 object PointConvert {
 
-    fun convertPoint(latitude: Double, longitude: Double): PointXYData {
-        val pointXY = PointXYData()
+    fun convertPoint(latitude: Double, longitude: Double): PointData {
+        val pointXY = PointData()
         val convertUTM = GeoConvert.INSTANCE.convertLatLonToUTM(latitude, longitude)
 
         pointXY.lat = latitude

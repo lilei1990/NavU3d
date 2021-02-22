@@ -1,7 +1,7 @@
 package com.huida.navu3d.utils
 
 import com.esri.core.geometry.*
-import com.huida.navu3d.bean.PointXYData
+import com.huida.navu3d.bean.PointData
 
 /**
  * 作者 : lei
@@ -29,7 +29,7 @@ object GeometryUtils {
      * length:线延长多远
      * 直接更改B点的坐标
      */
-    fun extLine(A: PointXYData, B: PointXYData, length: Int) {
+    fun extLine(A: PointData, B: PointData, length: Int) {
         var distance = distanceOfTwoPoints(A, B)
 
         //算出变化后和之前比例
@@ -50,7 +50,7 @@ object GeometryUtils {
      * @param pp2
      * @return
      */
-    fun distanceOfTwoPoints(pp1: PointXYData, pp2: PointXYData): Double {
+    fun distanceOfTwoPoints(pp1: PointData, pp2: PointData): Double {
         return Math.sqrt(
                 Math.pow((pp2.X - pp1.X).toDouble(), 2.0) + Math.pow((pp2.Y - pp1.Y).toDouble(), 2.0)
         )

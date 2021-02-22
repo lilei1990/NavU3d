@@ -10,7 +10,7 @@ import org.litepal.crud.LitePalSupport
  */
 
 
-class PointXYData : LitePalSupport() {
+open class PointData : LitePalSupport() {
     //0是定位点,1是A点,2是B点,3是线的点,4是引导线的点
     var type: Int = 0
 
