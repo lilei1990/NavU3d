@@ -14,12 +14,14 @@ import com.huida.navu3d.common.NameProviderManager
 import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
 import com.huida.navu3d.utils.GeometryUtils
 import com.huida.navu3d.utils.PointConvert
+import org.litepal.LitePal
 import java.util.*
 import kotlin.math.roundToInt
 
 
 class HomeViewModel : ViewModel() {
     //当前坐标
+    val DataCurrenLatLng = MutableLiveData<PointData>()
     var mCurrenLatLng = PointData()
 
     //平行线数据
@@ -32,12 +34,12 @@ class HomeViewModel : ViewModel() {
     val mLinesData: MutableList<LineData> = ArrayList()
 
     //速度
-    val DataSpeed = MutableLiveData<String>()
-    var speed = ""
+    val DataSpeed = MutableLiveData<Double>()
+    var speed = 0.0
 
     //角度
-    val DataSteerAngle = MutableLiveData<String>()
-    var steerAngle = ""
+    val DataSteerAngle = MutableLiveData<Double>()
+    var steerAngle = 0.0
 
     //卫星数
     val DataSatelliteCount = MutableLiveData<String>()
@@ -90,6 +92,7 @@ class HomeViewModel : ViewModel() {
      * 开始
      */
     fun start() {
+
         NameProviderManager.reset()
         NameProviderManager.start()
         val lineDbManage = LineDbManage()
@@ -110,6 +113,7 @@ class HomeViewModel : ViewModel() {
             //存储点
             lineDbManage.savePoint(pointXY)
             mCurrenLatLng = pointXY
+            DataCurrenLatLng.postValue(mCurrenLatLng)
 //            DataPointXY.postValue(mLinesData)
             satelliteCount = "${it.satelliteCount}"
             DataSatelliteCount.postValue(satelliteCount)
@@ -126,26 +130,15 @@ class HomeViewModel : ViewModel() {
             DataOffsetLineDistance.postValue(offsetLineDistance)
         }
         NameProviderManager.setVTGListen {
-            speed = "${(it.speedKmh * 100).roundToInt() / 1000.00}Km/h"
-            steerAngle = "${it.trueCourse}°"
+            speed =it.speedKmh
+            steerAngle =it.trueCourse
             DataSpeed.postValue(speed)
             DataSteerAngle.postValue(steerAngle)
         }
 
     }
 
-    /**
-     * 数据库存储
-     */
-    fun saveDb(lineXYData: LineData) {
-        //数据每一百个点存储一次,并且抽稀操作
-        if (lineXYData.points.size%100==0) {
-            for (point in lineXYData.points) {
-                point.save()
-            }
-            lineXYData.save()
-        }
-    }
+
 
     /**
      * 停止

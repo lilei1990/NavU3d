@@ -2,20 +2,13 @@ package com.huida.navu3d.ui.fragment.unity
 
 import android.os.Bundle
 import androidx.lifecycle.observe
-import com.amap.api.maps.model.LatLng
-import com.amap.api.maps.model.animation.Animation
-import com.amap.api.maps.model.animation.ScaleAnimation
-import com.blankj.utilcode.util.ActivityUtils
+
 import com.huida.navu3d.databinding.FragmentUnityBinding
-import com.huida.navu3d.ui.activity.main.MainActivity
 import com.huida.navu3d.ui.activity.unity.U3dViewModel
 import com.huida.navu3d.ui.fragment.home.HomeViewModel
-import com.huida.navu3d.utils.GaoDeUtils
 import com.lei.core.base.BaseVmFragment
 import com.unity3d.player.UnityPlayer
-import com.unity3d.splash.services.core.api.Intent.launch
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -42,37 +35,49 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
 
     override fun observe() {
         var str = "{\n" +
-                "\t\"x\": 31.0,\n" +
-                "\t\"y\": 121.0,\n" +
+                "\t\"x\": 449290.2745917518,\n" +
+                "\t\"y\": 4416840.592564532,\n" +
                 "\t\"yaw\": 39.0,\n" +
                 "\t\"moveSpeed\": 2.0,\n" +
                 "\t\"rotationSpeed\": 4.0\n" +
                 "}"
-        var lines = "[\n" +
+        var linesss = "[\n" +
                 "  {\"nav\":[\n" +
-                "          {\"x\":1.0,\"y\":10.0},\n" +
-                "          {\"x\":1.0,\"y\":20.0}\n" +
+                "          {\"x\":449290.2745917518,\"y\":4416840.592564532},\n" +
+                "          {\"x\":449297.6005963016,\"y\":4417740.847266125}\n" +
                 "          ],\n" +
                 "  \"name\":\"line1\"},\n" +
                 "  {\"nav\":[\n" +
-                "          {\"x\":1.0,\"y\":30.0},\n" +
-                "          {\"x\":1.0,\"y\":40.0}\n" +
+                "          {\"x\":449300.27426065726,\"y\":4416840.511190205},\n" +
+                "          {\"x\":449307.60026520706,\"y\":4417740.765891798}\n" +
                 "          ],\n" +
                 "  \"name\":\"line2\"},\n" +
                 "  {\"nav\":[\n" +
-                "          {\"x\":1.0,\"y\":50.0},\n" +
-                "          {\"x\":1.0,\"y\":60.0}\n" +
+                "          {\"x\":449300.27426065726,\"y\":4416840.511190205},\n" +
+                "          {\"x\":449307.60026520706,\"y\":4417740.765891798}\n" +
                 "          ],\n" +
                 "  \"name\":\"line3\"}\n" +
                 "  \n" +
                 "  \n" +
                 "]"
         homeViewModel.DataPointA.observe(this) {
-            moveCat()
-            //生成导航线
-            UnityPlayer.UnitySendMessage("Correspondent", "SendData", str)
+            u3dViewModel.addPoint("A")
+//            moveCat()
         }
-        UnityPlayer.UnitySendMessage("Correspondent", "BuildNavLine", lines)
+        homeViewModel.DataPointA.observe(this) {
+            u3dViewModel.addPoint("B")
+        }
+        homeViewModel.DataCurrenLatLng.observe(this) {
+
+            u3dViewModel.moveCart(it,homeViewModel.steerAngle,homeViewModel.speed)
+        }
+
+        homeViewModel.DataParallelLine.observe(this) {
+            u3dViewModel.addParallelLine(it)
+//            UnityPlayer.UnitySendMessage("Correspondent", "SendData", str)
+
+        }
+
 
 
 //        u3dViewModel.mUnityPlayer.UnitySendMessage("Manager", "Manager", str)
@@ -81,13 +86,14 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
     var a = 31.0
     fun moveCat() {
         GlobalScope.launch {
-            delay(1000)
+//            delay(1000)
+            a += 2
             var str = "{\n" +
-                    "\t\"x\": ${a++},\n" +
+                    "\t\"x\": ${a},\n" +
                     "\t\"y\": 121.0,\n" +
                     "\t\"yaw\": 39.0,\n" +
                     "\t\"moveSpeed\": 2.0,\n" +
-                    "\t\"rotationSpeed\": 4.0\n" +
+                    "\t\"rotationSpeed\": 0.0\n" +
                     "}"
             //生成导航线
             UnityPlayer.UnitySendMessage("Correspondent", "SendData", str)

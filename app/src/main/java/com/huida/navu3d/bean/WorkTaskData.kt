@@ -1,5 +1,6 @@
 package com.huida.navu3d.bean
 
+import org.litepal.LitePal
 import org.litepal.crud.LitePalSupport
 
 /**
@@ -28,21 +29,27 @@ class WorkTaskData : LitePalSupport() {
     //农具
     var farmTools: Int = 0
 
-    //ab点
-    var pointAB: ArrayList<PointData>? = ArrayList()
-
     //平行线数据,包含AB点
-    var navLineData: NavLineData? = NavLineData()
+    var navLineData: NavLineData? = null
+
     //轨迹数据
-
-    var LineXYDatas: ArrayList<LineData>? = null
-
-
-    //参考线
-    //历史轨迹
-    //标记,引导标记
+    var lines: ArrayList<LineData>? = ArrayList()
 
 
+    fun getObjId(): Long {
+        return baseObjId
+    }
+
+    /**
+     * 查询线的数据
+     */
+    fun findLines() {
+        var arr =
+            LitePal.where("worktaskdata_id=${getObjId()}")
+                .find(LineData::class.java, true)
+        lines?.clear()
+        lines?.addAll(arr)
+    }
 }
 
 

@@ -27,7 +27,7 @@ object NameProviderManager {
     }
 
     private fun runDome() {
-        timer = fixedRateTimer("", false, 0, 1000) {
+        timer = fixedRateTimer("", false, 0, 100) {
 
             var nmeaStr = mNmeaBuilder.doTick()
             val lines = nmeaStr.lines()

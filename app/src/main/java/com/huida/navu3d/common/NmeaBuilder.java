@@ -69,7 +69,7 @@ public enum NmeaBuilder {
 
         //calc the speed
         //speed = Math.Round(1.944 * stepDistance * (double)nudHz.Value, 1);
-        speed = new BigDecimal(1.944 * stepDistance * 50.0).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+        speed = new BigDecimal(1.944 * stepDistance * 10).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
 
         //lblSpeed.Text = (Math.Round(1.852 * speed, 1)).ToString();
 

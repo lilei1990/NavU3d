@@ -11,6 +11,7 @@ import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
 import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
+import kotlin.math.roundToInt
 
 
 class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
@@ -95,11 +96,11 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         }
         //角度
         homeViewModel.DataSteerAngle.observe(this) {
-            binding.incTopBar.tvRtk.text = it
+            binding.incTopBar.tvRtk.text = "${it}°"
         }
         //速度
         homeViewModel.DataSpeed.observe(this) {
-            binding.incTopBar.tvSpeed.text = it
+            binding.incTopBar.tvSpeed.text =  "${(it * 100).roundToInt() / 100.00}Km/h"
         }
         //A点
         homeViewModel.DataPointA.observe(this) {

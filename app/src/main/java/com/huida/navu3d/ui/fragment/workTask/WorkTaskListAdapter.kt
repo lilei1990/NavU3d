@@ -21,6 +21,7 @@ class WorkTaskListAdapter(context: Context?, layoutId: Int, datas: ArrayList<Wor
     override fun convert(holder: ViewHolder?, t: WorkTaskData?, position: Int) {
         holder?.setOnClickListener(R.id.clRoot) {
             viewModel.selectWorkTaskData=t
+            viewModel.selectWorkTaskData?.findLines()
             ToastUtils.showLong("${position}被点击")
             Navigation.findNavController(it)
                     .navigate(R.id.action_task_list_fragment_to_home_fragment)
