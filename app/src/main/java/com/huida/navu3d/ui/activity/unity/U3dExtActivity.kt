@@ -118,18 +118,27 @@ abstract class U3dExtActivity<VB : ViewBinding>(inflate: (LayoutInflater) -> VB)
 
     // For some reason the multiple keyevent type is not supported by the ndk.
     // Force event injection by overriding dispatchKeyEvent().
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        return if (event.action == KeyEvent.ACTION_MULTIPLE)  u3dViewModel.mUnityPlayer!!.injectEvent(
-            event
-        ) else super.dispatchKeyEvent(event)
-    }
+//    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+//        return if (event.action == KeyEvent.ACTION_MULTIPLE)  u3dViewModel.mUnityPlayer!!.injectEvent(
+//            event
+//        ) else super.dispatchKeyEvent(event)
+//    }
 
     // Pass any events not handled by (unfocused) views straight to UnityPlayer
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //如果点击的是后退键
+            return super.onKeyUp(keyCode, event);
+        }
         return  u3dViewModel.mUnityPlayer!!.injectEvent(event)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //如果点击的是后退键
+            return super.onKeyDown(keyCode, event);
+        }
+
         return  u3dViewModel.mUnityPlayer!!.injectEvent(event)
     }
 

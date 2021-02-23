@@ -45,7 +45,6 @@ object NameProviderManager {
                     //卫星信息的解析类
                     if (createParser is GGASentence) {
                         for (mCallBackGGA in mCallBackGGAs) {
-
                             mCallBackGGA(createParser)
                         }
 

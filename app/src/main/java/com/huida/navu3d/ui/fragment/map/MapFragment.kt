@@ -22,6 +22,7 @@ import com.lei.core.base.BaseVmFragment
 class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::inflate) {
     private val mapViewModel by lazy { getFragmentViewModel(MapViewModel::class.java)!! }
     private val homeViewModel by lazy { getActivityViewModel(HomeViewModel::class.java)!! }
+    val gdMap by lazy { binding.gdMap}
     companion object {
         fun newInstance() = MapFragment()
     }
@@ -29,6 +30,7 @@ class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::infla
 
 
     override fun init(savedInstanceState: Bundle?) {
+
         binding.apply {
             initMap(savedInstanceState)
         }
@@ -124,23 +126,23 @@ class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::infla
 
     // Quit Unity
     override fun onDestroy() {
-        super.onDestroy()
         //在activity执行onDestroy时执行mMapView.onDestroy()，销毁地图
-        binding.gdMap.onDestroy();
+        gdMap.onDestroy();
+        super.onDestroy()
     }
 
     // Pause Unity
     override fun onPause() {
-        super.onPause()
         //在activity执行onPause时执行mMapView.onPause ()，暂停地图的绘制
-        binding.gdMap.onPause();
+        gdMap.onPause();
+        super.onPause()
     }
 
     // Resume Unity
     override fun onResume() {
-        super.onResume()
         //在activity执行onResume时执行mMapView.onResume ()，重新绘制加载地图
-        binding.gdMap.onResume();
+        gdMap.onResume();
+        super.onResume()
     }
 
 }

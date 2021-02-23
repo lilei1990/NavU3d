@@ -2,6 +2,7 @@ package com.huida.navu3d.ui.fragment.unity
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.LinearLayout
 import androidx.lifecycle.observe
 import com.huida.navu3d.common.NameProviderManager
 
@@ -26,13 +27,14 @@ import kotlin.concurrent.fixedRateTimer
 class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding::inflate) {
     private val u3dViewModel by lazy { getActivityViewModel(U3dViewModel::class.java) }
     private val homeViewModel by lazy { getActivityViewModel(HomeViewModel::class.java)!! }
-
+  lateinit  var llRoot:LinearLayout
     companion object {
         fun newInstance() = UnityFragment()
     }
 
 
     override fun init(savedInstanceState: Bundle?) {
+        llRoot=binding.llRoot
         binding.apply {
             binding.llRoot.addView(u3dViewModel.mUnityPlayer)
             u3dViewModel.mUnityPlayer!!.requestFocus()
@@ -95,4 +97,8 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
         }
     }
 
+    override fun onDestroy() {
+        llRoot.removeAllViews()
+        super.onDestroy()
+    }
 }
