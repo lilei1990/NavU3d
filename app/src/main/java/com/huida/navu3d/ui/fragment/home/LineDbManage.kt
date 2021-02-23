@@ -60,6 +60,7 @@ class LineDbManage {
      */
     fun savePoint(pointXY: PointData) {
         lineXYData.points.add(pointXY)
-        saveDb()
+        pointXY.save()
+        lineXYData.save()
     }
 }

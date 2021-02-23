@@ -1,9 +1,11 @@
 package com.huida.navu3d.ui.activity.unity
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.esri.core.geometry.Polyline
 import com.huida.navu3d.bean.PointData
 import com.unity3d.player.UnityPlayer
+import org.jetbrains.annotations.Nullable
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -47,12 +49,20 @@ class U3dViewModel : ViewModel() {
         steerAngle: Double,
         speed: Double
     ) {
+//        Log.d("TAG_lilei", "moveCart: ${it.X}--${it.Y}")
         val json = JSONObject()
         json.put("x",it.X)
         json.put("y",it.Y)
-        json.put("yaw",39.0)
+        json.put("yaw",steerAngle)
         json.put("moveSpeed",speed)
-        json.put("rotationSpeed",steerAngle)
+        json.put("rotationSpeed",4.0)
         UnityPlayer.UnitySendMessage("Correspondent", "SendData", json.toString())
+    }
+
+    fun isShowTrack(isShow:Boolean,@Nullable color:String) {
+        val json = JSONObject()
+        json.put("isShowTrack",true)
+        json.put("colorStr",color)
+        UnityPlayer.UnitySendMessage("Correspondent", "IsShowTrack", json.toString())
     }
 }

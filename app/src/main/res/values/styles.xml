@@ -53,5 +53,12 @@
         <item name="android:padding">@dimen/dp_0</item>
     </style>
 
+    <style name="text_title">
+        <item name="android:textColor">?attr/theme_color_1</item>
+        <item name="android:textSize">@dimen/dp_19</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 
 </resources>

@@ -1,15 +1,21 @@
 package com.huida.navu3d.ui.fragment.unity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.observe
+import com.huida.navu3d.common.NameProviderManager
 
 import com.huida.navu3d.databinding.FragmentUnityBinding
 import com.huida.navu3d.ui.activity.unity.U3dViewModel
 import com.huida.navu3d.ui.fragment.home.HomeViewModel
+import com.huida.navu3d.utils.PointConvert
 import com.lei.core.base.BaseVmFragment
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import net.sf.marineapi.nmea.sentence.GGASentence
+import net.sf.marineapi.nmea.sentence.VTGSentence
+import kotlin.concurrent.fixedRateTimer
 
 /**
  * 作者 : lei
@@ -34,44 +40,33 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
     }
 
     override fun observe() {
-        var str = "{\n" +
-                "\t\"x\": 449290.2745917518,\n" +
-                "\t\"y\": 4416840.592564532,\n" +
-                "\t\"yaw\": 39.0,\n" +
-                "\t\"moveSpeed\": 2.0,\n" +
-                "\t\"rotationSpeed\": 4.0\n" +
-                "}"
-        var linesss = "[\n" +
-                "  {\"nav\":[\n" +
-                "          {\"x\":449290.2745917518,\"y\":4416840.592564532},\n" +
-                "          {\"x\":449297.6005963016,\"y\":4417740.847266125}\n" +
-                "          ],\n" +
-                "  \"name\":\"line1\"},\n" +
-                "  {\"nav\":[\n" +
-                "          {\"x\":449300.27426065726,\"y\":4416840.511190205},\n" +
-                "          {\"x\":449307.60026520706,\"y\":4417740.765891798}\n" +
-                "          ],\n" +
-                "  \"name\":\"line2\"},\n" +
-                "  {\"nav\":[\n" +
-                "          {\"x\":449300.27426065726,\"y\":4416840.511190205},\n" +
-                "          {\"x\":449307.60026520706,\"y\":4417740.765891798}\n" +
-                "          ],\n" +
-                "  \"name\":\"line3\"}\n" +
-                "  \n" +
-                "  \n" +
-                "]"
+
         homeViewModel.DataPointA.observe(this) {
             u3dViewModel.addPoint("A")
-//            moveCat()
+
         }
-        homeViewModel.DataPointA.observe(this) {
+        homeViewModel.DataPointB.observe(this) {
             u3dViewModel.addPoint("B")
         }
-        homeViewModel.DataCurrenLatLng.observe(this) {
-
-            u3dViewModel.moveCart(it,homeViewModel.steerAngle,homeViewModel.speed)
+//        homeViewModel.DataCurrenLatLng.observe(this) {
+//            u3dViewModel.moveCart(it,homeViewModel.steerAngle,homeViewModel.speed)
+//        }
+        //打开小车轨迹
+        u3dViewModel.isShowTrack(true,"FF00FF")
+        NameProviderManager.registGGAListen {
+            val position = it.position
+            val latitude = position.latitude
+            val longitude = position.longitude
+            val pointXY = PointConvert.convertPoint(latitude, longitude)
+            u3dViewModel.moveCart(pointXY,0.0,25.0)
         }
-
+        NameProviderManager.registGGAListen {
+//
+//            speed =it.speedKmh
+//            steerAngle =it.trueCourse
+//            DataSpeed.postValue(speed)
+//            DataSteerAngle.postValue(steerAngle)
+        }
         homeViewModel.DataParallelLine.observe(this) {
             u3dViewModel.addParallelLine(it)
 //            UnityPlayer.UnitySendMessage("Correspondent", "SendData", str)
@@ -83,11 +78,11 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
 //        u3dViewModel.mUnityPlayer.UnitySendMessage("Manager", "Manager", str)
     }
 
-    var a = 31.0
+    var a =1.0
     fun moveCat() {
         GlobalScope.launch {
 //            delay(1000)
-            a += 2
+            a += 1
             var str = "{\n" +
                     "\t\"x\": ${a},\n" +
                     "\t\"y\": 121.0,\n" +

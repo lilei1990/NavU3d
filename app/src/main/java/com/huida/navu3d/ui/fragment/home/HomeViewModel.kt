@@ -1,6 +1,5 @@
 package com.huida.navu3d.ui.fragment.home
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blankj.utilcode.util.ToastUtils
@@ -14,7 +13,11 @@ import com.huida.navu3d.common.NameProviderManager
 import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
 import com.huida.navu3d.utils.GeometryUtils
 import com.huida.navu3d.utils.PointConvert
-import org.litepal.LitePal
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.nio.channels.AsynchronousByteChannel
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -98,23 +101,18 @@ class HomeViewModel : ViewModel() {
         val lineDbManage = LineDbManage()
         lineDbManage.build(taskWorkby)
 
-//        //每次点start的时候就代表一个新的线段
-//        val lineXYData = LineXYData()
-//        taskWorkby?.LineXYDatas?.add(lineXYData)
-//        lineXYData.save()
-//        taskWorkby?.save()
-////        val concurrentHashMap = ConcurrentHashMap<String, PointXYData>()
-//        mLinesData.add(lineXYData)
-        NameProviderManager.setGGAListen {
+        NameProviderManager.registGGAListen {
             val position = it.position
             val latitude = position.latitude
             val longitude = position.longitude
             val pointXY = PointConvert.convertPoint(latitude, longitude)
-            //存储点
-            lineDbManage.savePoint(pointXY)
+//            GlobalScope.launch {
+//                //存储点
+//                lineDbManage.savePoint(pointXY)
+//            }
+
             mCurrenLatLng = pointXY
             DataCurrenLatLng.postValue(mCurrenLatLng)
-//            DataPointXY.postValue(mLinesData)
             satelliteCount = "${it.satelliteCount}"
             DataSatelliteCount.postValue(satelliteCount)
             val p = Point(pointXY.X, pointXY.Y)
@@ -123,13 +121,11 @@ class HomeViewModel : ViewModel() {
             polyline?.apply {
                 //计算偏移的距离
                 offsetLineDistance = (GeometryUtils.getPointToCurveDis(p, this) * 100).roundToInt()
-                Log.d("TAG_lilei", "偏移距离: " + offsetLineDistance)
             }
-
-
             DataOffsetLineDistance.postValue(offsetLineDistance)
         }
-        NameProviderManager.setVTGListen {
+        NameProviderManager.registVTGListen {
+
             speed =it.speedKmh
             steerAngle =it.trueCourse
             DataSpeed.postValue(speed)

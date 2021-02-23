@@ -29,6 +29,7 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
             initButton()
             initRockView()
         }
+        workTaskViewModel.workTaskData
     }
 
 
@@ -100,7 +101,7 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         }
         //速度
         homeViewModel.DataSpeed.observe(this) {
-            binding.incTopBar.tvSpeed.text =  "${(it * 100).roundToInt() / 100.00}Km/h"
+            binding.incTopBar.tvSpeed.text = "${(it * 100).roundToInt() / 100.00}Km/h"
         }
         //A点
         homeViewModel.DataPointA.observe(this) {
@@ -113,55 +114,60 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
     }
 
 
-
     private fun initRockView() {
         binding.rockerView.setCallBackMode(RockerView.CallBackMode.CALL_BACK_MODE_MOVE);
         binding.rockerView.setOnShakeListener(
-                RockerView.DirectionMode.DIRECTION_8,
-                object : RockerView.OnShakeListener {
-                    override fun onStart() {
+            RockerView.DirectionMode.DIRECTION_8,
+            object : RockerView.OnShakeListener {
+                override fun onStart() {
 
-                    }
+                }
 
-                    override fun direction(direction: RockerView.Direction) {
-                        LogUtils.e("摇动方向 : $direction")
-                        when (direction) {
-                            RockerView.Direction.DIRECTION_LEFT -> {
-                                NameProviderManager.setAngle(-5.0)
-                            }
-                            RockerView.Direction.DIRECTION_RIGHT -> {
-                                NameProviderManager.setAngle(5.0)
-                            }
-                            RockerView.Direction.DIRECTION_UP -> {
-                                NameProviderManager.setSpeedDistance(0.005)
-                            }
-                            RockerView.Direction.DIRECTION_DOWN -> {
-                                NameProviderManager.setSpeedDistance(-0.005)
-                            }
-                            RockerView.Direction.DIRECTION_UP_LEFT -> {
-                                NameProviderManager.setAngle(-5.0)
-                                NameProviderManager.setSpeedDistance(0.005)
-                            }
-                            RockerView.Direction.DIRECTION_UP_RIGHT -> {
-                                NameProviderManager.setAngle(5.0)
-                                NameProviderManager.setSpeedDistance(0.005)
-                            }
-                            RockerView.Direction.DIRECTION_DOWN_LEFT -> {
-                                NameProviderManager.setAngle(-5.0)
-                                NameProviderManager.setSpeedDistance(-0.005)
-                            }
-                            RockerView.Direction.DIRECTION_DOWN_RIGHT -> {
-                                NameProviderManager.setAngle(5.0)
-                                NameProviderManager.setSpeedDistance(-0.005)
-                            }
-
+                var offsetAngle = 0.001
+                var offsetSpeedDistance = 0.005
+                override fun direction(direction: RockerView.Direction) {
+                    LogUtils.e("摇动方向 : $direction")
+                    when (direction) {
+                        RockerView.Direction.DIRECTION_LEFT -> {
+                            NameProviderManager.setAngle(-offsetAngle)
                         }
-                    }
+                        RockerView.Direction.DIRECTION_RIGHT -> {
+                            NameProviderManager.setAngle(offsetAngle)
+                        }
+                        RockerView.Direction.DIRECTION_UP -> {
+                            NameProviderManager.setSpeedDistance(offsetSpeedDistance)
+                        }
+                        RockerView.Direction.DIRECTION_DOWN -> {
+                            NameProviderManager.setSpeedDistance(-offsetSpeedDistance)
+                        }
+                        RockerView.Direction.DIRECTION_UP_LEFT -> {
+                            NameProviderManager.setAngle(-offsetAngle)
+                            NameProviderManager.setSpeedDistance(offsetSpeedDistance)
+                        }
+                        RockerView.Direction.DIRECTION_UP_RIGHT -> {
+                            NameProviderManager.setAngle(offsetAngle)
+                            NameProviderManager.setSpeedDistance(offsetSpeedDistance)
+                        }
+                        RockerView.Direction.DIRECTION_DOWN_LEFT -> {
+                            NameProviderManager.setAngle(-offsetAngle)
+                            NameProviderManager.setSpeedDistance(-offsetSpeedDistance)
+                        }
+                        RockerView.Direction.DIRECTION_DOWN_RIGHT -> {
+                            NameProviderManager.setAngle(offsetAngle)
+                            NameProviderManager.setSpeedDistance(-offsetSpeedDistance)
+                        }
 
-                    override fun onFinish() {
-
                     }
-                })
+                }
+
+                override fun onFinish() {
+
+                }
+            })
     }
 
+    override fun onDestroy() {
+        NameProviderManager.clearAllRegist()
+        super.onDestroy()
+    }
 }
