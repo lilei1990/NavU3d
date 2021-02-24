@@ -41,7 +41,8 @@ public enum NmeaBuilder {
     private final SimpleDateFormat mSimpleDateFormat;
     //The checksum of an NMEA line
     private String sumStr = "";
-    double nudHz = 20.0;
+    public double nudHz = 10.0;
+
     NmeaBuilder() {//116.407387,39.904179
         latitude = 39.904179;
         longitude = 116.407387;

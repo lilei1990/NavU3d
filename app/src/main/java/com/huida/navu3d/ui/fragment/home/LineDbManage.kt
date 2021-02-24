@@ -6,6 +6,9 @@ import com.esri.core.geometry.OperatorGeneralize
 import com.huida.navu3d.bean.LineData
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.bean.WorkTaskData
+import java.util.concurrent.ConcurrentLinkedDeque
+import kotlin.concurrent.fixedRateTimer
+import kotlin.concurrent.thread
 
 /**
  * 作者 : lei
@@ -17,7 +20,9 @@ import com.huida.navu3d.bean.WorkTaskData
 class LineDbManage {
     //每次点start的时候就代表一个新的线段
     val lineXYData = LineData()
-
+    val mLineXYData = LineData()
+    //点的队列
+    val mPointQueue=ConcurrentLinkedDeque<PointData>()
     //抽稀操作
     val generalizer =
         OperatorFactoryLocal
@@ -62,5 +67,20 @@ class LineDbManage {
         lineXYData.points.add(pointXY)
         pointXY.save()
         lineXYData.save()
+    }
+    fun sendPoint(pointXY: PointData) {
+        mPointQueue.add(pointXY)
+    }
+    fun saveP() {
+        thread {
+            fixedRateTimer(period = 1000){
+                while (true) {
+                    val point = mPointQueue.poll()
+                    point?: break
+                    mLineXYData.points.add(point)
+                    point.save()
+                }
+            }
+        }.run()
     }
 }

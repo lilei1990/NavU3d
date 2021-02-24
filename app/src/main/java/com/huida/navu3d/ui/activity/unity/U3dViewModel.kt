@@ -23,16 +23,22 @@ class U3dViewModel : ViewModel() {
     /**
      * 添加导航线
      */
+    val scaleX = 1000000
+    val scaleY = 10000000
     fun addParallelLine(it: MutableMap<Int, Polyline>) {
         val lines = JSONArray()
         for ((key, value) in it) {
             val line = JSONObject()
             val startPoint = JSONObject()
             val endPoint = JSONObject()
-            startPoint.put("x", value.getPoint(0).x)
-            startPoint.put("y", value.getPoint(0).y)
-            endPoint.put("x", value.getPoint(1).x)
-            endPoint.put("y", value.getPoint(1).y)
+            var x0: Double = (value.getPoint(0).x *100)/100.00
+            var y0: Double = (value.getPoint(0).y *100)/100.00
+            var x1: Double = (value.getPoint(1).x *100)/100.00
+            var y1: Double = (value.getPoint(1).y *100)/100.00
+            startPoint.put("x", x0)
+            startPoint.put("y", y0)
+            endPoint.put("x", x1)
+            endPoint.put("y", y1)
             line.put("nav", JSONArray().put(startPoint).put(endPoint))
             line.put("name", "line1")
             lines.put(line)
@@ -44,17 +50,23 @@ class U3dViewModel : ViewModel() {
     /**
      * 小车移动
      */
+
+    var aaa:Float = 4000000.01f
     fun moveCart(
         it: PointData,
         speed: Double
     ) {
-        Log.d("TAG_lilei", "moveCart: ${it.X}--${it.Y}")
+var sss:Float= 0.01F
+        var x =Math.round(it.X*100)/100.00
+        var y =Math.round(it.Y*100)/100.00
+//        var x = (it.X * 1000).toInt()*1f/1000%scaleX
+//        var y = (it.Y * 1000).toInt()*1f/1000%scaleY
+        Log.d("TAG_lilei", "moveCart: ${x}--${y}")
         val json = JSONObject()
-        json.put("x", it.X)
-        json.put("y", it.Y)
+        json.put("x", x)
+        json.put("y", y)
         //这个速度知识插值器,当数据刷新频率达到一定程度就影响不到实际效果
         json.put("moveSpeed", speed)
-        json.put("rotationSpeed", 4.0)
         UnityPlayer.UnitySendMessage("Correspondent", "SendVData", json.toString())
     }
 
@@ -84,13 +96,20 @@ class U3dViewModel : ViewModel() {
      * 切换昼夜模式
      * “day”白天，“night”晚上
      */
-    var isSwLight=true
+    var isSwLight = false
     fun switchLight() {
-        isSwLight=!isSwLight
+        isSwLight = !isSwLight
         if (isSwLight) {
             UnityPlayer.UnitySendMessage("Correspondent", "SwitchLight", "night")
         } else {
             UnityPlayer.UnitySendMessage("Correspondent", "SwitchLight", "day")
         }
+    }
+
+    /**
+     * 场景初始化
+     */
+    fun restartScene() {
+        UnityPlayer.UnitySendMessage("Correspondent", "RestartScene", "")
     }
 }

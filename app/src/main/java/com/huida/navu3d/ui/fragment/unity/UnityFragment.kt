@@ -30,14 +30,16 @@ import kotlin.concurrent.fixedRateTimer
 class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding::inflate) {
     private val u3dViewModel by lazy { getActivityViewModel(U3dViewModel::class.java) }
     private val homeViewModel by lazy { getActivityViewModel(HomeViewModel::class.java)!! }
-  lateinit  var llRoot:LinearLayout
+    lateinit var llRoot: LinearLayout
+
     companion object {
         fun newInstance() = UnityFragment()
     }
 
 
     override fun init(savedInstanceState: Bundle?) {
-        llRoot=binding.llRoot
+        llRoot = binding.llRoot
+        u3dViewModel.restartScene()
         binding.apply {
             binding.llRoot.addView(u3dViewModel.mUnityPlayer)
             u3dViewModel.mUnityPlayer!!.requestFocus()
@@ -47,6 +49,7 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
         }
     }
 
+    var aaa = 4000000.000
     override fun observe() {
 
         homeViewModel.DataPointA.observe(this) {
@@ -56,47 +59,24 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
         homeViewModel.DataPointB.observe(this) {
             u3dViewModel.addPoint("B")
         }
-//        homeViewModel.DataCurrenLatLng.observe(this) {
-//            u3dViewModel.moveCart(it,homeViewModel.steerAngle,homeViewModel.speed)
-//        }
         //打开小车轨迹
-        u3dViewModel.isShowTrack(true,"FF00FF")
+        u3dViewModel.isShowTrack(true, "FF00FF")
         NameProviderManager.registGGAListen("UnityFragment") {
+            aaa+=0.01
             val position = it.position
             val latitude = position.latitude
             val longitude = position.longitude
             val pointXY = PointConvert.convertPoint(latitude, longitude)
-            u3dViewModel.moveCart(pointXY,0.0)
+
+            u3dViewModel.moveCart(pointXY, 1.0)
         }
         NameProviderManager.registVTGListen("UnityFragment") {
 
             u3dViewModel.cartStance(it.trueCourse)
         }
         homeViewModel.DataParallelLine.observe(this) {
-//            u3dViewModel.addParallelLine(it)
-//            UnityPlayer.UnitySendMessage("Correspondent", "SendData", str)
+            u3dViewModel.addParallelLine(it)
 
-        }
-
-
-
-//        u3dViewModel.mUnityPlayer.UnitySendMessage("Manager", "Manager", str)
-    }
-
-    var a =1.0
-    fun moveCat() {
-        GlobalScope.launch {
-//            delay(1000)
-            a += 1
-            var str = "{\n" +
-                    "\t\"x\": ${a},\n" +
-                    "\t\"y\": 121.0,\n" +
-                    "\t\"yaw\": 39.0,\n" +
-                    "\t\"moveSpeed\": 2.0,\n" +
-                    "\t\"rotationSpeed\": 0.0\n" +
-                    "}"
-            //生成导航线
-            UnityPlayer.UnitySendMessage("Correspondent", "SendData", str)
         }
     }
 

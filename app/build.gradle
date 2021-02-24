@@ -62,6 +62,7 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
 //    implementation files('..\\lib\\unity3d\\libs\\unity-classes.jar')
     kapt(Android.room.roomCompiler)
+
 }
 allprojects {
     repositories {

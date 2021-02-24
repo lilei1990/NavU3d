@@ -94,7 +94,6 @@ class HomeViewModel : ViewModel() {
      * 开始
      */
     fun start() {
-
         NameProviderManager.reset()
         NameProviderManager.start()
         val lineDbManage = LineDbManage()
@@ -167,8 +166,6 @@ class HomeViewModel : ViewModel() {
      * 画平行线
      */
     fun DrawMapParallelLine(workTaskViewModel: WorkTaskViewModel) {
-//        A ?: return ToastUtils.showLong("请添加A点")
-//        B ?: return ToastUtils.showLong("请添加B点")
         taskWorkby?.navLineData = taskWorkby?.navLineData ?: NavLineData()
         val mA = taskWorkby?.navLineData!!.getStart()
         val mB = taskWorkby?.navLineData!!.getEnd()
