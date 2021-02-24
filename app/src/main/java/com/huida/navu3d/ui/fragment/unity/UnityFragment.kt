@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
 import androidx.lifecycle.observe
+import com.blankj.utilcode.util.SPUtils
 import com.huida.navu3d.common.NameProviderManager
+import com.huida.navu3d.constants.Constants
 
 import com.huida.navu3d.databinding.FragmentUnityBinding
 import com.huida.navu3d.ui.activity.unity.U3dViewModel
 import com.huida.navu3d.ui.fragment.home.HomeViewModel
 import com.huida.navu3d.utils.PointConvert
 import com.lei.core.base.BaseVmFragment
+import com.lei.core.common.clickNoRepeat
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -38,6 +41,9 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
         binding.apply {
             binding.llRoot.addView(u3dViewModel.mUnityPlayer)
             u3dViewModel.mUnityPlayer!!.requestFocus()
+            binding.scDayNight.clickNoRepeat {
+                u3dViewModel.switchLight()
+            }
         }
     }
 
@@ -55,22 +61,19 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
 //        }
         //打开小车轨迹
         u3dViewModel.isShowTrack(true,"FF00FF")
-        NameProviderManager.registGGAListen {
+        NameProviderManager.registGGAListen("UnityFragment") {
             val position = it.position
             val latitude = position.latitude
             val longitude = position.longitude
             val pointXY = PointConvert.convertPoint(latitude, longitude)
-            u3dViewModel.moveCart(pointXY,0.0,25.0)
+            u3dViewModel.moveCart(pointXY,0.0)
         }
-        NameProviderManager.registGGAListen {
-//
-//            speed =it.speedKmh
-//            steerAngle =it.trueCourse
-//            DataSpeed.postValue(speed)
-//            DataSteerAngle.postValue(steerAngle)
+        NameProviderManager.registVTGListen("UnityFragment") {
+
+            u3dViewModel.cartStance(it.trueCourse)
         }
         homeViewModel.DataParallelLine.observe(this) {
-            u3dViewModel.addParallelLine(it)
+//            u3dViewModel.addParallelLine(it)
 //            UnityPlayer.UnitySendMessage("Correspondent", "SendData", str)
 
         }

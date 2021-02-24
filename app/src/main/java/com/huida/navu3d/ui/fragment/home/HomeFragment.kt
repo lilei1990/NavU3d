@@ -126,7 +126,6 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
                 var offsetAngle = 0.001
                 var offsetSpeedDistance = 0.005
                 override fun direction(direction: RockerView.Direction) {
-                    LogUtils.e("摇动方向 : $direction")
                     when (direction) {
                         RockerView.Direction.DIRECTION_LEFT -> {
                             NameProviderManager.setAngle(-offsetAngle)

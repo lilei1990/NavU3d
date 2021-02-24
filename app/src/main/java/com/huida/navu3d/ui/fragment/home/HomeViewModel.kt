@@ -55,11 +55,11 @@ class HomeViewModel : ViewModel() {
 
     //A点
     val DataPointA = MutableLiveData<PointData>()
-    private var pointA: PointData?= null
+    private var pointA: PointData? = null
 
     //B点
     val DataPointB = MutableLiveData<PointData>()
-    private var pointB: PointData?= null
+    private var pointB: PointData? = null
 
     /**
      * 设置A点
@@ -90,7 +90,6 @@ class HomeViewModel : ViewModel() {
     }
 
 
-
     /**
      * 开始
      */
@@ -101,7 +100,7 @@ class HomeViewModel : ViewModel() {
         val lineDbManage = LineDbManage()
         lineDbManage.build(taskWorkby)
 
-        NameProviderManager.registGGAListen {
+        NameProviderManager.registGGAListen("HomeViewModel") {
             val position = it.position
             val latitude = position.latitude
             val longitude = position.longitude
@@ -124,16 +123,15 @@ class HomeViewModel : ViewModel() {
             }
             DataOffsetLineDistance.postValue(offsetLineDistance)
         }
-        NameProviderManager.registVTGListen {
+        NameProviderManager.registVTGListen("HomeViewModel") {
 
-            speed =it.speedKmh
-            steerAngle =it.trueCourse
+            speed = it.speedKmh
+            steerAngle = it.trueCourse
             DataSpeed.postValue(speed)
             DataSteerAngle.postValue(steerAngle)
         }
 
     }
-
 
 
     /**
@@ -162,8 +160,8 @@ class HomeViewModel : ViewModel() {
 
     //补点操作
     var densifier = OperatorFactoryLocal
-            .getInstance()
-            .getOperator(Operator.Type.DensifyByLength) as OperatorDensifyByLength
+        .getInstance()
+        .getOperator(Operator.Type.DensifyByLength) as OperatorDensifyByLength
 
     /**
      * 画平行线
@@ -171,8 +169,10 @@ class HomeViewModel : ViewModel() {
     fun DrawMapParallelLine(workTaskViewModel: WorkTaskViewModel) {
 //        A ?: return ToastUtils.showLong("请添加A点")
 //        B ?: return ToastUtils.showLong("请添加B点")
-        val mA =  taskWorkby?.navLineData!!.getStart()
-        val mB =  taskWorkby?.navLineData!!.getEnd()
+        taskWorkby?.navLineData = taskWorkby?.navLineData ?: NavLineData()
+        val mA = taskWorkby?.navLineData!!.getStart()
+        val mB = taskWorkby?.navLineData!!.getEnd()
+        taskWorkby?.navLineData?.save()
         taskWorkby?.navLineData?.apply {
             setStart(mA)
             setEnd(mB)

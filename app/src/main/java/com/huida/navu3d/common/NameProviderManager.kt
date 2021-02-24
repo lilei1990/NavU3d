@@ -6,6 +6,7 @@ import net.sf.marineapi.nmea.parser.SentenceFactory
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 import kotlin.concurrent.fixedRateTimer
 
@@ -18,12 +19,10 @@ import kotlin.concurrent.fixedRateTimer
 object NameProviderManager {
     var mNmeaBuilder = NmeaBuilder.INSTANCE
     val sf = SentenceFactory.getInstance()
-     var mCallBackGGAs=ArrayList<(GGASentence) -> Unit>()
-     var mCallBackVTGs= ArrayList<(VTGSentence) -> Unit>()
-    lateinit var mCallBackGGA1: (GGASentence) -> Unit
-    lateinit var mCallBackGGA2: (GGASentence) -> Unit
-    lateinit var mCallBackVTG1: (VTGSentence) -> Unit
-    lateinit var mCallBackVTG2: (VTGSentence) -> Unit
+
+    //ConcurrentHashMap
+    var mCallBackGGAs = ConcurrentHashMap<String, (GGASentence) -> Unit>()
+    var mCallBackVTGs = ConcurrentHashMap<String, (VTGSentence) -> Unit>()
     lateinit var timer: Timer
     val isDome = true
     fun start() {
@@ -34,7 +33,7 @@ object NameProviderManager {
     }
 
     private fun runDome() {
-        val freq:Long = (1000 / mNmeaBuilder.nudHz).toLong()
+        val freq: Long = (1000 / mNmeaBuilder.nudHz).toLong()
         timer = fixedRateTimer("", false, 0, freq) {
             var nmeaStr = mNmeaBuilder.doTick()
             val lines = nmeaStr.lines()
@@ -44,7 +43,7 @@ object NameProviderManager {
                     val createParser = sf.createParser(line.toUpperCase())
                     //卫星信息的解析类
                     if (createParser is GGASentence) {
-                        for (mCallBackGGA in mCallBackGGAs) {
+                        for ((key,mCallBackGGA) in mCallBackGGAs) {
                             mCallBackGGA(createParser)
                         }
 
@@ -52,7 +51,7 @@ object NameProviderManager {
                     //地面速度信息
                     if (createParser is VTGSentence) {
 
-                        for (mCallBackVTG in mCallBackVTGs) {
+                        for ((key,mCallBackVTG) in mCallBackVTGs) {
                             mCallBackVTG(createParser)
                         }
                     }
@@ -83,12 +82,12 @@ object NameProviderManager {
     }
 
 
-    fun registGGAListen(callBackGGA: (GGASentence) -> Unit) {
-        mCallBackGGAs.add(callBackGGA)
+    fun registGGAListen(registrants:String,callBackGGA: (GGASentence) -> Unit) {
+        mCallBackGGAs.put(registrants,callBackGGA)
     }
 
-    fun registVTGListen(callBackVTG: (VTGSentence) -> Unit) {
-        mCallBackVTGs.add(callBackVTG)
+    fun registVTGListen(registrants:String,callBackVTG: (VTGSentence) -> Unit) {
+        mCallBackVTGs.put(registrants,callBackVTG)
     }
 
     fun clearAllRegist() {
