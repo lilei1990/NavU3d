@@ -12,7 +12,7 @@ import org.litepal.crud.LitePalSupport
  * 邮箱 :416587959@qq.com
  * 描述 : 导航线
  */
-class NavLineData : LitePalSupport() {
+class GuideLineData : LitePalSupport() {
     //索引,所在的位置
     var index: Int = 0
     var startX: Double = 0.0

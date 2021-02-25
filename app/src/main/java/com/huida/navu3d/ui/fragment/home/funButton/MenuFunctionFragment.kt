@@ -2,6 +2,7 @@ package com.huida.navu3d.ui.fragment.home.funButton
 
 import android.os.Bundle
 import com.huida.navu3d.databinding.FragmentHomeMenuFunctionBinding
+import com.huida.navu3d.ui.activity.unity.U3dVM
 import com.huida.navu3d.ui.fragment.home.HomeVM
 import com.huida.navu3d.ui.fragment.workTask.WorkTaskVM
 import com.lei.core.base.BaseVmFragment
@@ -15,6 +16,7 @@ import com.lei.core.common.clickNoRepeat
  */
 class MenuFunctionFragment : BaseVmFragment<FragmentHomeMenuFunctionBinding>(FragmentHomeMenuFunctionBinding::inflate) {
     private val homeViewModel by lazy { getActivityViewModel(HomeVM::class.java)!! }
+    private val u3dVM by lazy { getActivityViewModel(U3dVM::class.java) }
     private val workTaskViewModel by lazy { getActivityViewModel(WorkTaskVM::class.java) }
     override fun init(savedInstanceState: Bundle?) {
         binding.apply {
@@ -42,15 +44,20 @@ class MenuFunctionFragment : BaseVmFragment<FragmentHomeMenuFunctionBinding>(Fra
         binding.bt5.itemRoot.clickNoRepeat {
             homeViewModel!!.start()
         }
-        binding.bt6.tvText.text = "暂停"
+        binding.bt6.tvText.text = "录制"
         binding.bt6.itemRoot.clickNoRepeat {
-            homeViewModel!!.stop()
+            //打开小车轨迹
+            u3dVM.isShowTrack(true, "FF00FF")
+            homeViewModel!!.saveRecord()
         }
-        binding.bt7.tvText.text = "停止"
+        binding.bt7.tvText.text = "暂停"
         binding.bt7.itemRoot.clickNoRepeat {
+            homeViewModel!!.pause()
+        }
+        binding.bt8.tvText.text = "停止"
+        binding.bt8.itemRoot.clickNoRepeat {
             homeViewModel!!.stop()
         }
-
 
     }
 }

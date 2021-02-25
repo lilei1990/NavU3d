@@ -13,7 +13,7 @@ import org.json.JSONObject
 import kotlin.math.roundToInt
 
 
-class U3dViewModel : ViewModel() {
+class U3dVM : ViewModel() {
     var mUnityPlayer: UnityPlayer? = null
 
     /**

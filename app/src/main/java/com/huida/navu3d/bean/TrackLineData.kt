@@ -8,7 +8,7 @@ import org.litepal.crud.LitePalSupport
  * 邮箱 :416587959@qq.com
  * 描述 :轨迹线的数据
  */
-class LineData : LitePalSupport() {
+class TrackLineData : LitePalSupport() {
     var startX: Double = 0.0
     var startY: Double = 0.0
     var startLat: Double = 0.0

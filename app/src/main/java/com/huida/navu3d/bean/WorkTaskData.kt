@@ -30,10 +30,10 @@ class WorkTaskData : LitePalSupport() {
     var farmTools: Int = 0
 
     //平行线数据,包含AB点
-    var navLineData: NavLineData? = null
+    var guideLineData: GuideLineData? = null
 
     //轨迹数据
-    var lines: ArrayList<LineData>? = ArrayList()
+    var lines: ArrayList<TrackLineData>? = ArrayList()
 
 
     fun getObjId(): Long {
@@ -46,7 +46,7 @@ class WorkTaskData : LitePalSupport() {
     fun findLines() {
         var arr =
             LitePal.where("worktaskdata_id=${getObjId()}")
-                .find(LineData::class.java, true)
+                .find(TrackLineData::class.java, true)
         lines?.clear()
         lines?.addAll(arr)
     }

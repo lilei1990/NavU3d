@@ -5,7 +5,7 @@ import android.widget.LinearLayout
 import androidx.lifecycle.observe
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.databinding.FragmentUnityBinding
-import com.huida.navu3d.ui.activity.unity.U3dViewModel
+import com.huida.navu3d.ui.activity.unity.U3dVM
 import com.huida.navu3d.ui.fragment.home.HomeVM
 import com.huida.navu3d.utils.PointConvert
 import com.lei.core.base.BaseVmFragment
@@ -18,7 +18,7 @@ import com.lei.core.common.clickNoRepeat
  * 描述 : 主菜单界面
  */
 class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding::inflate) {
-    private val u3dViewModel by lazy { getActivityViewModel(U3dViewModel::class.java) }
+    private val u3dViewModel by lazy { getActivityViewModel(U3dVM::class.java) }
     private val homeFragmentBean by lazy { getActivityViewModel(HomeVM::class.java)!!.homeFragmentBean }
     lateinit var llRoot: LinearLayout
 
@@ -47,8 +47,7 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
         homeFragmentBean.pointB.observe(this) {
             u3dViewModel.addPoint("B")
         }
-        //打开小车轨迹
-        u3dViewModel.isShowTrack(true, "FF00FF")
+
         NmeaProviderManager.registGGAListen("UnityFragment") {
             val position = it.position
             val latitude = position.latitude

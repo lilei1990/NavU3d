@@ -3,7 +3,7 @@ package com.huida.navu3d.ui.fragment.home
 import com.esri.core.geometry.Operator
 import com.esri.core.geometry.OperatorFactoryLocal
 import com.esri.core.geometry.OperatorGeneralize
-import com.huida.navu3d.bean.LineData
+import com.huida.navu3d.bean.TrackLineData
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.bean.WorkTaskData
 import java.util.concurrent.ConcurrentLinkedDeque
@@ -19,8 +19,8 @@ import kotlin.concurrent.thread
 
 class LineDbManage {
     //每次点start的时候就代表一个新的线段
-    val lineXYData = LineData()
-    val mLineXYData = LineData()
+    val lineXYData = TrackLineData()
+    val mLineXYData = TrackLineData()
     //点的队列
     val mPointQueue=ConcurrentLinkedDeque<PointData>()
     //抽稀操作

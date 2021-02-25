@@ -5,6 +5,7 @@ import com.huida.navu3d.common.NmeaProviderManager
 import kotlinx.coroutines.*
 import org.junit.Test
 import java.lang.Thread.sleep
+import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.concurrent.fixedRateTimer
 import kotlin.concurrent.thread
@@ -24,29 +25,33 @@ class TestP {
 //    longitude = 116.407387
     @Test
     fun test() {
-        GlobalScope.launch {
-            async {
-
-            }
-            launch(Dispatchers.IO) {
-                while (true) {
-                    println("${Thread.currentThread()}-1")
-                    sleep(1000)
-                }
-            }
-            launch(Dispatchers.IO) {
-                while (true) {
-                    println("${Thread.currentThread()}-1")
-                    sleep(1000)
-                }
-            }
-            withContext(Dispatchers.IO) {
-                while (true) {
-                    println("${Thread.currentThread()}-2")
-                    sleep(1000)
-                }
-            }
+        //循环任务
+        var timer: Timer = fixedRateTimer("", true, 0, 1000) {
+            println("1111")
         }
+//        GlobalScope.launch {
+//            async {
+//
+//            }
+//            launch(Dispatchers.IO) {
+//                while (true) {
+//                    println("${Thread.currentThread()}-1")
+//                    sleep(1000)
+//                }
+//            }
+//            launch(Dispatchers.IO) {
+//                while (true) {
+//                    println("${Thread.currentThread()}-1")
+//                    sleep(1000)
+//                }
+//            }
+//            withContext(Dispatchers.IO) {
+//                while (true) {
+//                    println("${Thread.currentThread()}-2")
+//                    sleep(1000)
+//                }
+//            }
+//        }
         sleep(100000000)
     }
 

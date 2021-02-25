@@ -3,9 +3,9 @@ package com.huida.navu3d.ui.fragment.home
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.observe
-import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.databinding.FragmentHomeBinding
+import com.huida.navu3d.ui.activity.unity.U3dVM
 import com.huida.navu3d.ui.fragment.workTask.WorkTaskVM
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
@@ -13,16 +13,19 @@ import kotlin.math.roundToInt
 
 
 class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
-    private val homeVM by lazy { getActivityViewModel(HomeVM::class.java)!! }
+    private val homeVM by lazy { getActivityViewModel(HomeVM::class.java) }
+
     private val workTaskViewModel by lazy { getActivityViewModel(WorkTaskVM::class.java) }
 
 
     override fun init(savedInstanceState: Bundle?) {
-//        homeViewModel.taskWorkby = workTaskViewModel.selectWorkTaskData
+        workTaskViewModel.selectWorkTaskData?.apply {
+            homeVM.setWorkTaskData(this)
+        }
         binding.apply {
+
             initU3dLayout()
         }
-        workTaskViewModel.workTaskData
     }
 
 

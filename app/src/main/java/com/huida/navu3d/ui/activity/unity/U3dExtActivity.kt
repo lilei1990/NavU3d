@@ -22,7 +22,7 @@ import com.unity3d.player.UnityPlayer
 
 abstract class U3dExtActivity<VB : ViewBinding>(inflate: (LayoutInflater) -> VB) : BaseVmActivity<VB>(inflate),
     IUnityPlayerLifecycleEvents {
-    val u3dViewModel by lazy { getActivityViewModel(U3dViewModel::class.java)!! }
+    val u3dViewModel by lazy { getActivityViewModel(U3dVM::class.java)!! }
     // don't change the name of this variable; referenced from native code
 
     override fun onCreate(savedInstanceState: Bundle?) {

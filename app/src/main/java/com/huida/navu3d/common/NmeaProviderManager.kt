@@ -1,16 +1,10 @@
 package com.huida.navu3d.common
 
-import android.util.Log
-import com.huida.navu3d.ui.fragment.home.NmeaRepo
-import com.huida.navu3d.utils.GeoConvert
 import net.sf.marineapi.nmea.parser.SentenceFactory
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentLinkedDeque
-import java.util.concurrent.ConcurrentLinkedQueue
-import kotlin.collections.ArrayList
 import kotlin.concurrent.fixedRateTimer
 
 /**
@@ -35,10 +29,7 @@ object NmeaProviderManager {
 
     }
 
-    fun start(repo: NmeaRepo) {
 
-
-    }
 
     private fun runDome() {
         val freq: Long = (1000 / mNmeaBuilder.nudHz).toLong()

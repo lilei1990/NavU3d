@@ -1,6 +1,6 @@
 package com.huida.navu3d.db
 
-import com.huida.navu3d.bean.LineData
+import com.huida.navu3d.bean.TrackLineData
 import org.litepal.LitePal
 
 /**
@@ -11,6 +11,6 @@ import org.litepal.LitePal
  */
 object LitePalManage {
     fun findLineDataTable(){
-        LitePal.deleteAll(LineData::class.java,"worktaskdata_id=?","")
+        LitePal.deleteAll(TrackLineData::class.java,"worktaskdata_id=?","")
     }
 }
