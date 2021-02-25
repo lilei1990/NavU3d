@@ -2,12 +2,15 @@ package com.huida.navu3d.ui.activity.unity
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.esri.core.geometry.Polyline
 import com.huida.navu3d.bean.PointData
 import com.unity3d.player.UnityPlayer
+import kotlinx.coroutines.launch
 import org.jetbrains.annotations.Nullable
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.math.roundToInt
 
 
 class U3dViewModel : ViewModel() {
@@ -17,13 +20,14 @@ class U3dViewModel : ViewModel() {
      * 设置标记点
      */
     fun addPoint(s: String) {
+
         UnityPlayer.UnitySendMessage("Correspondent", "SetSignBrand", s)
     }
 
     /**
      * 添加导航线
      */
-    val scaleX = 1000000
+    val scale = 100.0
     val scaleY = 10000000
     fun addParallelLine(it: MutableMap<Int, Polyline>) {
         val lines = JSONArray()
@@ -31,10 +35,10 @@ class U3dViewModel : ViewModel() {
             val line = JSONObject()
             val startPoint = JSONObject()
             val endPoint = JSONObject()
-            var x0: Double = (value.getPoint(0).x *100)/100.00
-            var y0: Double = (value.getPoint(0).y *100)/100.00
-            var x1: Double = (value.getPoint(1).x *100)/100.00
-            var y1: Double = (value.getPoint(1).y *100)/100.00
+            var x0: Double = (value.getPoint(0).x *100).toInt()/scale
+            var y0: Double = (value.getPoint(0).y *100).toInt()/scale
+            var x1: Double = (value.getPoint(1).x *100).toInt()/scale
+            var y1: Double = (value.getPoint(1).y *100).toInt()/scale
             startPoint.put("x", x0)
             startPoint.put("y", y0)
             endPoint.put("x", x1)
@@ -50,15 +54,12 @@ class U3dViewModel : ViewModel() {
     /**
      * 小车移动
      */
-
-    var aaa:Float = 4000000.01f
     fun moveCart(
         it: PointData,
         speed: Double
     ) {
-var sss:Float= 0.01F
-        var x =Math.round(it.X*100)/100.00
-        var y =Math.round(it.Y*100)/100.00
+        var x = (it.X ).toFloat()
+        var y = (it.Y ).toFloat()
 //        var x = (it.X * 1000).toInt()*1f/1000%scaleX
 //        var y = (it.Y * 1000).toInt()*1f/1000%scaleY
         Log.d("TAG_lilei", "moveCart: ${x}--${y}")

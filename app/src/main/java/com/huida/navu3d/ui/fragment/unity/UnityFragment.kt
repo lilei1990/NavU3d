@@ -1,25 +1,14 @@
 package com.huida.navu3d.ui.fragment.unity
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.LinearLayout
 import androidx.lifecycle.observe
-import com.blankj.utilcode.util.SPUtils
 import com.huida.navu3d.common.NameProviderManager
-import com.huida.navu3d.constants.Constants
-
 import com.huida.navu3d.databinding.FragmentUnityBinding
 import com.huida.navu3d.ui.activity.unity.U3dViewModel
 import com.huida.navu3d.ui.fragment.home.HomeViewModel
 import com.huida.navu3d.utils.PointConvert
 import com.lei.core.base.BaseVmFragment
-import com.lei.core.common.clickNoRepeat
-import com.unity3d.player.UnityPlayer
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import net.sf.marineapi.nmea.sentence.GGASentence
-import net.sf.marineapi.nmea.sentence.VTGSentence
-import kotlin.concurrent.fixedRateTimer
 
 /**
  * 作者 : lei

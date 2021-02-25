@@ -3,11 +3,8 @@ package com.huida.navu3d
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.common.NameProviderManager
 import com.huida.navu3d.utils.GeoConvert
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import org.junit.Test
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentLinkedDeque
@@ -25,16 +22,36 @@ import kotlin.coroutines.EmptyCoroutineContext
 class TestP {
     //点的队列
     val mPointQueue = ConcurrentLinkedQueue<Int>()
+
     //116.407387,39.904179
 //    latitude = 39.904179
 //    longitude = 116.407387
     @Test
     fun test() {
-        for (i in 0..31) {
-            val convertLatLonToUTM = GeoConvert.INSTANCE.convertLatLonToUTM(i*1.0, 116.407387)
-            println(convertLatLonToUTM[0])
+        GlobalScope.launch {
+            async {
+
+            }
+            launch(Dispatchers.IO) {
+                while (true) {
+                    println("${Thread.currentThread()}-1")
+                    sleep(1000)
+                }
+            }
+            launch(Dispatchers.IO) {
+                while (true) {
+                    println("${Thread.currentThread()}-1")
+                    sleep(1000)
+                }
+            }
+            withContext(Dispatchers.IO) {
+                while (true) {
+                    println("${Thread.currentThread()}-2")
+                    sleep(1000)
+                }
+            }
         }
-        val gaussToBLToGauss = GeoCvUt.GaussToBLToGauss(116.404269, 39.982638)
+        sleep(100000000)
     }
 
     fun runTest2() {

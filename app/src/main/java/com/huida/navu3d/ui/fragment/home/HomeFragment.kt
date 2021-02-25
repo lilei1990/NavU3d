@@ -27,7 +27,6 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         binding.apply {
             initU3dLayout()
             initButton()
-            initRockView()
         }
         workTaskViewModel.workTaskData
     }
@@ -114,56 +113,6 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
     }
 
 
-    private fun initRockView() {
-        binding.rockerView.setCallBackMode(RockerView.CallBackMode.CALL_BACK_MODE_MOVE);
-        binding.rockerView.setOnShakeListener(
-            RockerView.DirectionMode.DIRECTION_8,
-            object : RockerView.OnShakeListener {
-                override fun onStart() {
-
-                }
-
-                var offsetAngle = 0.01
-                var offsetSpeedDistance = 0.005
-                override fun direction(direction: RockerView.Direction) {
-                    when (direction) {
-                        RockerView.Direction.DIRECTION_LEFT -> {
-                            NameProviderManager.setAngle(-offsetAngle)
-                        }
-                        RockerView.Direction.DIRECTION_RIGHT -> {
-                            NameProviderManager.setAngle(offsetAngle)
-                        }
-                        RockerView.Direction.DIRECTION_UP -> {
-                            NameProviderManager.setSpeedDistance(offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_DOWN -> {
-                            NameProviderManager.setSpeedDistance(-offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_UP_LEFT -> {
-                            NameProviderManager.setAngle(-offsetAngle)
-                            NameProviderManager.setSpeedDistance(offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_UP_RIGHT -> {
-                            NameProviderManager.setAngle(offsetAngle)
-                            NameProviderManager.setSpeedDistance(offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_DOWN_LEFT -> {
-                            NameProviderManager.setAngle(-offsetAngle)
-                            NameProviderManager.setSpeedDistance(-offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_DOWN_RIGHT -> {
-                            NameProviderManager.setAngle(offsetAngle)
-                            NameProviderManager.setSpeedDistance(-offsetSpeedDistance)
-                        }
-
-                    }
-                }
-
-                override fun onFinish() {
-
-                }
-            })
-    }
 
     override fun onDestroy() {
         NameProviderManager.clearAllRegist()
