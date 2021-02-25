@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
  */
 class FarmMachineryConfigFragment :
     BaseVmFragment<FragmentFarmMachineryConfigBinding>(FragmentFarmMachineryConfigBinding::inflate){
-    private val viewModel by lazy { getFragmentViewModel(FarmMachineryVM::class.java) }
+    private val viewModel by lazy { getActivityViewModel(FarmMachineryVM::class.java) }
 
     companion object {
         fun newInstance() =

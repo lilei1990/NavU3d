@@ -19,7 +19,7 @@ import com.lei.core.common.clickNoRepeat
  */
 class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding::inflate) {
     private val u3dViewModel by lazy { getActivityViewModel(U3dViewModel::class.java) }
-    private val homeViewModel by lazy { getFragmentViewModel(HomeVM::class.java)!! }
+    private val homeFragmentBean by lazy { getActivityViewModel(HomeVM::class.java)!!.homeFragmentBean }
     lateinit var llRoot: LinearLayout
 
     companion object {
@@ -39,32 +39,28 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
         }
     }
 
-    var aaa = 4000000.000
     override fun observe() {
-
-        homeViewModel.DataPointA.observe(this) {
+        homeFragmentBean.pointA.observe(this) {
             u3dViewModel.addPoint("A")
 
         }
-        homeViewModel.DataPointB.observe(this) {
+        homeFragmentBean.pointB.observe(this) {
             u3dViewModel.addPoint("B")
         }
         //打开小车轨迹
         u3dViewModel.isShowTrack(true, "FF00FF")
         NmeaProviderManager.registGGAListen("UnityFragment") {
-            aaa+=0.01
             val position = it.position
             val latitude = position.latitude
             val longitude = position.longitude
             val pointXY = PointConvert.convertPoint(latitude, longitude)
-
             u3dViewModel.moveCart(pointXY, 1.0)
         }
         NmeaProviderManager.registVTGListen("UnityFragment") {
 
             u3dViewModel.cartStance(it.trueCourse)
         }
-        homeViewModel.DataParallelLine.observe(this) {
+        homeFragmentBean.DataParallelLine.observe(this) {
             u3dViewModel.addParallelLine(it)
 
         }

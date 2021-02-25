@@ -14,7 +14,7 @@ import com.lei.core.common.clickNoRepeat
  * 描述 :
  */
 class MenuFunctionFragment : BaseVmFragment<FragmentHomeMenuFunctionBinding>(FragmentHomeMenuFunctionBinding::inflate) {
-    private val homeViewModel by lazy { getFragmentViewModel(HomeVM::class.java)!! }
+    private val homeViewModel by lazy { getActivityViewModel(HomeVM::class.java)!! }
     private val workTaskViewModel by lazy { getActivityViewModel(WorkTaskVM::class.java) }
     override fun init(savedInstanceState: Bundle?) {
         binding.apply {
@@ -32,11 +32,10 @@ class MenuFunctionFragment : BaseVmFragment<FragmentHomeMenuFunctionBinding>(Fra
         }
         binding.bt3.tvText.text = "生成导航线"
         binding.bt3.itemRoot.clickNoRepeat {
-            homeViewModel!!.DrawMapParallelLine(workTaskViewModel)
+//            homeViewModel!!.homeFragmentBean.DrawMapParallelLine(workTaskViewModel)
         }
         binding.bt4.tvText.text = "刷新线"
         binding.bt4.itemRoot.clickNoRepeat {
-            homeViewModel!!.DrawTrack()
         }
 
         binding.bt5.tvText.text = "开始"

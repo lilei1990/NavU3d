@@ -1,6 +1,7 @@
 package com.huida.navu3d.common
 
 import android.util.Log
+import com.huida.navu3d.ui.fragment.home.NmeaRepo
 import com.huida.navu3d.utils.GeoConvert
 import net.sf.marineapi.nmea.parser.SentenceFactory
 import net.sf.marineapi.nmea.sentence.GGASentence
@@ -34,6 +35,11 @@ object NmeaProviderManager {
 
     }
 
+    fun start(repo: NmeaRepo) {
+
+
+    }
+
     private fun runDome() {
         val freq: Long = (1000 / mNmeaBuilder.nudHz).toLong()
         timer = fixedRateTimer("", false, 0, freq) {
@@ -45,7 +51,7 @@ object NmeaProviderManager {
                     val createParser = sf.createParser(line.toUpperCase())
                     //卫星信息的解析类
                     if (createParser is GGASentence) {
-                        for ((key,mCallBackGGA) in mCallBackGGAs) {
+                        for ((key, mCallBackGGA) in mCallBackGGAs) {
                             mCallBackGGA(createParser)
                         }
 
@@ -53,7 +59,7 @@ object NmeaProviderManager {
                     //地面速度信息
                     if (createParser is VTGSentence) {
 
-                        for ((key,mCallBackVTG) in mCallBackVTGs) {
+                        for ((key, mCallBackVTG) in mCallBackVTGs) {
                             mCallBackVTG(createParser)
                         }
                     }
@@ -84,12 +90,12 @@ object NmeaProviderManager {
     }
 
 
-    fun registGGAListen(registrants:String,callBackGGA: (GGASentence) -> Unit) {
-        mCallBackGGAs.put(registrants,callBackGGA)
+    fun registGGAListen(registrants: String, callBackGGA: (GGASentence) -> Unit) {
+        mCallBackGGAs.put(registrants, callBackGGA)
     }
 
-    fun registVTGListen(registrants:String,callBackVTG: (VTGSentence) -> Unit) {
-        mCallBackVTGs.put(registrants,callBackVTG)
+    fun registVTGListen(registrants: String, callBackVTG: (VTGSentence) -> Unit) {
+        mCallBackVTGs.put(registrants, callBackVTG)
     }
 
     fun clearAllRegist() {

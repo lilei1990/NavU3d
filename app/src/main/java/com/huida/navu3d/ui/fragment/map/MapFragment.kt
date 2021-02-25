@@ -19,8 +19,8 @@ import com.lei.core.base.BaseVmFragment
  * 描述 : 主菜单界面
  */
 class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::inflate) {
-    private val mapViewModel by lazy { getFragmentViewModel(MapVM::class.java)!! }
-    private val homeViewModel by lazy { getFragmentViewModel(HomeVM::class.java)!! }
+    private val mapViewModel by lazy { getActivityViewModel(MapVM::class.java)}
+    private val homeFragmentBean by lazy { getActivityViewModel(HomeVM::class.java).homeFragmentBean  }
     val gdMap by lazy { binding.gdMap}
     companion object {
         fun newInstance() = MapFragment()
@@ -37,7 +37,7 @@ class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::infla
 
     override fun observe() {
         //A点
-        homeViewModel.DataPointA.observe(this) {
+        homeFragmentBean.pointA.observe(this) {
             mapViewModel.DataMarkerA?:mapViewModel.DataMarkerA?.remove()
             val markPoint = mapViewModel.markPoint(it)
             GaoDeUtils.moveCameraLatLng(binding.gdMap.map, LatLng(markPoint.position.latitude, markPoint.position.longitude), 20f, 0f, 30f)
@@ -48,7 +48,7 @@ class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::infla
             mapViewModel.DataMarkerA!!.startAnimation();
         }
         //B点
-        homeViewModel.DataPointB.observe(this) {
+        homeFragmentBean.pointB.observe(this) {
             mapViewModel.DataMarkerB?:mapViewModel.DataMarkerB?.remove()
             val markPoint = mapViewModel.markPoint(it)
             GaoDeUtils.moveCameraLatLng(binding.gdMap.map, LatLng(markPoint.position.latitude, markPoint.position.longitude), 20f, 0f, 30f)
@@ -60,22 +60,22 @@ class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::infla
         }
         var addPolyline: Polyline? = null
         //轨迹线
-        homeViewModel.DataPointXY.observe(this) {
-//            addPolyline?.apply {
-//                addPolyline?.remove()
-//            }
-//            val latLngs = ArrayList<LatLng>()
-//            for (pointXY in it) {
-//                latLngs.add(GaoDeUtils.convertGPS(LatLng(pointXY.lat, pointXY.lng)))
-//            }
-//            PolylineOptions().add()
-//            addPolyline = binding.gdMap.map.addPolyline(
-//                    PolylineOptions().addAll(latLngs).width(5f).color(Color.argb(255, 1, 255, 1))
-//            )
-
-
-        }
-        homeViewModel.DataParallelLine.observe(this) {
+//        homeFragmentBean.DataPointXY.observe(this) {
+////            addPolyline?.apply {
+////                addPolyline?.remove()
+////            }
+////            val latLngs = ArrayList<LatLng>()
+////            for (pointXY in it) {
+////                latLngs.add(GaoDeUtils.convertGPS(LatLng(pointXY.lat, pointXY.lng)))
+////            }
+////            PolylineOptions().add()
+////            addPolyline = binding.gdMap.map.addPolyline(
+////                    PolylineOptions().addAll(latLngs).width(5f).color(Color.argb(255, 1, 255, 1))
+////            )
+//
+//
+//        }
+        homeFragmentBean.DataParallelLine.observe(this) {
             for ((key, polyline) in it) {
                 val latLngs: MutableList<LatLng> = ArrayList()
 

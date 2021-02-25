@@ -16,7 +16,7 @@ import java.net.UnknownHostException
  * @author zs
  */
 
-open class BaseViewModel:ViewModel() {
+open class BaseViewModel: ViewModel() {
 
     /**
      * 错误信息liveData

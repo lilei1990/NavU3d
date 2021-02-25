@@ -3,6 +3,7 @@ package com.huida.navu3d.ui.fragment.home
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.observe
+import com.blankj.utilcode.util.LogUtils
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.databinding.FragmentHomeBinding
 import com.huida.navu3d.ui.fragment.workTask.WorkTaskVM
@@ -12,12 +13,12 @@ import kotlin.math.roundToInt
 
 
 class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
-    private val homeViewModel by lazy { getFragmentViewModel(HomeVM::class.java)!! }
+    private val homeVM by lazy { getActivityViewModel(HomeVM::class.java)!! }
     private val workTaskViewModel by lazy { getActivityViewModel(WorkTaskVM::class.java) }
 
 
     override fun init(savedInstanceState: Bundle?) {
-        homeViewModel.taskWorkby = workTaskViewModel.selectWorkTaskData
+//        homeViewModel.taskWorkby = workTaskViewModel.selectWorkTaskData
         binding.apply {
             initU3dLayout()
         }
@@ -43,32 +44,31 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 
 
     override fun observe() {
-        //与最近导航线偏移距离
-        homeViewModel.DataOffsetLineDistance.observe(this) {
+        val homeFragmentBean = homeVM.homeFragmentBean
+        homeFragmentBean.offsetLineDistance.observe(this) {
+            //与最近导航线偏移距离
             binding.incTopBar.tvLength.text = "${it}"
         }
-        //卫星数
-        homeViewModel.DataSatelliteCount.observe(this) {
-            binding.incTopBar.tvStatellite.text = it
+        homeFragmentBean.satelliteCount.observe(this) {
+            //卫星数
+            binding.incTopBar.tvStatellite.text = "${it}"
         }
-        //角度
-        homeViewModel.DataSteerAngle.observe(this) {
-            binding.incTopBar.tvRtk.text = "${it}°"
+        homeFragmentBean.steerAngle.observe(this) {
+            //角度
+            binding.incTopBar.tvRtk.text = "${it}"
         }
-        //速度
-        homeViewModel.DataSpeed.observe(this) {
+        homeFragmentBean.speed.observe(this) {
+            //速度
             binding.incTopBar.tvSpeed.text = "${(it * 100).roundToInt() / 100.00}Km/h"
+//            binding.incTopBar.tvSpeed.text = "${it}Km/h"
         }
-        //A点
-        homeViewModel.DataPointA.observe(this) {
-            Log.d("TAG_lilei", "observeA: ")
+        homeVM.vtgData.observe(this) {
+            Log.d("TAG", "observe: lil0ei")
         }
-        //B点
-        homeViewModel.DataPointB.observe(this) {
-            Log.d("TAG_lilei", "observeB: ")
+        homeVM.ggaData.observe(this) {
+            Log.d("TAG", "observe: lil1ei")
         }
     }
-
 
 
     override fun onDestroy() {

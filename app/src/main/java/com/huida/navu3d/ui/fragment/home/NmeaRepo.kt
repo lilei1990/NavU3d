@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import com.huida.navu3d.common.NmeaProviderManager
 import com.zs.base_library.http.ApiException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import net.sf.marineapi.nmea.sentence.GGASentence
-import net.sf.marineapi.nmea.sentence.VTGSentence
 
 /**
  * 作者 : lei
@@ -14,28 +14,34 @@ import net.sf.marineapi.nmea.sentence.VTGSentence
  * 描述 :数据实现层
  */
 class NmeaRepo(
-    viewModelScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
     errorLiveData: MutableLiveData<ApiException>
 ) {
-    val vtgData = MutableLiveData<VTGSentence>()
-    val ggaData = MutableLiveData<GGASentence>()
+
     /**
      * 开始
      */
-    fun start() {
-        NmeaProviderManager.reset()
-        NmeaProviderManager.start()
+    fun start(
+        nemaImp: NemaImp
+    ) {
+        coroutineScope.launch {
+            NmeaProviderManager.reset()
+            NmeaProviderManager.start()
+            NmeaProviderManager.registGGAListen("HomeViewModel") {
+                nemaImp.receive(it)
+            }
+            NmeaProviderManager.registVTGListen("HomeViewModel") {
+                nemaImp.receive(it)
+            }
+        }
+
     }
 
     /**
-     * 接收数据
+     * 停止
      */
-    fun receiveNmea(vtg: VTGSentence) {
-        vtgData.postValue(vtg)
-    }
-
-    fun receiveNmea(gga: GGASentence) {
-        ggaData.postValue(gga)
+    fun stop() {
+        NmeaProviderManager.stop()
     }
 
 
