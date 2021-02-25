@@ -18,7 +18,7 @@ import kotlinx.coroutines.*
 
 class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskListBinding::inflate) {
     private lateinit var workTaskListAdapter: WorkTaskListAdapter
-    private val workTaskViewModel by lazy { getActivityViewModel(WorkTaskViewModel::class.java) }
+    private val workTaskViewModel by lazy { getActivityViewModel(WorkTaskVM::class.java) }
 
 
     companion object {

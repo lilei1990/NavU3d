@@ -6,7 +6,7 @@ import com.huida.navu3d.bean.FarmToolsData
 import com.huida.navu3d.bean.WorkTaskData
 import org.litepal.LitePal
 
-class WorkTaskViewModel : ViewModel() {
+class WorkTaskVM : ViewModel() {
 
 
     val workTaskDatas = MutableLiveData<ArrayList<WorkTaskData>>()

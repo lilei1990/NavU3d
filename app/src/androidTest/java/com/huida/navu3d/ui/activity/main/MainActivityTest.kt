@@ -2,7 +2,7 @@ package com.huida.navu3d.ui.activity.main
 
 import androidx.test.filters.SmallTest
 import com.huida.navu3d.bean.PointData
-import com.huida.navu3d.common.NameProviderManager
+import com.huida.navu3d.common.NmeaProviderManager
 import junit.framework.TestCase
 
 /**
@@ -17,7 +17,7 @@ class MainActivityTest : TestCase(){
 
         println("PointData().X")
         println(PointData().X)
-        val freq: Long = (1000 / NameProviderManager.mNmeaBuilder.nudHz).toLong()
+        val freq: Long = (1000 / NmeaProviderManager.mNmeaBuilder.nudHz).toLong()
         var startTime=System.currentTimeMillis()
         PointData().save()
 

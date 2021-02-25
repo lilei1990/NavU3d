@@ -1,17 +1,13 @@
 package com.huida.navu3d
 
 import com.huida.navu3d.bean.PointData
-import com.huida.navu3d.common.NameProviderManager
-import com.huida.navu3d.utils.GeoConvert
+import com.huida.navu3d.common.NmeaProviderManager
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.flow
 import org.junit.Test
 import java.lang.Thread.sleep
-import java.util.concurrent.ConcurrentLinkedDeque
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.concurrent.fixedRateTimer
 import kotlin.concurrent.thread
-import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * 作者 : lei
@@ -77,7 +73,7 @@ class TestP {
     }
 
     private fun runTest() {
-        val freq: Long = (1000 / NameProviderManager.mNmeaBuilder.nudHz).toLong()
+        val freq: Long = (1000 / NmeaProviderManager.mNmeaBuilder.nudHz).toLong()
         var startTime = System.currentTimeMillis()
         println("开始")
         var endTime = System.currentTimeMillis()

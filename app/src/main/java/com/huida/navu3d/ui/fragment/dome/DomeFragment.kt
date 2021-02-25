@@ -1,9 +1,8 @@
 package com.huida.navu3d.ui.fragment.dome
 
 import android.os.Bundle
-import com.huida.navu3d.common.NameProviderManager
+import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.databinding.FragmentDomeBinding
-import com.huida.navu3d.databinding.FragmentHomeBinding
 import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.base.BaseVmFragment
 
@@ -34,32 +33,32 @@ class DomeFragment: BaseVmFragment<FragmentDomeBinding>(FragmentDomeBinding::inf
                 override fun direction(direction: RockerView.Direction) {
                     when (direction) {
                         RockerView.Direction.DIRECTION_LEFT -> {
-                            NameProviderManager.setAngle(-offsetAngle)
+                            NmeaProviderManager.setAngle(-offsetAngle)
                         }
                         RockerView.Direction.DIRECTION_RIGHT -> {
-                            NameProviderManager.setAngle(offsetAngle)
+                            NmeaProviderManager.setAngle(offsetAngle)
                         }
                         RockerView.Direction.DIRECTION_UP -> {
-                            NameProviderManager.setSpeedDistance(offsetSpeedDistance)
+                            NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)
                         }
                         RockerView.Direction.DIRECTION_DOWN -> {
-                            NameProviderManager.setSpeedDistance(-offsetSpeedDistance)
+                            NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
                         }
                         RockerView.Direction.DIRECTION_UP_LEFT -> {
-                            NameProviderManager.setAngle(-offsetAngle)
-                            NameProviderManager.setSpeedDistance(offsetSpeedDistance)
+                            NmeaProviderManager.setAngle(-offsetAngle)
+                            NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)
                         }
                         RockerView.Direction.DIRECTION_UP_RIGHT -> {
-                            NameProviderManager.setAngle(offsetAngle)
-                            NameProviderManager.setSpeedDistance(offsetSpeedDistance)
+                            NmeaProviderManager.setAngle(offsetAngle)
+                            NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)
                         }
                         RockerView.Direction.DIRECTION_DOWN_LEFT -> {
-                            NameProviderManager.setAngle(-offsetAngle)
-                            NameProviderManager.setSpeedDistance(-offsetSpeedDistance)
+                            NmeaProviderManager.setAngle(-offsetAngle)
+                            NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
                         }
                         RockerView.Direction.DIRECTION_DOWN_RIGHT -> {
-                            NameProviderManager.setAngle(offsetAngle)
-                            NameProviderManager.setSpeedDistance(-offsetSpeedDistance)
+                            NmeaProviderManager.setAngle(offsetAngle)
+                            NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
                         }
 
                     }

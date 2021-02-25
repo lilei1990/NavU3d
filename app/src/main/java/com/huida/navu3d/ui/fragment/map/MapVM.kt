@@ -8,7 +8,7 @@ import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.utils.GaoDeUtils
 
 
-class MapViewModel : ViewModel() {
+class MapVM : ViewModel() {
 
 
     //A点坐标

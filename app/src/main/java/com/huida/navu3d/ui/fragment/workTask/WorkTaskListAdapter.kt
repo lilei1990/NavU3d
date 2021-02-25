@@ -14,7 +14,7 @@ import com.zhy.adapter.recyclerview.base.ViewHolder
  * 邮箱 :416587959@qq.com
  * 描述 :工作任务
  */
-class WorkTaskListAdapter(context: Context?, layoutId: Int, datas: ArrayList<WorkTaskData>, workTaskViewModel: WorkTaskViewModel) :
+class WorkTaskListAdapter(context: Context?, layoutId: Int, datas: ArrayList<WorkTaskData>, workTaskViewModel: WorkTaskVM) :
         CommonAdapter<WorkTaskData>(context, layoutId, datas) {
     val viewModel = workTaskViewModel
 

@@ -78,57 +78,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/incTopBar" />
 
-    <ScrollView
-        android:id="@+id/sv_menu"
+    <fragment
+        android:id="@+id/fgMenu"
+        android:name="com.huida.navu3d.ui.fragment.home.funButton.MenuFunctionFragment"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/dp_1_5"
         android:layout_marginRight="@dimen/dp_6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/incTopBar">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <include
-                android:id="@+id/bt1"
-                layout="@layout/item_activity_main_button" />
-
-            <include
-                android:id="@+id/bt2"
-                layout="@layout/item_activity_main_button" />
-
-            <include
-                android:id="@+id/bt3"
-                layout="@layout/item_activity_main_button" />
-
-            <include
-                android:id="@+id/bt4"
-                layout="@layout/item_activity_main_button" />
-
-
-            <include
-                android:id="@+id/bt5"
-                layout="@layout/item_activity_main_button" />
-
-
-            <include
-                android:id="@+id/bt6"
-                layout="@layout/item_activity_main_button" />
-
-            <include
-                android:id="@+id/bt7"
-                layout="@layout/item_activity_main_button" />
-
-            <include
-                android:id="@+id/bt8"
-                layout="@layout/item_activity_main_button" />
-        </LinearLayout>
-    </ScrollView>
-
+        app:layout_constraintTop_toBottomOf="@+id/incTopBar"/>
     <fragment
         android:id="@+id/fgDome"
         android:name="com.huida.navu3d.ui.fragment.dome.DomeFragment"

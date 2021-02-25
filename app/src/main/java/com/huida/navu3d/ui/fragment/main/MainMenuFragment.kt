@@ -21,7 +21,7 @@ class MainMenuFragment : BaseVmFragment<FragmentMainMenuBinding>(FragmentMainMen
         fun newInstance() = MainMenuFragment()
     }
 
-    private lateinit var viewModel: MainMenuViewModel
+    private lateinit var viewModel: MainMenuVM
 
     override fun init(savedInstanceState: Bundle?) {
         binding.btStart.clickNoRepeat {

@@ -1,7 +1,7 @@
 package com.huida.navu3d.ui.fragment.home
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
 import com.huida.navu3d.bean.LineData
@@ -9,20 +9,17 @@ import com.huida.navu3d.bean.NavLineData
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.constants.Constants.EXTEND_LINE
-import com.huida.navu3d.common.NameProviderManager
-import com.huida.navu3d.ui.fragment.workTask.WorkTaskViewModel
+import com.huida.navu3d.common.NmeaProviderManager
+import com.huida.navu3d.ui.fragment.workTask.WorkTaskVM
 import com.huida.navu3d.utils.GeometryUtils
 import com.huida.navu3d.utils.PointConvert
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.nio.channels.AsynchronousByteChannel
+import com.lei.core.base.BaseViewModel
 import java.util.*
 import kotlin.math.roundToInt
 
 
-class HomeViewModel : ViewModel() {
+class HomeVM : BaseViewModel() {
+    private val repo by lazy { NmeaRepo(viewModelScope, errorLiveData) }
     //当前坐标
     val DataCurrenLatLng = MutableLiveData<PointData>()
     var mCurrenLatLng = PointData()
@@ -94,12 +91,13 @@ class HomeViewModel : ViewModel() {
      * 开始
      */
     fun start() {
-        NameProviderManager.reset()
-        NameProviderManager.start()
+        repo.start()
+        NmeaProviderManager.reset()
+        NmeaProviderManager.start()
         val lineDbManage = LineDbManage()
         lineDbManage.build(taskWorkby)
 
-        NameProviderManager.registGGAListen("HomeViewModel") {
+        NmeaProviderManager.registGGAListen("HomeViewModel") {
             val position = it.position
             val latitude = position.latitude
             val longitude = position.longitude
@@ -122,7 +120,7 @@ class HomeViewModel : ViewModel() {
             }
             DataOffsetLineDistance.postValue(offsetLineDistance)
         }
-        NameProviderManager.registVTGListen("HomeViewModel") {
+        NmeaProviderManager.registVTGListen("HomeViewModel") {
 
             speed = it.speedKmh
             steerAngle = it.trueCourse
@@ -137,7 +135,7 @@ class HomeViewModel : ViewModel() {
      * 停止
      */
     fun stop() {
-        NameProviderManager.stop()
+        NmeaProviderManager.stop()
 
     }
 
@@ -165,7 +163,7 @@ class HomeViewModel : ViewModel() {
     /**
      * 画平行线
      */
-    fun DrawMapParallelLine(workTaskViewModel: WorkTaskViewModel) {
+    fun DrawMapParallelLine(workTaskViewModel: WorkTaskVM) {
         taskWorkby?.navLineData = taskWorkby?.navLineData ?: NavLineData()
         val mA = taskWorkby?.navLineData!!.getStart()
         val mB = taskWorkby?.navLineData!!.getEnd()

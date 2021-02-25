@@ -18,7 +18,7 @@ import kotlin.concurrent.fixedRateTimer
  * 邮箱 :416587959@qq.com
  * 描述 : name数据源提供者
  */
-object NameProviderManager {
+object NmeaProviderManager {
     var mNmeaBuilder = NmeaBuilder.INSTANCE
     val sf = SentenceFactory.getInstance()
 

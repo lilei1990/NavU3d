@@ -3,12 +3,13 @@ package com.huida.navu3d.ui.fragment.unity
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.lifecycle.observe
-import com.huida.navu3d.common.NameProviderManager
+import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.databinding.FragmentUnityBinding
 import com.huida.navu3d.ui.activity.unity.U3dViewModel
-import com.huida.navu3d.ui.fragment.home.HomeViewModel
+import com.huida.navu3d.ui.fragment.home.HomeVM
 import com.huida.navu3d.utils.PointConvert
 import com.lei.core.base.BaseVmFragment
+import com.lei.core.common.clickNoRepeat
 
 /**
  * 作者 : lei
@@ -18,7 +19,7 @@ import com.lei.core.base.BaseVmFragment
  */
 class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding::inflate) {
     private val u3dViewModel by lazy { getActivityViewModel(U3dViewModel::class.java) }
-    private val homeViewModel by lazy { getActivityViewModel(HomeViewModel::class.java)!! }
+    private val homeViewModel by lazy { getFragmentViewModel(HomeVM::class.java)!! }
     lateinit var llRoot: LinearLayout
 
     companion object {
@@ -50,7 +51,7 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
         }
         //打开小车轨迹
         u3dViewModel.isShowTrack(true, "FF00FF")
-        NameProviderManager.registGGAListen("UnityFragment") {
+        NmeaProviderManager.registGGAListen("UnityFragment") {
             aaa+=0.01
             val position = it.position
             val latitude = position.latitude
@@ -59,7 +60,7 @@ class UnityFragment : BaseVmFragment<FragmentUnityBinding>(FragmentUnityBinding:
 
             u3dViewModel.moveCart(pointXY, 1.0)
         }
-        NameProviderManager.registVTGListen("UnityFragment") {
+        NmeaProviderManager.registVTGListen("UnityFragment") {
 
             u3dViewModel.cartStance(it.trueCourse)
         }

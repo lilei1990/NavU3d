@@ -2,14 +2,13 @@ package com.huida.navu3d.ui.fragment.map
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.observe
 import com.amap.api.maps.AMap
 import com.amap.api.maps.model.*
 import com.amap.api.maps.model.animation.Animation
 import com.amap.api.maps.model.animation.ScaleAnimation
 import com.huida.navu3d.databinding.FragmentMapBinding
-import com.huida.navu3d.ui.fragment.home.HomeViewModel
+import com.huida.navu3d.ui.fragment.home.HomeVM
 import com.huida.navu3d.utils.GaoDeUtils
 import com.lei.core.base.BaseVmFragment
 
@@ -20,8 +19,8 @@ import com.lei.core.base.BaseVmFragment
  * 描述 : 主菜单界面
  */
 class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::inflate) {
-    private val mapViewModel by lazy { getFragmentViewModel(MapViewModel::class.java)!! }
-    private val homeViewModel by lazy { getActivityViewModel(HomeViewModel::class.java)!! }
+    private val mapViewModel by lazy { getFragmentViewModel(MapVM::class.java)!! }
+    private val homeViewModel by lazy { getFragmentViewModel(HomeVM::class.java)!! }
     val gdMap by lazy { binding.gdMap}
     companion object {
         fun newInstance() = MapFragment()
