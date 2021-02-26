@@ -60,14 +60,14 @@ class UnityRepo(
     /**
      * 小车移动
      */
+    val scaleX=100000
+    val scaleY=1000000
     fun moveCart(
         it: PointData,
         speed: Double
     ) {
-        var x = (it.X).toFloat()
-        var y = (it.Y).toFloat()
-//        var x = (it.X * 1000).toInt()*1f/1000%scaleX
-//        var y = (it.Y * 1000).toInt()*1f/1000%scaleY
+        var x = (it.X).toFloat()%scaleX
+        var y = (it.Y).toFloat()%scaleY
         Log.d("TAG_lilei", "moveCart: ${x}--${y}")
         val json = JSONObject()
         json.put("x", x)
@@ -83,6 +83,7 @@ class UnityRepo(
     fun cartStance(
         steerAngle: Double
     ) {
+        Log.d("TAG_lilei", "cartStance: ${steerAngle}")
         val json = JSONObject()
         json.put("yaw", steerAngle)
         json.put("rotationSpeed", 4.0)

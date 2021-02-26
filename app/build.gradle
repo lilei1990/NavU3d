@@ -23,7 +23,11 @@ ext {
             'com.facebook.stetho:stetho-js-rhino:1.5.1'
     ]
 //    depProject = [ModelName.BaseCore]
-    depProject = [ModelName.BaseCore, ModelName.UnityLib, ModelName.NMEA, ModelName.GEOMETRY_LIB]
+    depProject = [ModelName.BaseCore,
+                  ModelName.UnityLib,
+                  ModelName.NMEA,
+                  ModelName.GEOMETRY_LIB,
+    ":lib:jcode"]
 }
 
 

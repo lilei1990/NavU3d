@@ -1,3 +1,4 @@
+include ':lib:jcode'
 include ':lib:core'
 include ':lib:geometry'
 include ':lib:nmea'

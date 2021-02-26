@@ -15,15 +15,13 @@ import net.sf.marineapi.nmea.sentence.VTGSentence
  * 作者 : lei
  * 时间 : 2021/02/25.
  * 邮箱 :416587959@qq.com
- * 描述 :具体实现类
+ * 描述 :具体实现类,主要数据的处理
  */
 class HomeRepo(
     val viewModelScope: CoroutineScope,
     val errorLiveData: MutableLiveData<ApiException>,
     homeVM: HomeVM
 ) {
-//    val vtgData by lazy { homeVM.vtgData }
-//    val ggaData by lazy { homeVM.ggaData }
     val homeFragmentBean by lazy { homeVM.homeFragmentBean }
 
     /**
@@ -31,14 +29,14 @@ class HomeRepo(
      */
     fun start() {
         viewModelScope.launch(Dispatchers.IO) {
-            NmeaProviderManager.reset()
-            NmeaProviderManager.start()
-            NmeaProviderManager.registGGAListen("HomeViewModel") {
-                receive(it)
-            }
-            NmeaProviderManager.registVTGListen("HomeViewModel") {
-                receive(it)
-            }
+                NmeaProviderManager.reset()
+                NmeaProviderManager.start()
+                NmeaProviderManager.registGGAListen("HomeViewModel") {
+                    receive(it)
+                }
+                NmeaProviderManager.registVTGListen("HomeViewModel") {
+                    receive(it)
+                }
         }
     }
 
@@ -68,18 +66,14 @@ class HomeRepo(
      * 暂停
      */
     fun pause() {
-//        //停止车的移动
-//        stop()
-
+        homeFragmentBean.isRecord(false)
     }
 
     /**
      * 录制
      */
-    var isRecord = false
     fun saveRecord() {
-        isRecord=!isRecord
-        homeFragmentBean.isRecord(isRecord)
+        homeFragmentBean.isRecord(true)
     }
 
     /**

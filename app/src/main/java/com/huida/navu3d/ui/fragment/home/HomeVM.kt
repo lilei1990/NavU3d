@@ -44,6 +44,15 @@ class HomeVM : BaseViewModel() {
             unityRepo.moveCart(this, 2.0)
         }
     }
+    /**
+     * 小车姿态
+     */
+    fun stance() {
+
+        homeFragmentBean.steerAngle.value?.apply {
+            unityRepo.cartStance(this)
+        }
+    }
 
     /**
      * 设置A点
@@ -117,5 +126,6 @@ class HomeVM : BaseViewModel() {
         stop()
         super.onCleared()
     }
+
 
 }

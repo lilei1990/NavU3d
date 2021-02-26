@@ -1,5 +1,6 @@
 package com.huida.navu3d.common
 
+import kotlinx.coroutines.delay
 import net.sf.marineapi.nmea.parser.SentenceFactory
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
@@ -16,53 +17,51 @@ import kotlin.concurrent.fixedRateTimer
 object NmeaProviderManager {
     var mNmeaBuilder = NmeaBuilder.INSTANCE
     val sf = SentenceFactory.getInstance()
-
-    //ConcurrentHashMap
     var mCallBackGGAs = ConcurrentHashMap<String, (GGASentence) -> Unit>()
     var mCallBackVTGs = ConcurrentHashMap<String, (VTGSentence) -> Unit>()
-    lateinit var timer: Timer
+    val freq: Long = (1000 / mNmeaBuilder.nudHz).toLong()
     val isDome = true
-    fun start() {
+    var isRun = false
+    suspend fun start() {
+        isRun = true
         if (isDome) {
-            runDome()
+            while (isRun) {
+                loop()
+                delay(freq)
+            }
         }
 
     }
 
-
-
-    private fun runDome() {
-        val freq: Long = (1000 / mNmeaBuilder.nudHz).toLong()
-        timer = fixedRateTimer("", false, 0, freq) {
-            var nmeaStr = mNmeaBuilder.doTick()
-            val lines = nmeaStr.lines()
-            for (line in lines) {
-                try {
-                    //必须字符都大写,
-                    val createParser = sf.createParser(line.toUpperCase())
-                    //卫星信息的解析类
-                    if (createParser is GGASentence) {
-                        for ((key, mCallBackGGA) in mCallBackGGAs) {
-                            mCallBackGGA(createParser)
-                        }
-
+    private fun loop() {
+        var nmeaStr = mNmeaBuilder.doTick()
+        val lines = nmeaStr.lines()
+        for (line in lines) {
+            try {
+                //必须字符都大写,
+                val createParser = sf.createParser(line.toUpperCase())
+                //卫星信息的解析类
+                if (createParser is GGASentence) {
+                    for ((key, mCallBackGGA) in mCallBackGGAs) {
+                        mCallBackGGA(createParser)
                     }
-                    //地面速度信息
-                    if (createParser is VTGSentence) {
 
-                        for ((key, mCallBackVTG) in mCallBackVTGs) {
-                            mCallBackVTG(createParser)
-                        }
-                    }
-                } catch (e: Exception) {
-                    //数据格式不对,或者解析类没有注册进去,数据将会被丢弃
-                    //LogUtils.e("数据格式不对")
                 }
+                //地面速度信息
+                if (createParser is VTGSentence) {
 
+                    for ((key, mCallBackVTG) in mCallBackVTGs) {
+                        mCallBackVTG(createParser)
+                    }
+                }
+            } catch (e: Exception) {
+                //数据格式不对,或者解析类没有注册进去,数据将会被丢弃
+                //LogUtils.e("数据格式不对")
             }
 
         }
     }
+
 
     /**
      * 计算方向角度
@@ -75,9 +74,7 @@ object NmeaProviderManager {
     }
 
     fun stop() {
-        timer.apply {
-            this.cancel()
-        }
+        isRun = false
     }
 
 

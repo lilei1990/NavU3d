@@ -2,11 +2,10 @@ package com.huida.navu3d
 
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.common.NmeaProviderManager
-import com.huida.navu3d.constants.BusConstants
-import kotlinx.coroutines.*
+import com.huida.navu3d.utils.GeoConvert
 import org.junit.Test
+import uk.me.jstott.jcoord.LatLng
 import java.lang.Thread.sleep
-import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.concurrent.fixedRateTimer
 import kotlin.concurrent.thread
@@ -22,36 +21,18 @@ class TestP {
     val mPointQueue = ConcurrentLinkedQueue<Int>()
 
     //116.407387,39.904179
-//    latitude = 39.904179
-//    longitude = 116.407387
+    var latitude = 39.904179
+    var longitude = 116.407387
+
     @Test
     fun test() {
 
-        println(BusConstants.SELECT_WORK_TASK_DATA.name)
-//        GlobalScope.launch {
-//            async {
-//
-//            }
-//            launch(Dispatchers.IO) {
-//                while (true) {
-//                    println("${Thread.currentThread()}-1")
-//                    sleep(1000)
-//                }
-//            }
-//            launch(Dispatchers.IO) {
-//                while (true) {
-//                    println("${Thread.currentThread()}-1")
-//                    sleep(1000)
-//                }
-//            }
-//            withContext(Dispatchers.IO) {
-//                while (true) {
-//                    println("${Thread.currentThread()}-2")
-//                    sleep(1000)
-//                }
-//            }
-//        }
-        sleep(100000000)
+        for (i in 1..1000) {
+            latitude=latitude-0.1
+            longitude=longitude-0.1
+            val toUTMRef = LatLng(latitude, longitude).toUTMRef()
+            println("${toUTMRef.easting}=======${toUTMRef.northing}------${longitude}")
+        }
     }
 
     fun runTest2() {

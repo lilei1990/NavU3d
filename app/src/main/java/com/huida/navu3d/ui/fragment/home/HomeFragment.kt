@@ -75,32 +75,16 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         homeFragmentBean.steerAngle.observe(this) {
             //角度
             binding.incTopBar.tvRtk.text = "${it}"
+            homeVM.stance()
         }
         homeFragmentBean.speed.observe(this) {
             //速度
             binding.incTopBar.tvSpeed.text = "${(it * 100).roundToInt() / 100.00}Km/h"
-//            binding.incTopBar.tvSpeed.text = "${it}Km/h"
         }
 
         homeFragmentBean.currenLatLng.observe(this) {
             homeVM.move()
         }
-
-//        NmeaProviderManager.registGGAListen("UnityFragment") {
-//            val position = it.position
-//            val latitude = position.latitude
-//            val longitude = position.longitude
-//            val pointXY = PointConvert.convertPoint(latitude, longitude)
-//            homeVM.moveCart(pointXY, 1.0)
-//        }
-//        NmeaProviderManager.registVTGListen("UnityFragment") {
-//
-//            homeVM.cartStance(it.trueCourse)
-//        }
-//        homeFragmentBean.DataParallelLine.observe(this) {
-//            homeVM.addParallelLine(it)
-//
-//        }
     }
 
     private fun initButton() {
