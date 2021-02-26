@@ -2,6 +2,7 @@ package com.huida.navu3d
 
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.common.NmeaProviderManager
+import com.huida.navu3d.constants.BusConstants
 import kotlinx.coroutines.*
 import org.junit.Test
 import java.lang.Thread.sleep
@@ -25,10 +26,8 @@ class TestP {
 //    longitude = 116.407387
     @Test
     fun test() {
-        //循环任务
-        var timer: Timer = fixedRateTimer("", true, 0, 1000) {
-            println("1111")
-        }
+
+        println(BusConstants.SELECT_WORK_TASK_DATA.name)
 //        GlobalScope.launch {
 //            async {
 //

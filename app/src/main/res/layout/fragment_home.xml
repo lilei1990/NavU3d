@@ -78,9 +78,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/incTopBar" />
 
-    <fragment
-        android:id="@+id/fgMenu"
-        android:name="com.huida.navu3d.ui.fragment.home.funButton.MenuFunctionFragment"
+    <include
+        layout="@layout/include_menu_function"
+        android:id="@+id/incMenu"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/dp_1_5"
@@ -88,9 +88,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/incTopBar"/>
-    <fragment
-        android:id="@+id/fgDome"
-        android:name="com.huida.navu3d.ui.fragment.dome.DomeFragment"
+    <include
+        layout="@layout/include_dome"
+        android:id="@+id/incDome"
         android:layout_width="@dimen/dp_150"
         android:layout_height="@dimen/dp_150"
         app:layout_constraintBottom_toBottomOf="parent"

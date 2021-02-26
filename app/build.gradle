@@ -7,7 +7,6 @@ ext {
             Plugins.kotlin_kapt,
 
     ]
-    depProject=[]
     deps = [
             'com.github.arcadefire:nice-spinner:1.4.4',
             'com.zhy:base-rvadapter:3.0.3',
@@ -62,7 +61,7 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
 //    implementation files('..\\lib\\unity3d\\libs\\unity-classes.jar')
     kapt(Android.room.roomCompiler)
-
+    implementation 'com.jeremyliao:live-event-bus-x:1.7.3'
 }
 allprojects {
     repositories {

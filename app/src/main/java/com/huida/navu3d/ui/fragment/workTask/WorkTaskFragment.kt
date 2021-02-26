@@ -108,8 +108,7 @@ class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskLis
                 WorkTaskListAdapter(
                         activity,
                         R.layout.item_task,
-                        arrayListOf(),
-                        workTaskViewModel
+                        arrayListOf()
                 );
 
         binding.rvContinue.adapter = workTaskListAdapter

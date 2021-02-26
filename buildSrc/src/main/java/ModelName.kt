@@ -12,4 +12,5 @@ object ModelName {
     const val App = ":App"
     const val NMEA = ":lib:nmea"
     const val GEOMETRY_LIB = ":lib:geometry"
+    const val LIVE_EVENT_BUS = ":lib:liveeventbus"
 }

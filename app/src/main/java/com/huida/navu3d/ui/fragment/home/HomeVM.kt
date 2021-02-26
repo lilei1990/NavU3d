@@ -1,51 +1,40 @@
 package com.huida.navu3d.ui.fragment.home
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.esri.core.geometry.*
+import com.esri.core.geometry.Operator
+import com.esri.core.geometry.OperatorDensifyByLength
+import com.esri.core.geometry.OperatorFactoryLocal
 import com.huida.navu3d.bean.WorkTaskData
-import com.huida.navu3d.common.NmeaProviderManager
 import com.lei.core.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import net.sf.marineapi.nmea.sentence.GGASentence
-import net.sf.marineapi.nmea.sentence.VTGSentence
 
 
-class HomeVM : BaseViewModel()  {
-
-    val vtgData = MutableLiveData<VTGSentence>()
-    val ggaData = MutableLiveData<GGASentence>()
-    val homeFragmentBean = HomeFragmentBean()
+class HomeVM : BaseViewModel() {
+    private val homeRepo by lazy { HomeRepo(viewModelScope, errorLiveData) }
+    private val unityRepo by lazy { UnityRepo(viewModelScope, errorLiveData) }
+    val vtgData by lazy { homeRepo.vtgData }
+    val ggaData by lazy { homeRepo.ggaData }
+    val homeFragmentBean by lazy { homeRepo.homeFragmentBean }
 
 
     /**
      * 开始
      */
     fun start() {
-        viewModelScope.launch(Dispatchers.IO) {
-            NmeaProviderManager.reset()
-            NmeaProviderManager.start()
-            NmeaProviderManager.registGGAListen("HomeViewModel") {
-                receive(it)
-            }
-            NmeaProviderManager.registVTGListen("HomeViewModel") {
-                receive(it)
-            }
-        }
+        homeRepo.start()
     }
 
     /**
      * 停止
      */
     fun stop() {
-        NmeaProviderManager.stop()
+        homeRepo.stop()
     }
+
     /**
      * 设置A点
      */
     fun setPointA() {
-        homeFragmentBean.creatPointA()
+        homeRepo.setPointA()
     }
 
 
@@ -54,7 +43,7 @@ class HomeVM : BaseViewModel()  {
      */
 
     fun setPointB() {
-        homeFragmentBean.creatPointB()
+        homeRepo.setPointB()
     }
 
     /**
@@ -62,16 +51,15 @@ class HomeVM : BaseViewModel()  {
      */
     fun pause() {
 
-
+        homeRepo.pause()
     }
 
     /**
      * 录制
      */
-    fun saveRecord() {
-//        homeFragmentBean.creatNavLine()
 
-        homeFragmentBean.isRecord(true)
+    fun saveRecord() {
+        homeRepo.saveRecord()
     }
 
     /**
@@ -86,27 +74,19 @@ class HomeVM : BaseViewModel()  {
         .getInstance()
         .getOperator(Operator.Type.DensifyByLength) as OperatorDensifyByLength
 
-    /**
-     * 接收GGA
-     */
-     fun receive(gga: GGASentence) {
-        ggaData.postValue(gga)
-        homeFragmentBean.putGGA(gga)
-    }
-    /**
-     * 接收VTG
-     */
-     fun receive(vtg: VTGSentence) {
-        vtgData.postValue(vtg)
-        homeFragmentBean.putVTG(vtg)
-    }
 
     /**
      * 设置历史数据
      */
-    fun  setWorkTaskData(workTaskData: WorkTaskData) {
-        homeFragmentBean.setWorkTaskData(workTaskData)
+    fun setWorkTaskData(workTaskData: WorkTaskData) {
+        homeRepo.setWorkTaskData(workTaskData)
     }
 
-
+    /**
+     * 当界面销毁的时候终止任务
+     */
+    override fun onCleared() {
+        stop()
+        super.onCleared()
+    }
 }
