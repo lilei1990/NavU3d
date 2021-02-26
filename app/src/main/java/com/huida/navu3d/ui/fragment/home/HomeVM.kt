@@ -1,25 +1,30 @@
 package com.huida.navu3d.ui.fragment.home
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.esri.core.geometry.Operator
 import com.esri.core.geometry.OperatorDensifyByLength
 import com.esri.core.geometry.OperatorFactoryLocal
+import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.bean.WorkTaskData
 import com.lei.core.base.BaseViewModel
+import com.unity3d.player.UnityPlayer
+import net.sf.marineapi.nmea.sentence.GGASentence
+import net.sf.marineapi.nmea.sentence.VTGSentence
 
 
 class HomeVM : BaseViewModel() {
-    private val homeRepo by lazy { HomeRepo(viewModelScope, errorLiveData) }
-    private val unityRepo by lazy { UnityRepo(viewModelScope, errorLiveData) }
-    val vtgData by lazy { homeRepo.vtgData }
-    val ggaData by lazy { homeRepo.ggaData }
-    val homeFragmentBean by lazy { homeRepo.homeFragmentBean }
-
+    private val homeRepo by lazy { HomeRepo(viewModelScope, errorLiveData, this) }
+    private val unityRepo by lazy { UnityRepo(viewModelScope, errorLiveData, this) }
+    val vtgData = MutableLiveData<VTGSentence>()
+    val ggaData = MutableLiveData<GGASentence>()
+    val homeFragmentBean = HomeFragmentBean()
 
     /**
      * 开始
      */
     fun start() {
+        unityRepo.start()
         homeRepo.start()
     }
 
@@ -28,6 +33,16 @@ class HomeVM : BaseViewModel() {
      */
     fun stop() {
         homeRepo.stop()
+        unityRepo.stop()
+    }
+
+    /**
+     * 移动
+     */
+    fun move() {
+        homeFragmentBean.currenLatLng.value?.apply {
+            unityRepo.moveCart(this, 2.0)
+        }
     }
 
     /**
@@ -35,6 +50,7 @@ class HomeVM : BaseViewModel() {
      */
     fun setPointA() {
         homeRepo.setPointA()
+        unityRepo.setPointA()
     }
 
 
@@ -44,6 +60,7 @@ class HomeVM : BaseViewModel() {
 
     fun setPointB() {
         homeRepo.setPointB()
+        unityRepo.setPointB()
     }
 
     /**
@@ -52,6 +69,8 @@ class HomeVM : BaseViewModel() {
     fun pause() {
 
         homeRepo.pause()
+        unityRepo.pause()
+
     }
 
     /**
@@ -60,6 +79,7 @@ class HomeVM : BaseViewModel() {
 
     fun saveRecord() {
         homeRepo.saveRecord()
+        unityRepo.saveRecord()
     }
 
     /**
@@ -83,10 +103,19 @@ class HomeVM : BaseViewModel() {
     }
 
     /**
+     * 切换昼夜模式
+     * “day”白天，“night”晚上
+     */
+    fun switchLight() {
+        unityRepo.switchLight()
+    }
+
+    /**
      * 当界面销毁的时候终止任务
      */
     override fun onCleared() {
         stop()
         super.onCleared()
     }
+
 }

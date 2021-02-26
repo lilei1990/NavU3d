@@ -2,14 +2,18 @@ package com.huida.navu3d.ui.fragment.home
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
 import com.blankj.utilcode.util.ToastUtils
+import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.NmeaProviderManager
+import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.databinding.FragmentHomeBinding
-import com.jeremyliao.liveeventbus.LiveEventBus
+import com.huida.navu3d.ui.activity.unity.U3dVM
+import com.huida.navu3d.utils.PointConvert
 import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
@@ -18,22 +22,30 @@ import kotlin.math.roundToInt
 
 class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
     private val homeVM by lazy { getFragmentViewModel(HomeVM::class.java) }
+    private val u3dViewModel by lazy { getActivityViewModel(U3dVM::class.java) }
+    lateinit var llRoot: LinearLayout
     override fun init(savedInstanceState: Bundle?) {
-
-        LiveEventBus.get(BusConstants.SELECT_WORK_TASK_DATA.name, WorkTaskData::class.java)
-            .observe(this, Observer {
-                Log.d("TAG_lilei", "init: 我已经接收到数据")
-                ToastUtils.showLong("我已经接收到数据")
+        liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name, WorkTaskData::class.java)
+            .observeSticky(this, Observer {
                 homeVM.setWorkTaskData(it)
             })
         binding.apply {
             initButton()
             initU3dLayout()
+            initRockView()
         }
     }
 
 
     private fun initU3dLayout() {
+        llRoot =  binding.incUnity.llRoot
+        binding.apply {
+            binding.incUnity.llRoot.addView(u3dViewModel.mUnityPlayer)
+            u3dViewModel.mUnityPlayer!!.requestFocus()
+            binding.incUnity.scDayNight.clickNoRepeat {
+                u3dViewModel.switchLight()
+            }
+        }
         //切换地图和u3d场景
         binding.btSwitch.clickNoRepeat {
             val progress = binding.mlRoot.progress
@@ -69,16 +81,33 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
             binding.incTopBar.tvSpeed.text = "${(it * 100).roundToInt() / 100.00}Km/h"
 //            binding.incTopBar.tvSpeed.text = "${it}Km/h"
         }
-        homeVM.vtgData.observe(this) {
-            Log.d("TAG", "observe: lil0ei")
+
+        homeFragmentBean.currenLatLng.observe(this) {
+            homeVM.move()
         }
-        homeVM.ggaData.observe(this) {
-            Log.d("TAG", "observe: lil1ei")
-        }
+
+//        NmeaProviderManager.registGGAListen("UnityFragment") {
+//            val position = it.position
+//            val latitude = position.latitude
+//            val longitude = position.longitude
+//            val pointXY = PointConvert.convertPoint(latitude, longitude)
+//            homeVM.moveCart(pointXY, 1.0)
+//        }
+//        NmeaProviderManager.registVTGListen("UnityFragment") {
+//
+//            homeVM.cartStance(it.trueCourse)
+//        }
+//        homeFragmentBean.DataParallelLine.observe(this) {
+//            homeVM.addParallelLine(it)
+//
+//        }
     }
 
     private fun initButton() {
-
+        binding.incUnity.tvNight.text = "夜间模式"
+        binding.incUnity.scDayNight.clickNoRepeat {
+            homeVM.switchLight()
+        }
         binding.incMenu.bt1.tvText.text = "设置A点"
         binding.incMenu.bt1.itemRoot.clickNoRepeat {
             homeVM.setPointA()
@@ -89,7 +118,7 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         }
         binding.incMenu.bt3.tvText.text = "生成导航线"
         binding.incMenu.bt3.itemRoot.clickNoRepeat {
-//            homeVM.homeFragmentBean.DrawMapParallelLine(workTaskViewModel)
+            homeVM.drawGuideLine()
         }
         binding.incMenu.bt4.tvText.text = "刷新线"
         binding.incMenu.bt4.itemRoot.clickNoRepeat {
@@ -166,6 +195,7 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
     }
 
     override fun onDestroy() {
+        llRoot.removeAllViews()
         NmeaProviderManager.clearAllRegist()
         super.onDestroy()
     }

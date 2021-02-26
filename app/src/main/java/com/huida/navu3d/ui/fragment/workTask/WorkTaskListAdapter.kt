@@ -5,6 +5,7 @@ import androidx.navigation.Navigation
 import com.blankj.utilcode.util.ToastUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.bean.WorkTaskData
+import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.constants.BusConstants
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lei.core.common.LiveDataBus
@@ -29,7 +30,7 @@ class WorkTaskListAdapter(
         holder?.setOnClickListener(R.id.clRoot) {
 
             t?.findLines()
-            LiveEventBus.get(BusConstants.SELECT_WORK_TASK_DATA.name)
+            liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name)
                 .post(t)
             ToastUtils.showLong("${position}被点击")
             Navigation.findNavController(it)

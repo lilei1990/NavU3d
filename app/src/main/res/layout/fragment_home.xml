@@ -26,9 +26,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" >
 
-            <fragment
-                android:id="@+id/fgUnity"
-                android:name="com.huida.navu3d.ui.fragment.unity.UnityFragment"
+            <include
+                layout="@layout/fragment_unity"
+                android:id="@+id/incUnity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
