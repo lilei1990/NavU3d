@@ -22,15 +22,11 @@ open class PointData : LitePalSupport() {
     var lng = 0.0
 
     //Utm,不存储到数据库
-    @Column(ignore = true)
     var x = 0.0
 
-    @Column(ignore = true)
     var y = 0.0
 
-    @Column(ignore = true)
     var lngZone: Int? = null
-    @Column(ignore = true)
     var latZone: Char? = null
     companion object {
         /**
@@ -56,6 +52,10 @@ open class PointData : LitePalSupport() {
             var latLng = UTMRef(lngZone, latZone, x, y).toLatLng()
             pointData.lat=latLng.latitude
             pointData.lng=latLng.longitude
+            pointData.x=x
+            pointData.y=y
+            pointData.lngZone=lngZone
+            pointData.latZone=latZone
             return pointData
         }
     }

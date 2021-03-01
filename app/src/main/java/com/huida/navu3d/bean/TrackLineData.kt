@@ -11,6 +11,7 @@ import kotlin.collections.ArrayList
  * 描述 :轨迹线的数据
  */
 class TrackLineData : LitePalSupport() {
+    //时间戳
     var time: Date= Date(System.currentTimeMillis())
 
     //当前线段的点
