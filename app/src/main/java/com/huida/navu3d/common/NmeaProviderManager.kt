@@ -19,15 +19,16 @@ object NmeaProviderManager {
     val sf = SentenceFactory.getInstance()
     var mCallBackGGAs = ConcurrentHashMap<String, (GGASentence) -> Unit>()
     var mCallBackVTGs = ConcurrentHashMap<String, (VTGSentence) -> Unit>()
-    val freq: Long = (1000 / mNmeaBuilder.nudHz).toLong()
+
     val isDome = true
-    var isRun = false
-    suspend fun start() {
-        isRun = true
+    var timer: Timer? = null
+    fun start() {
         if (isDome) {
-            while (isRun) {
+            //数据刷新频率
+            val freq: Long = (1000 / mNmeaBuilder.nudHz).toLong()
+            timer?.cancel()
+            timer = fixedRateTimer("", false, 0, freq) {
                 loop()
-                delay(freq)
             }
         }
 
@@ -74,7 +75,7 @@ object NmeaProviderManager {
     }
 
     fun stop() {
-        isRun = false
+        timer?.cancel()
     }
 
 
@@ -84,6 +85,11 @@ object NmeaProviderManager {
 
     fun registVTGListen(registrants: String, callBackVTG: (VTGSentence) -> Unit) {
         mCallBackVTGs.put(registrants, callBackVTG)
+    }
+
+    fun removeRegist(str: String) {
+        mCallBackGGAs.remove(str)
+        mCallBackVTGs.remove(str)
     }
 
     fun clearAllRegist() {

@@ -3,6 +3,7 @@ package com.huida.navu3d.ui.fragment.home
 import androidx.lifecycle.MutableLiveData
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.NmeaProviderManager
+import com.huida.navu3d.ui.fragment.home.HomeFragmentBean.Status.*
 import com.zs.base_library.http.ApiException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,20 +24,25 @@ class HomeRepo(
     homeVM: HomeVM
 ) {
     val homeFragmentBean by lazy { homeVM.homeFragmentBean }
+    val REGIST_FLAG = "HomeViewModel"
+
+    val ggaListener: (GGASentence) -> Unit = {
+        receive(it)
+    }
+    val vtgListener: (VTGSentence) -> Unit = {
+        receive(it)
+    }
 
     /**
      * 开始
      */
     fun start() {
         viewModelScope.launch(Dispatchers.IO) {
-                NmeaProviderManager.reset()
-                NmeaProviderManager.start()
-                NmeaProviderManager.registGGAListen("HomeViewModel") {
-                    receive(it)
-                }
-                NmeaProviderManager.registVTGListen("HomeViewModel") {
-                    receive(it)
-                }
+            homeFragmentBean.status.postValue(START)
+            NmeaProviderManager.reset()
+            NmeaProviderManager.start()
+            NmeaProviderManager.registGGAListen(REGIST_FLAG, ggaListener)
+            NmeaProviderManager.registVTGListen(REGIST_FLAG, vtgListener)
         }
     }
 
@@ -44,6 +50,8 @@ class HomeRepo(
      * 停止
      */
     fun stop() {
+        homeFragmentBean.status.postValue(STOP)
+        NmeaProviderManager.removeRegist(REGIST_FLAG)
         NmeaProviderManager.stop()
     }
 
@@ -66,6 +74,7 @@ class HomeRepo(
      * 暂停
      */
     fun pause() {
+        homeFragmentBean.status.postValue(PAUSE)
         homeFragmentBean.isRecord(false)
     }
 
@@ -73,6 +82,7 @@ class HomeRepo(
      * 录制
      */
     fun saveRecord() {
+
         homeFragmentBean.isRecord(true)
     }
 

@@ -35,9 +35,9 @@ object GeometryUtils {
         //算出变化后和之前比例
         var b = (length + distance) / distance
         //计算和延长的坐标Y
-        B.Y = (B.Y - A.Y) * b + A.Y
-        B.X = (B.X - A.X) * b + A.X
-        val latlng = GeoConvert.INSTANCE.convertUTMToLatLon(B.X, B.Y)
+        B.y = (B.y - A.y) * b + A.y
+        B.x = (B.x - A.x) * b + A.x
+        val latlng = GeoConvert.INSTANCE.convertUTMToLatLon(B.x, B.y)
         B.lat = latlng[0]
         B.lng = latlng[1]
 
@@ -52,7 +52,7 @@ object GeometryUtils {
      */
     fun distanceOfTwoPoints(pp1: PointData, pp2: PointData): Double {
         return Math.sqrt(
-                Math.pow((pp2.X - pp1.X).toDouble(), 2.0) + Math.pow((pp2.Y - pp1.Y).toDouble(), 2.0)
+                Math.pow((pp2.x - pp1.x).toDouble(), 2.0) + Math.pow((pp2.y - pp1.y).toDouble(), 2.0)
         )
     }
 

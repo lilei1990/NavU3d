@@ -16,7 +16,7 @@ class MainActivityTest : TestCase(){
     fun test() {
 
         println("PointData().X")
-        println(PointData().X)
+        println(PointData().x)
         val freq: Long = (1000 / NmeaProviderManager.mNmeaBuilder.nudHz).toLong()
         var startTime=System.currentTimeMillis()
         PointData().save()

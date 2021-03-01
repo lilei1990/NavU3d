@@ -61,8 +61,8 @@ class GuideLineData : LitePalSupport() {
      * 设置开始点
      */
     fun setStart(mA: PointData) {
-        startX = mA.X
-        startY = mA.Y
+        startX = mA.x
+        startY = mA.y
         startLat = mA.lat
         startLng = mA.lng
 
@@ -70,8 +70,8 @@ class GuideLineData : LitePalSupport() {
 
     fun getStart(): PointData {
         val mA = PointData()
-        mA.X = startX
-        mA.Y = startY
+        mA.x = startX
+        mA.y = startY
         mA.lat = startLat
         mA.lng = startLng
         return mA
@@ -81,16 +81,16 @@ class GuideLineData : LitePalSupport() {
      * 设置结束点
      */
     fun setEnd(mB: PointData) {
-        endX = mB.X
-        endY = mB.Y
+        endX = mB.x
+        endY = mB.y
         endLat = mB.lat
         endLng = mB.lng
     }
 
     fun getEnd(): PointData {
         val mB = PointData()
-        mB.X = endX
-        mB.Y = endY
+        mB.x = endX
+        mB.y = endY
         mB.lat = endLat
         mB.lng = endLng
         return mB

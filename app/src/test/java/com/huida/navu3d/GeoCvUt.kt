@@ -83,12 +83,12 @@ object GeoCvUt {
         m = Math.cos(rB) * dL * Math.PI / 180
         N = a / Math.sqrt(1 - ee * Math.sin(rB) * Math.sin(rB))
         it2 = ee2 * Math.pow(Math.cos(rB), 2.0)
-        temp.X = m * m / 2 + (5 - tB * tB + 9 * it2 + 4 * it2 * it2) * Math.pow(
+        temp.x = m * m / 2 + (5 - tB * tB + 9 * it2 + 4 * it2 * it2) * Math.pow(
             m,
             4.0
         ) / 24 + (61 - 58 * tB * tB + Math.pow(tB, 4.0)) * Math.pow(m, 6.0) / 720
-        temp.X = MeridianLength(B, a, f) + N * tB * temp.X
-        temp.Y = N * (m + (1 - tB * tB + it2) * Math.pow(m, 3.0) / 6 + (5 - 18 * tB * tB + Math.pow(
+        temp.x = MeridianLength(B, a, f) + N * tB * temp.x
+        temp.y = N * (m + (1 - tB * tB + it2) * Math.pow(m, 3.0) / 6 + (5 - 18 * tB * tB + Math.pow(
             tB,
             4.0
         ) + 14 * it2 - 58 * tB * tB * it2) *

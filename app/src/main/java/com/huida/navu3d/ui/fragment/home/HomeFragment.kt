@@ -1,22 +1,24 @@
 package com.huida.navu3d.ui.fragment.home
 
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
-import com.blankj.utilcode.util.ToastUtils
-import com.huida.navu3d.bean.PointData
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.PolylineOptions
+import com.amap.api.maps.model.TextOptions
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.databinding.FragmentHomeBinding
 import com.huida.navu3d.ui.activity.unity.U3dVM
-import com.huida.navu3d.utils.PointConvert
+import com.huida.navu3d.utils.GaoDeUtils
 import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
+import com.unity3d.player.UnityPlayer
 import kotlin.math.roundToInt
 
 
@@ -38,7 +40,7 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 
 
     private fun initU3dLayout() {
-        llRoot =  binding.incUnity.llRoot
+        llRoot = binding.incUnity.llRoot
         binding.apply {
             binding.incUnity.llRoot.addView(u3dViewModel.mUnityPlayer)
             u3dViewModel.mUnityPlayer!!.requestFocus()
@@ -85,6 +87,24 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         homeFragmentBean.currenLatLng.observe(this) {
             homeVM.move()
         }
+        homeFragmentBean.status.observe(this) {
+//            when (it) {
+//                HomeFragmentBean.Status.START -> {
+//                    binding.incMenu.bt5.itemRoot.visibility=View.INVISIBLE
+//                    binding.incMenu.bt8.itemRoot.visibility=View.VISIBLE
+//                }
+//                HomeFragmentBean.Status.PAUSE -> {
+//                    binding.incMenu.bt5.itemRoot.visibility=View.INVISIBLE
+//                }
+//                HomeFragmentBean.Status.STOP -> {
+//                    binding.incMenu.bt5.itemRoot.visibility=View.VISIBLE
+//                    binding.incMenu.bt8.itemRoot.visibility=View.INVISIBLE
+//                }
+//            }
+        }
+        homeFragmentBean.DataParallelLine.observe(this) {
+            homeVM.addParallelLine()
+        }
     }
 
     private fun initButton() {
@@ -103,6 +123,35 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         binding.incMenu.bt3.tvText.text = "生成导航线"
         binding.incMenu.bt3.itemRoot.clickNoRepeat {
             homeVM.drawGuideLine()
+//            var str="[\n" +
+//                    "  {\"nav\":[\n" +
+//                    "          {\"x\":49343,\"y\":417301},\n" +
+//                    "          {\"x\":49313,\"y\":417311}\n" +
+//                    "          ],\n" +
+//                    "  \"name\":\"line1\"},\n" +
+//                    "  {\"nav\":[\n" +
+//                    "          {\"x\":1.0,\"y\":1.0},\n" +
+//                    "          {\"x\":1.0,\"y\":2.0}\n" +
+//                    "          ],\n" +
+//                    "  \"name\":\"line1\"},\n" +
+//                    "  {\"nav\":[\n" +
+//                    "          {\"x\":1.0,\"y\":1.0},\n" +
+//                    "          {\"x\":1.0,\"y\":2.0}\n" +
+//                    "          ],\n" +
+//                    "  \"name\":\"line1\"},\n" +
+//                    "  {\"nav\":[\n" +
+//                    "          {\"x\":1.0,\"y\":1.0},\n" +
+//                    "          {\"x\":1.0,\"y\":2.0}\n" +
+//                    "          ],\n" +
+//                    "  \"name\":\"line1\"},\n" +
+//                    "  {\"nav\":[\n" +
+//                    "          {\"x\":1.0,\"y\":1.0},\n" +
+//                    "          {\"x\":1.0,\"y\":2.0}\n" +
+//                    "          ],\n" +
+//                    "  \"name\":\"line1\"}\n" +
+//                    "  \n" +
+//                    "]"
+//            UnityPlayer.UnitySendMessage("Correspondent", "BuildNavLine", str)
         }
         binding.incMenu.bt4.tvText.text = "刷新线"
         binding.incMenu.bt4.itemRoot.clickNoRepeat {

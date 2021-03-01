@@ -2,6 +2,7 @@ package com.huida.navu3d.ui.fragment.home
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.esri.core.geometry.Point
 import com.esri.core.geometry.Polyline
 import com.huida.navu3d.bean.PointData
 import com.unity3d.player.UnityPlayer
@@ -22,7 +23,9 @@ class UnityRepo(
     val errorLiveData: MutableLiveData<ApiException>,
     homeVM: HomeVM
 ) {
-
+    //缩小的比例系数
+    val scaleX=100000
+    val scaleY=1000000
     /**
      * 设置标记点
      */
@@ -41,10 +44,10 @@ class UnityRepo(
             val line = JSONObject()
             val startPoint = JSONObject()
             val endPoint = JSONObject()
-            var x0: Double = (value.getPoint(0).x)
-            var y0: Double = (value.getPoint(0).y)
-            var x1: Double = (value.getPoint(1).x)
-            var y1: Double = (value.getPoint(1).y)
+            var x0: Double = (value.getPoint(0).x%scaleX)
+            var y0: Double = (value.getPoint(0).y%scaleY)
+            var x1: Double = (value.getPoint(1).x%scaleX)
+            var y1: Double = (value.getPoint(1).y%scaleY)
             startPoint.put("x", x0)
             startPoint.put("y", y0)
             endPoint.put("x", x1)
@@ -60,14 +63,13 @@ class UnityRepo(
     /**
      * 小车移动
      */
-    val scaleX=100000
-    val scaleY=1000000
+
     fun moveCart(
         it: PointData,
         speed: Double
     ) {
-        var x = (it.X).toFloat()%scaleX
-        var y = (it.Y).toFloat()%scaleY
+        var x = (it.x).toFloat()%scaleX
+        var y = (it.y).toFloat()%scaleY
         Log.d("TAG_lilei", "moveCart: ${x}--${y}")
         val json = JSONObject()
         json.put("x", x)

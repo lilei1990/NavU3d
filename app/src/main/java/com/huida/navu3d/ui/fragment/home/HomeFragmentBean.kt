@@ -3,18 +3,15 @@ package com.huida.navu3d.ui.fragment.home
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
-import com.huida.navu3d.bean.GuideLineData
-import com.huida.navu3d.bean.PointData
-import com.huida.navu3d.bean.TrackLineData
-import com.huida.navu3d.bean.WorkTaskData
+import com.huida.navu3d.bean.*
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.utils.GeometryUtils
-import com.huida.navu3d.utils.PointConvert
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
+import uk.me.jstott.jcoord.LatLng
+import uk.me.jstott.jcoord.UTMRef
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedDeque
-import kotlin.concurrent.fixedRateTimer
 
 
 /**
@@ -25,6 +22,8 @@ import kotlin.concurrent.fixedRateTimer
  */
 class HomeFragmentBean {
 
+
+    var status = MutableLiveData<Status>()
 
     //与最近导航线偏移距离
     var offsetLineDistance = MutableLiveData<Int>()
@@ -58,17 +57,19 @@ class HomeFragmentBean {
     var trackLineData = MutableLiveData<TrackLineData>()
 
     //是否录制轨迹
-    var isRecord = false
+    var isRecord = MutableLiveData<Boolean>(false)
 
     //点的队列
     val mPointQueue = ConcurrentLinkedDeque<PointData>()
+
 
     //抽稀操作
     val generalizer =
         OperatorFactoryLocal
             .getInstance()
             .getOperator(Operator.Type.Generalize) as OperatorGeneralize
-
+    var lngZone: Int? = null
+    var latZone: Char? = null
 
     /**
      * 计算gga数据
@@ -78,14 +79,15 @@ class HomeFragmentBean {
         val position = gga.position
         val latitude = position.latitude
         val longitude = position.longitude
-        val pointXY = PointConvert.convertPoint(latitude, longitude)
-        currenLatLng.postValue(pointXY)
+        val point = PointData.build(latitude, longitude)
+
+        currenLatLng.postValue(point)
         satelliteCount.postValue(gga.satelliteCount)
         //如果开始录制
-        if (isRecord) {
-            mPointQueue.addFirst(pointXY)
+        if (isRecord.value!!) {
+            mPointQueue.addFirst(point)
         }
-        val p = Point(pointXY.X, pointXY.Y)
+        val p = Point(point.x, point.y)
         //计算偏移的距离
 //        val polyline = mParalleMaplLine.get(3)
     }
@@ -115,12 +117,21 @@ class HomeFragmentBean {
     /**
      * 创建到引导线
      */
-    fun creatGuideLine(mA: PointData, mB: PointData) {
-        //没有任何意义,仅仅是历史数据加载时更新zoom,确定utm区域
-        PointConvert.convertPoint(mA.lat, mA.lng)
+    fun creatGuideLine() {
+        if (pointA.value==null) {
+            ToastUtils.showLong("请设置A点")
+            return
+        }
+        if (pointB.value==null) {
+            ToastUtils.showLong("请设置B点")
+            return
+        }
+        val mA=PointData.build(pointA.value!!.lat, pointA.value!!.lng)
+        val mB=PointData.build(pointB.value!!.lat, pointB.value!!.lng)
         val pointData: MutableList<PointData> = ArrayList()
         //延长
         val length = Constants.EXTEND_LINE
+        //计算两点之间的距离
         val distance = GeometryUtils.distanceOfTwoPoints(mA, mB)
         if (distance == 0.0) {
             ToastUtils.showLong("AB点重合,请重新设置AB点")
@@ -132,10 +143,10 @@ class HomeFragmentBean {
         pointData.add(mA)
         pointData.add(mB)
         val navLineData = GuideLineData()
-        navLineData.startX = mA.X
-        navLineData.startY = mA.Y
-        navLineData.endX = mB.X
-        navLineData.endY = mB.Y
+        navLineData.startX = mA.x
+        navLineData.startY = mA.y
+        navLineData.endX = mB.x
+        navLineData.endY = mB.y
         mParalleMaplLine.putAll(navLineData.budileUtmLine())
         DataParallelLine.postValue(mParalleMaplLine)
 
@@ -163,34 +174,43 @@ class HomeFragmentBean {
      */
 
     fun isRecord(b: Boolean) {
-        isRecord = b
-        loop()
+        isRecord.postValue(b)
     }
 
     /**
-     * 循环进行数据处理
+     * 循环进行数据处理,对数据进行抽稀
      */
     private fun loop() {
-        if (isRecord && mPointQueue.size > 100) {
+        if (isRecord.value!! && mPointQueue.size > 1000) {
             mPointQueue.first.apply {
                 //将原始离散点转换成折线
                 val outpm = Polyline()
-                outpm.startPath(this.X, this.Y)
+                outpm.startPath(this.x,this.y)
                 var len = mPointQueue.pollFirst()
                 while (len != null) {
-                    outpm.lineTo(len.X, len.Y)
+                    outpm.lineTo(this.x,this.y)
                     len = mPointQueue.pollFirst()
                 }
+
                 //1 传入点抽稀
                 var outputGeom = generalizer.execute(
                     outpm,
-                    0.3,
+                    0.03,
                     true,
                     null
                 ) as Polyline
+
+                val pathSize = outputGeom.getPathSize(0)
+                for (i in (0 until pathSize)) {
+                    val point = outputGeom.getPoint(i)
+                    PointData.build(lngZone!!,latZone!!,point.x,point.y).save()
+                }
             }
 
         }
     }
 
+    enum class Status {
+        START, PAUSE, STOP
+    }
 }

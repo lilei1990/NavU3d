@@ -5,10 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.esri.core.geometry.Operator
 import com.esri.core.geometry.OperatorDensifyByLength
 import com.esri.core.geometry.OperatorFactoryLocal
-import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.bean.WorkTaskData
 import com.lei.core.base.BaseViewModel
-import com.unity3d.player.UnityPlayer
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
 
@@ -95,7 +93,7 @@ class HomeVM : BaseViewModel() {
      * 画引导线
      */
     fun drawGuideLine() {
-//        homeFragmentBean.creatGuideLine()
+        homeFragmentBean.creatGuideLine()
     }
 
     //补点操作
@@ -125,6 +123,13 @@ class HomeVM : BaseViewModel() {
     override fun onCleared() {
         stop()
         super.onCleared()
+    }
+
+    /**
+     * 添加平行线
+     */
+    fun addParallelLine() {
+        unityRepo.addParallelLine(homeFragmentBean.mParalleMaplLine)
     }
 
 

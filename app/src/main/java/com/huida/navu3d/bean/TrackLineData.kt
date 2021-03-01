@@ -14,15 +14,15 @@ class TrackLineData : LitePalSupport() {
     var startLat: Double = 0.0
     var startLng: Double = 0.0
     var points = ArrayList<PointData>()
-    override fun save(): Boolean {
-        //把第一个点作为起始点,方便查询操作
-        if (points.size > 0) {
-            val point = points.get(0)
-            startX = point.X
-            startY = point.Y
-            startLat = point.lat
-            startLng = point.lng
-        }
-        return super.save()
-    }
+//    override fun save(): Boolean {
+//        //把第一个点作为起始点,方便查询操作
+//        if (points.size > 0) {
+//            val point = points.get(0)
+//            startX = point.x
+//            startY = point.y
+//            startLat = point.lat
+//            startLng = point.lng
+//        }
+//        return super.save()
+//    }
 }

@@ -29,12 +29,14 @@ class WorkTaskData : LitePalSupport() {
     //农具
     var farmTools: Int = 0
 
-    //平行线数据,包含AB点
-    var guideLineData: GuideLineData? = null
-
     //轨迹数据
     var lines: ArrayList<TrackLineData>? = ArrayList()
 
+//    //A点
+//    var pointA = ArrayList<PointDb>()
+//
+//    //B点
+//    var pointB = ArrayList<PointDb>()
 
     fun getObjId(): Long {
         return baseObjId

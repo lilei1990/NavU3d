@@ -1,8 +1,12 @@
 package com.huida.navu3d
 
+import com.esri.core.geometry.Polyline
+import com.huida.navu3d.bean.EncapPointData
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.utils.GeoConvert
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.junit.Test
 import uk.me.jstott.jcoord.LatLng
 import java.lang.Thread.sleep
@@ -26,13 +30,16 @@ class TestP {
 
     @Test
     fun test() {
-
-        for (i in 1..1000) {
-            latitude=latitude-0.1
-            longitude=longitude-0.1
-            val toUTMRef = LatLng(latitude, longitude).toUTMRef()
-            println("${toUTMRef.easting}=======${toUTMRef.northing}------${longitude}")
+        val start = System.currentTimeMillis()
+        for (i in (0 until 100000)) {
+            val ll = LatLng(84.0, 23.0)
+//            val convertUTMToLatLon = GeoConvert.INSTANCE.convertUTMToLatLon(84.0, 23.0)
+            val utm = ll.toUTMRef()
+//            val e = utm.toLatLng()
         }
+        println("${System.currentTimeMillis() - start}")
+
+
     }
 
     fun runTest2() {
@@ -66,8 +73,8 @@ class TestP {
 
             println("-$i")
             var ab = PointData()
-            ab.X = 100.0
-            ab.Y = 100.0
+            ab.x = 100.0
+            ab.y = 100.0
             sleep(100)
             endTime = System.currentTimeMillis()
         }
@@ -79,8 +86,8 @@ class TestP {
 
             println("-$i")
             var ab = PointData()
-            ab.X = 100.0
-            ab.Y = 100.0
+            ab.x = 100.0
+            ab.y = 100.0
             sleep(100)
         }
     }

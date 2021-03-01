@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.Marker
 import com.amap.api.maps.model.MarkerOptions
+import com.esri.core.geometry.Point
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.utils.GaoDeUtils
 

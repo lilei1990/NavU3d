@@ -2,15 +2,10 @@ package com.huida.navu3d.ui.activity.unity
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.esri.core.geometry.Polyline
 import com.huida.navu3d.bean.PointData
 import com.unity3d.player.UnityPlayer
-import kotlinx.coroutines.launch
 import org.jetbrains.annotations.Nullable
-import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.math.roundToInt
 
 
 class U3dVM : ViewModel() {
@@ -25,8 +20,8 @@ class U3dVM : ViewModel() {
         it: PointData,
         speed: Double
     ) {
-        var x = (it.X ).toFloat()
-        var y = (it.Y ).toFloat()
+        var x = (it.x ).toFloat()
+        var y = (it.y ).toFloat()
 //        var x = (it.X * 1000).toInt()*1f/1000%scaleX
 //        var y = (it.Y * 1000).toInt()*1f/1000%scaleY
         Log.d("TAG_lilei", "moveCart: ${x}--${y}")
