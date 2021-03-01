@@ -50,8 +50,6 @@ class HomeFragmentBean {
     val DataParallelLine = MutableLiveData<MutableMap<Int, Polyline>>()
     val mParalleMaplLine: MutableMap<Int, Polyline> = mutableMapOf<Int, Polyline>()
 
-    //历史数据
-    val workTaskData = MutableLiveData<WorkTaskData>()
 
     //轨迹线
     var trackLineData = MutableLiveData<TrackLineData>()
@@ -68,8 +66,13 @@ class HomeFragmentBean {
         OperatorFactoryLocal
             .getInstance()
             .getOperator(Operator.Type.Generalize) as OperatorGeneralize
+
+    //当前所在的utm区域编号
     var lngZone: Int? = null
     var latZone: Char? = null
+
+    //每次点start的时候就代表一个新的线段
+    val lineXYData = TrackLineData()
 
     /**
      * 计算gga数据
@@ -80,7 +83,8 @@ class HomeFragmentBean {
         val latitude = position.latitude
         val longitude = position.longitude
         val point = PointData.build(latitude, longitude)
-
+        lngZone = point.lngZone
+        latZone = point.latZone
         currenLatLng.postValue(point)
         satelliteCount.postValue(gga.satelliteCount)
         //如果开始录制
@@ -90,6 +94,8 @@ class HomeFragmentBean {
         val p = Point(point.x, point.y)
         //计算偏移的距离
 //        val polyline = mParalleMaplLine.get(3)
+
+        loop()
     }
 
     /**
@@ -118,16 +124,16 @@ class HomeFragmentBean {
      * 创建到引导线
      */
     fun creatGuideLine() {
-        if (pointA.value==null) {
+        if (pointA.value == null) {
             ToastUtils.showLong("请设置A点")
             return
         }
-        if (pointB.value==null) {
+        if (pointB.value == null) {
             ToastUtils.showLong("请设置B点")
             return
         }
-        val mA=PointData.build(pointA.value!!.lat, pointA.value!!.lng)
-        val mB=PointData.build(pointB.value!!.lat, pointB.value!!.lng)
+        val mA = PointData.build(pointA.value!!.lat, pointA.value!!.lng)
+        val mB = PointData.build(pointB.value!!.lat, pointB.value!!.lng)
         val pointData: MutableList<PointData> = ArrayList()
         //延长
         val length = Constants.EXTEND_LINE
@@ -153,21 +159,14 @@ class HomeFragmentBean {
     }
 
     /**
-     * 添加历史数据
+     * 添加历史数据,关联数据
      */
     fun setWorkTaskData(taskData: WorkTaskData) {
-        workTaskData.postValue(taskData)
+        lineXYData.save()
+        taskData?.lines?.add(lineXYData)
+        taskData?.save()
     }
 
-    /**
-     * 创建导航线
-     */
-    fun creatNavLine() {
-        workTaskData.value?.apply {
-            trackLineData.postValue(TrackLineData())
-            lines?.add(trackLineData.value!!)
-        }
-    }
 
     /**
      * 是否录制轨迹
@@ -181,14 +180,14 @@ class HomeFragmentBean {
      * 循环进行数据处理,对数据进行抽稀
      */
     private fun loop() {
-        if (isRecord.value!! && mPointQueue.size > 1000) {
+        if (isRecord.value!! && mPointQueue.size > 100) {
             mPointQueue.first.apply {
                 //将原始离散点转换成折线
                 val outpm = Polyline()
-                outpm.startPath(this.x,this.y)
+                outpm.startPath(this.x, this.y)
                 var len = mPointQueue.pollFirst()
                 while (len != null) {
-                    outpm.lineTo(this.x,this.y)
+                    outpm.lineTo(len.x, len.y)
                     len = mPointQueue.pollFirst()
                 }
 
@@ -203,11 +202,21 @@ class HomeFragmentBean {
                 val pathSize = outputGeom.getPathSize(0)
                 for (i in (0 until pathSize)) {
                     val point = outputGeom.getPoint(i)
-                    PointData.build(lngZone!!,latZone!!,point.x,point.y).save()
+                    savePoint(PointData.build(lngZone!!, latZone!!, point.x, point.y))
+
                 }
             }
 
         }
+    }
+
+    /**
+     * 存储数据
+     */
+    fun savePoint(pointXY: PointData) {
+        lineXYData.points.add(pointXY)
+        pointXY.save()
+        lineXYData.save()
     }
 
     enum class Status {

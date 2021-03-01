@@ -1,6 +1,8 @@
 package com.huida.navu3d.bean
 
 import org.litepal.crud.LitePalSupport
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * 作者 : lei
@@ -9,10 +11,9 @@ import org.litepal.crud.LitePalSupport
  * 描述 :轨迹线的数据
  */
 class TrackLineData : LitePalSupport() {
-    var startX: Double = 0.0
-    var startY: Double = 0.0
-    var startLat: Double = 0.0
-    var startLng: Double = 0.0
+    var time: Date= Date(System.currentTimeMillis())
+
+    //当前线段的点
     var points = ArrayList<PointData>()
 //    override fun save(): Boolean {
 //        //把第一个点作为起始点,方便查询操作
