@@ -30,7 +30,10 @@ class WorkTaskData : LitePalSupport() {
     var farmTools: Int = 0
 
     //轨迹数据
-    var lines: ArrayList<TrackLineData>? = ArrayList()
+    var trackLineData: ArrayList<TrackLineData>? =null
+
+    //平行线数据,包含AB点
+    var guideLineData: GuideLineData? =null
 
 //    //A点
 //    var pointA = ArrayList<PointDb>()
@@ -43,14 +46,22 @@ class WorkTaskData : LitePalSupport() {
     }
 
     /**
-     * 查询线的数据
+     * 查询轨迹线的数据
      */
-    fun findLines() {
+    fun findTrackLines() {
         var arr =
             LitePal.where("worktaskdata_id=${getObjId()}")
                 .find(TrackLineData::class.java, true)
-        lines?.clear()
-        lines?.addAll(arr)
+        trackLineData?.clear()
+        trackLineData?.addAll(arr)
+    }
+    /**
+     * 查询导航线的数据
+     */
+    fun findGuideLines() {
+         guideLineData =
+            LitePal.where("worktaskdata_id=${getObjId()}")
+                .findFirst(GuideLineData::class.java, true)
     }
 }
 

@@ -7,7 +7,6 @@ import com.huida.navu3d.ui.fragment.home.HomeFragmentBean.Status.*
 import com.zs.base_library.http.ApiException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
@@ -93,6 +92,7 @@ class HomeRepo(
      */
     fun setWorkTaskData(workTaskData: WorkTaskData) {
         homeFragmentBean.setWorkTaskData(workTaskData)
+
     }
 
     /**

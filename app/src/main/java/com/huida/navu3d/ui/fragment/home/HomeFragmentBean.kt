@@ -8,8 +8,6 @@ import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.utils.GeometryUtils
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
-import uk.me.jstott.jcoord.LatLng
-import uk.me.jstott.jcoord.UTMRef
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedDeque
 
@@ -186,7 +184,7 @@ class HomeFragmentBean {
     private fun newLine() {
         lineXYData = TrackLineData()
         lineXYData.save()
-        taskData.lines!!.add(lineXYData)
+        taskData.trackLineData!!.add(lineXYData)
     }
 
     /**

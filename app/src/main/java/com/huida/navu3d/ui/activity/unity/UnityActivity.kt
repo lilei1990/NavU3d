@@ -1,31 +1,38 @@
-package com.huida.navu3d.ui.fragment.home
+package com.huida.navu3d.ui.activity.unity
 
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
-import com.amap.api.maps.model.LatLng
-import com.amap.api.maps.model.PolylineOptions
-import com.amap.api.maps.model.TextOptions
+import com.blankj.utilcode.util.ToastUtils
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.constants.BusConstants
+import com.huida.navu3d.databinding.ActivityMainBinding
 import com.huida.navu3d.databinding.FragmentHomeBinding
-import com.huida.navu3d.ui.activity.unity.U3dVM
-import com.huida.navu3d.utils.GaoDeUtils
+import com.huida.navu3d.ui.fragment.home.HomeFragmentBean
+import com.huida.navu3d.ui.fragment.home.HomeVM
+import com.huida.navu3d.ui.fragment.home.UnityVM
 import com.kongqw.rockerlibrary.view.RockerView
-import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
-import com.unity3d.player.UnityPlayer
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+/**
+ * 作者 : lei
+ * 时间 : 2021/03/02.
+ * 邮箱 :416587959@qq.com
+ * 描述 :
+ */
+class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
+    private val homeVM by lazy { getActivityViewModel(HomeVM::class.java)!! }
 
-class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
-    private val homeVM by lazy { getFragmentViewModel(HomeVM::class.java) }
-    private val u3dViewModel by lazy { getActivityViewModel(U3dVM::class.java) }
-    private val unityVM by lazy { getActivityViewModel(UnityVM::class.java) }
+    private val unityVM by lazy { getActivityViewModel(UnityVM::class.java)!! }
     lateinit var llRoot: LinearLayout
     var workTaskData: WorkTaskData? = null
     override fun init(savedInstanceState: Bundle?) {
@@ -39,16 +46,25 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
             initU3dLayout()
             initRockView()
         }
+
+
     }
 
+    /**
+     * 场景初始化
+    请求位置
+     */
+    fun onSceneLoad() {
+        ToastUtils.showLong("onSceneLoad")
+    }
 
     private fun initU3dLayout() {
         llRoot = binding.incUnity.llRoot
         binding.apply {
-            binding.incUnity.llRoot.addView(u3dViewModel.mUnityPlayer)
-            u3dViewModel.mUnityPlayer!!.requestFocus()
+            binding.incUnity.llRoot.addView(mUnityPlayer)
+            mUnityPlayer!!.requestFocus()
             binding.incUnity.scDayNight.clickNoRepeat {
-                u3dViewModel.switchLight()
+                unityVM.switchLight()
             }
         }
         //切换地图和u3d场景

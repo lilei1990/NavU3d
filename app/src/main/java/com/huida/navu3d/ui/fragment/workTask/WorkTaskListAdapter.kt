@@ -2,11 +2,13 @@ package com.huida.navu3d.ui.fragment.workTask
 
 import android.content.Context
 import androidx.navigation.Navigation
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.constants.BusConstants
+import com.huida.navu3d.ui.activity.unity.UnityActivity
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lei.core.common.LiveDataBus
 import com.zhy.adapter.recyclerview.CommonAdapter
@@ -29,12 +31,14 @@ class WorkTaskListAdapter(
     override fun convert(holder: ViewHolder?, t: WorkTaskData?, position: Int) {
         holder?.setOnClickListener(R.id.clRoot) {
 
-            t?.findLines()
+            t?.findGuideLines()
+            t?.findTrackLines()
             liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name)
                 .post(t)
             ToastUtils.showLong("${position}被点击")
-            Navigation.findNavController(it)
-                .navigate(R.id.action_task_list_fragment_to_home_fragment)
+            ActivityUtils.startActivity(UnityActivity::class.java)
+//            Navigation.findNavController(it)
+//                .navigate(R.id.action_task_list_fragment_to_home_fragment)
         }
         holder?.setText(R.id.tv_name, t?.name)
         holder?.setText(R.id.tv_creator, "创建人:${t?.creator}")

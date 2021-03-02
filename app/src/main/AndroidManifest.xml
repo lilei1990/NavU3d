@@ -47,7 +47,11 @@
         <activity
             android:name=".ui.activity.main.MainActivity"
             android:screenOrientation="landscape" />
-
+        <activity
+            android:theme="@style/AppTheme_Night"
+            android:process=":unity"
+            android:name=".ui.activity.unity.UnityActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

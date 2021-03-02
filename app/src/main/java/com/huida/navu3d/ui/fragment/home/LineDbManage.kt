@@ -54,7 +54,7 @@ class LineDbManage {
      * 关联数据,并存储
      */
     fun build(taskWorkby: WorkTaskData?): LineDbManage {
-        taskWorkby?.lines?.add(lineXYData)
+        taskWorkby?.trackLineData?.add(lineXYData)
         lineXYData.save()
         taskWorkby?.save()
         return this

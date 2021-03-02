@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.databinding.ActivityMainBinding
 import com.huida.navu3d.ui.activity.unity.U3dExtActivity
+import com.lei.core.base.BaseVmActivity
 import com.lei.core.utils.PrefUtils
 import com.lei.core.utils.StatusUtils
 
@@ -16,7 +17,7 @@ import com.lei.core.utils.StatusUtils
  * 邮箱 :416587959@qq.com
  * 描述 : 入口activity
  */
-class MainActivity : U3dExtActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+class MainActivity : BaseVmActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     override fun init(savedInstanceState: Bundle?) {
 
     }
@@ -34,13 +35,6 @@ class MainActivity : U3dExtActivity<ActivityMainBinding>(ActivityMainBinding::in
         }
     }
 
-    /**
-     * 场景初始化
-    请求位置
-     */
-    fun onSceneLoad() {
-  ToastUtils.showLong("onSceneLoad")
-    }
 }
 
 

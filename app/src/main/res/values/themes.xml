@@ -16,6 +16,8 @@
 
     <!--    白天主题-->
     <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
+<!--        解决启动白屏问题-->
+        <item name="android:windowBackground">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="colorPrimary">#666666</item>
@@ -42,6 +44,7 @@
 
     <!--    夜晚主题-->
     <style name="AppTheme_Night" parent="Theme.Design.Light.NoActionBar">
+        <item name="android:windowBackground">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="colorPrimary">#00796B</item>

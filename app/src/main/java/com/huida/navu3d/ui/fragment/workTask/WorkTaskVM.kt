@@ -19,7 +19,7 @@ class WorkTaskVM : ViewModel() {
     fun loadInitData(): MutableLiveData<ArrayList<WorkTaskData>> {
         val arrayListOf = arrayListOf<WorkTaskData>()
         val alls =
-                LitePal.findAll(WorkTaskData::class.java, true)
+                LitePal.findAll(WorkTaskData::class.java)
         alls?.apply {
             this.forEach {
                 arrayListOf.add(it)
