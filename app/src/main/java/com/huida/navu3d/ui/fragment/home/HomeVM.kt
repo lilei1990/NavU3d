@@ -93,7 +93,7 @@ class HomeVM : BaseViewModel() {
      * 画引导线
      */
     fun drawGuideLine() {
-        homeFragmentBean.creatGuideLine()
+        homeRepo.drawGuideLine()
     }
 
     //补点操作

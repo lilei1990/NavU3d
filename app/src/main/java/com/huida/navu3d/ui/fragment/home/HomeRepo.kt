@@ -97,7 +97,7 @@ class HomeRepo(
      * 画引导线
      */
     fun drawGuideLine() {
-//        homeFragmentBean.creatGuideLine()
+        homeFragmentBean.creatGuideLine()
     }
 
     /**

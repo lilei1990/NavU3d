@@ -16,15 +16,8 @@ class TrackLineData : LitePalSupport() {
 
     //当前线段的点
     var points = ArrayList<PointData>()
-//    override fun save(): Boolean {
-//        //把第一个点作为起始点,方便查询操作
-//        if (points.size > 0) {
-//            val point = points.get(0)
-//            startX = point.x
-//            startY = point.y
-//            startLat = point.lat
-//            startLng = point.lng
-//        }
-//        return super.save()
-//    }
+
+     fun getId(): Long {
+        return super.getBaseObjId()
+    }
 }

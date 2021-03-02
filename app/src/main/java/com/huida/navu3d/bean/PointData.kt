@@ -25,9 +25,12 @@ open class PointData : LitePalSupport() {
     var x = 0.0
 
     var y = 0.0
+    //线的标识
+    var trackLineId = -1L
 
     var lngZone: Int? = null
     var latZone: Char? = null
+
     companion object {
         /**
          * 根据经纬度数据生成对象
@@ -37,10 +40,10 @@ open class PointData : LitePalSupport() {
             pointData.lat = latitude
             pointData.lng = longitude
             val utm = LatLng(latitude, longitude).toUTMRef()
-            pointData.x=utm.easting
-            pointData.y=utm.northing
-            pointData.lngZone=utm.lngZone
-            pointData.latZone=utm.latZone
+            pointData.x = utm.easting
+            pointData.y = utm.northing
+            pointData.lngZone = utm.lngZone
+            pointData.latZone = utm.latZone
             return pointData
         }
 
@@ -50,12 +53,12 @@ open class PointData : LitePalSupport() {
         fun build(lngZone: Int, latZone: Char, x: Double, y: Double): PointData {
             val pointData = PointData()
             var latLng = UTMRef(lngZone, latZone, x, y).toLatLng()
-            pointData.lat=latLng.latitude
-            pointData.lng=latLng.longitude
-            pointData.x=x
-            pointData.y=y
-            pointData.lngZone=lngZone
-            pointData.latZone=latZone
+            pointData.lat = latLng.latitude
+            pointData.lng = latLng.longitude
+            pointData.x = x
+            pointData.y = y
+            pointData.lngZone = lngZone
+            pointData.latZone = latZone
             return pointData
         }
     }

@@ -72,13 +72,14 @@ class HomeFragmentBean {
     var latZone: Char? = null
 
     //每次点start的时候就代表一个新的线段
-    val lineXYData = TrackLineData()
+    lateinit var lineXYData:TrackLineData
+
+    lateinit var taskData: WorkTaskData
 
     /**
      * 计算gga数据
      */
     fun putGGA(gga: GGASentence) {
-
         val position = gga.position
         val latitude = position.latitude
         val longitude = position.longitude
@@ -161,10 +162,10 @@ class HomeFragmentBean {
     /**
      * 添加历史数据,关联数据
      */
-    fun setWorkTaskData(taskData: WorkTaskData) {
-        lineXYData.save()
-        taskData?.lines?.add(lineXYData)
-        taskData?.save()
+    fun setWorkTaskData(task: WorkTaskData) {
+        taskData = task
+        //每次重新录制就重新初始化一条线
+        newLine()
     }
 
 
@@ -173,7 +174,19 @@ class HomeFragmentBean {
      */
 
     fun isRecord(b: Boolean) {
+        //每次重新录制就重新初始化一条线
+        newLine()
         isRecord.postValue(b)
+
+    }
+
+    /**
+     * //每次重新录制就重新初始化一条线
+     */
+    private fun newLine() {
+        lineXYData = TrackLineData()
+        lineXYData.save()
+        taskData.lines!!.add(lineXYData)
     }
 
     /**
@@ -214,9 +227,8 @@ class HomeFragmentBean {
      * 存储数据
      */
     fun savePoint(pointXY: PointData) {
-        lineXYData.points.add(pointXY)
+        pointXY.trackLineId = lineXYData.getId()
         pointXY.save()
-        lineXYData.save()
     }
 
     enum class Status {
