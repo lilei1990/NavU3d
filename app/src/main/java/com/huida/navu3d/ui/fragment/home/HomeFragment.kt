@@ -129,6 +129,10 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 
 //            workTaskData.lines.add(it)
         }
+        homeFragmentBean.lineXYData.observe(this) {
+            workTaskData?.trackLineData?.add(it)
+            workTaskData?.save()
+        }
     }
 
     private fun initButton() {

@@ -70,10 +70,7 @@ class HomeFragmentBean {
     var latZone: Char? = null
 
     //每次点start的时候就代表一个新的线段
-    lateinit var lineXYData:TrackLineData
-
-    lateinit var taskData: WorkTaskData
-
+    var lineXYData= MutableLiveData<TrackLineData>()
     /**
      * 计算gga数据
      */
@@ -157,14 +154,7 @@ class HomeFragmentBean {
 
     }
 
-    /**
-     * 添加历史数据,关联数据
-     */
-    fun setWorkTaskData(task: WorkTaskData) {
-        taskData = task
-        //每次重新录制就重新初始化一条线
-        newLine()
-    }
+
 
 
     /**
@@ -182,9 +172,7 @@ class HomeFragmentBean {
      * //每次重新录制就重新初始化一条线
      */
     private fun newLine() {
-        lineXYData = TrackLineData()
-        lineXYData.save()
-        taskData.trackLineData!!.add(lineXYData)
+        lineXYData.postValue( TrackLineData())
     }
 
     /**
@@ -225,7 +213,7 @@ class HomeFragmentBean {
      * 存储数据
      */
     fun savePoint(pointXY: PointData) {
-        pointXY.trackLineId = lineXYData.getId()
+        pointXY.trackLineId = lineXYData.value?.getId()!!
         pointXY.save()
     }
 

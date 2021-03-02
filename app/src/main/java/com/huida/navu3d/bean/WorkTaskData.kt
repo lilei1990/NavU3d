@@ -2,6 +2,7 @@ package com.huida.navu3d.bean
 
 import org.litepal.LitePal
 import org.litepal.crud.LitePalSupport
+import java.io.Serializable
 
 /**
  * 作者 : lei
@@ -10,7 +11,7 @@ import org.litepal.crud.LitePalSupport
  * 描述 :作业任务数据模型
  */
 
-class WorkTaskData : LitePalSupport() {
+class WorkTaskData : LitePalSupport() ,Serializable{
 
     var sortId: Int = 0
 

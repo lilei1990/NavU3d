@@ -1,18 +1,18 @@
 package com.huida.navu3d.ui.fragment.workTask
 
 import android.content.Context
-import androidx.navigation.Navigation
+import android.os.Bundle
 import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.ui.activity.unity.UnityActivity
-import com.jeremyliao.liveeventbus.LiveEventBus
-import com.lei.core.common.LiveDataBus
 import com.zhy.adapter.recyclerview.CommonAdapter
 import com.zhy.adapter.recyclerview.base.ViewHolder
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * 作者 : lei
@@ -30,13 +30,17 @@ class WorkTaskListAdapter(
 
     override fun convert(holder: ViewHolder?, t: WorkTaskData?, position: Int) {
         holder?.setOnClickListener(R.id.clRoot) {
-
+            ActivityUtils.startActivity(UnityActivity::class.java)
             t?.findGuideLines()
             t?.findTrackLines()
-            liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name)
-                .post(t)
-            ToastUtils.showLong("${position}被点击")
-            ActivityUtils.startActivity(UnityActivity::class.java)
+            GlobalScope.launch {
+                delay(2000)
+                liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name)
+                    .postAcrossProcess(t)
+
+            }
+
+//            ToastUtils.showLong("${position}被点击")
 //            Navigation.findNavController(it)
 //                .navigate(R.id.action_task_list_fragment_to_home_fragment)
         }

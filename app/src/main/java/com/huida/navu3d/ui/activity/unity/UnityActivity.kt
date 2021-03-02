@@ -1,6 +1,8 @@
 package com.huida.navu3d.ui.activity.unity
 
 import android.os.Bundle
+import android.os.Debug
+import android.util.Log
 import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -36,10 +38,14 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
     lateinit var llRoot: LinearLayout
     var workTaskData: WorkTaskData? = null
     override fun init(savedInstanceState: Bundle?) {
+
         liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name, WorkTaskData::class.java)
-            .observeSticky(this, Observer {
+            .observe(this, Observer {
+                Log.d("TAG_lilei", "init: ${it.toString()}")
                 workTaskData = it
                 homeVM.setWorkTaskData(it)
+
+                ToastUtils.showLong(it.toString())
             })
         binding.apply {
             initButton()
@@ -144,6 +150,11 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
             unityVM.addParallelLine(it)
 
 //            workTaskData.lines.add(it)
+        }
+        homeFragmentBean.lineXYData.observe(this) {
+            it.save()
+            workTaskData?.trackLineData?.add(it)
+            workTaskData?.save()
         }
     }
 

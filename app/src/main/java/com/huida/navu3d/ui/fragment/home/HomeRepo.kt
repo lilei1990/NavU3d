@@ -91,7 +91,7 @@ class HomeRepo(
      * 设置历史数据
      */
     fun setWorkTaskData(workTaskData: WorkTaskData) {
-        homeFragmentBean.setWorkTaskData(workTaskData)
+
 
     }
 
