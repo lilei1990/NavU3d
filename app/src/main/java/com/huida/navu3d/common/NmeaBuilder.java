@@ -7,8 +7,8 @@ import java.util.Locale;
 /**
  * nmea数据生成类
  */
-public enum NmeaBuilder {
-    INSTANCE;
+public class NmeaBuilder {
+
 
     //Our two new nmea strings
     private StringBuilder sbOGI = new StringBuilder();

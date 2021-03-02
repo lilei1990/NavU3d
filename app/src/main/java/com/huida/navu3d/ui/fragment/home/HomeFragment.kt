@@ -25,6 +25,7 @@ import kotlin.math.roundToInt
 class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
     private val homeVM by lazy { getFragmentViewModel(HomeVM::class.java) }
     private val u3dViewModel by lazy { getActivityViewModel(U3dVM::class.java) }
+    private val unityVM by lazy { getActivityViewModel(UnityVM::class.java) }
     lateinit var llRoot: LinearLayout
     override fun init(savedInstanceState: Bundle?) {
         liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name, WorkTaskData::class.java)
@@ -60,7 +61,7 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
                 binding.mlRoot.bringChildToFront(binding.llTop)
             }
         }
-        binding.btSwitch.performClick()
+//        binding.btSwitch.performClick()
     }
 
 
@@ -77,40 +78,53 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         homeFragmentBean.steerAngle.observe(this) {
             //角度
             binding.incTopBar.tvRtk.text = "${it}"
-            homeVM.stance()
+            unityVM.cartStance(it)
         }
         homeFragmentBean.speed.observe(this) {
             //速度
             binding.incTopBar.tvSpeed.text = "${(it * 100).roundToInt() / 100.00}Km/h"
         }
-
+        //当前位置
         homeFragmentBean.currenLatLng.observe(this) {
-            homeVM.move()
+            unityVM.moveCart(it, 2.0)
+        }
+        //是否录制
+        homeFragmentBean.isRecord.observe(this) {
+            unityVM.saveRecord(it)
+        }
+        //A
+        homeFragmentBean.pointA.observe(this) {
+            unityVM.setPointA()
+        }
+        //B
+        homeFragmentBean.pointB.observe(this) {
+            unityVM.setPointB()
         }
         homeFragmentBean.status.observe(this) {
-//            when (it) {
-//                HomeFragmentBean.Status.START -> {
+            when (it) {
+                HomeFragmentBean.Status.START -> {
+
 //                    binding.incMenu.bt5.itemRoot.visibility=View.INVISIBLE
 //                    binding.incMenu.bt8.itemRoot.visibility=View.VISIBLE
-//                }
-//                HomeFragmentBean.Status.PAUSE -> {
+                }
+                HomeFragmentBean.Status.PAUSE -> {
 //                    binding.incMenu.bt5.itemRoot.visibility=View.INVISIBLE
-//                }
-//                HomeFragmentBean.Status.STOP -> {
+                }
+                HomeFragmentBean.Status.STOP -> {
 //                    binding.incMenu.bt5.itemRoot.visibility=View.VISIBLE
 //                    binding.incMenu.bt8.itemRoot.visibility=View.INVISIBLE
-//                }
-//            }
+                }
+            }
         }
         homeFragmentBean.DataParallelLine.observe(this) {
-            homeVM.addParallelLine()
+            unityVM.addParallelLine(it)
         }
     }
 
     private fun initButton() {
         binding.incUnity.tvNight.text = "夜间模式"
         binding.incUnity.scDayNight.clickNoRepeat {
-            homeVM.switchLight()
+            unityVM.switchLight()
         }
         binding.incMenu.bt1.tvText.text = "设置A点"
         binding.incMenu.bt1.itemRoot.clickNoRepeat {
@@ -123,35 +137,6 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         binding.incMenu.bt3.tvText.text = "生成导航线"
         binding.incMenu.bt3.itemRoot.clickNoRepeat {
             homeVM.drawGuideLine()
-//            var str="[\n" +
-//                    "  {\"nav\":[\n" +
-//                    "          {\"x\":49343,\"y\":417301},\n" +
-//                    "          {\"x\":49313,\"y\":417311}\n" +
-//                    "          ],\n" +
-//                    "  \"name\":\"line1\"},\n" +
-//                    "  {\"nav\":[\n" +
-//                    "          {\"x\":1.0,\"y\":1.0},\n" +
-//                    "          {\"x\":1.0,\"y\":2.0}\n" +
-//                    "          ],\n" +
-//                    "  \"name\":\"line1\"},\n" +
-//                    "  {\"nav\":[\n" +
-//                    "          {\"x\":1.0,\"y\":1.0},\n" +
-//                    "          {\"x\":1.0,\"y\":2.0}\n" +
-//                    "          ],\n" +
-//                    "  \"name\":\"line1\"},\n" +
-//                    "  {\"nav\":[\n" +
-//                    "          {\"x\":1.0,\"y\":1.0},\n" +
-//                    "          {\"x\":1.0,\"y\":2.0}\n" +
-//                    "          ],\n" +
-//                    "  \"name\":\"line1\"},\n" +
-//                    "  {\"nav\":[\n" +
-//                    "          {\"x\":1.0,\"y\":1.0},\n" +
-//                    "          {\"x\":1.0,\"y\":2.0}\n" +
-//                    "          ],\n" +
-//                    "  \"name\":\"line1\"}\n" +
-//                    "  \n" +
-//                    "]"
-//            UnityPlayer.UnitySendMessage("Correspondent", "BuildNavLine", str)
         }
         binding.incMenu.bt4.tvText.text = "刷新线"
         binding.incMenu.bt4.itemRoot.clickNoRepeat {
@@ -172,6 +157,7 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         binding.incMenu.bt8.tvText.text = "停止"
         binding.incMenu.bt8.itemRoot.clickNoRepeat {
             homeVM.stop()
+            unityVM.restartScene()
         }
 
     }

@@ -15,7 +15,7 @@ import kotlin.concurrent.fixedRateTimer
  * 描述 : name数据源提供者
  */
 object NmeaProviderManager {
-    var mNmeaBuilder = NmeaBuilder.INSTANCE
+    var mNmeaBuilder = NmeaBuilder()
     val sf = SentenceFactory.getInstance()
     var mCallBackGGAs = ConcurrentHashMap<String, (GGASentence) -> Unit>()
     var mCallBackVTGs = ConcurrentHashMap<String, (VTGSentence) -> Unit>()
@@ -98,8 +98,7 @@ object NmeaProviderManager {
     }
 
     fun reset() {
-        mNmeaBuilder.speed = 0.0
-        mNmeaBuilder.stepDistance = 0.0
+        mNmeaBuilder = NmeaBuilder()
     }
 
 

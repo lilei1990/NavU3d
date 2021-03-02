@@ -1,5 +1,8 @@
 package com.huida.navu3d.bean
 
+import com.esri.core.geometry.Point
+import org.litepal.LitePal
+import org.litepal.annotation.Column
 import org.litepal.crud.LitePalSupport
 import java.util.*
 import kotlin.collections.ArrayList
@@ -12,12 +15,28 @@ import kotlin.collections.ArrayList
  */
 class TrackLineData : LitePalSupport() {
     //时间戳
-    var time: Date= Date(System.currentTimeMillis())
+    var time: Date = Date(System.currentTimeMillis())
 
     //当前线段的点
-    var points = ArrayList<PointData>()
+    @Column(ignore = true)
+    lateinit var points:MutableList<PointData>
 
-     fun getId(): Long {
+    fun getId(): Long {
         return super.getBaseObjId()
+    }
+
+    /**
+     * 查询线的数据
+     */
+    fun findPoint() {
+//        var arr =
+//            LitePal.where("worktaskdata_id=${getId()}")
+//                .count(PointData::class.java)
+//        //如果数据量太大,就分批加载
+//        if (arr > 10000) {
+//        }
+        points =
+            LitePal.where("worktaskdata_id=${getId()}")
+                .find(PointData::class.java)
     }
 }

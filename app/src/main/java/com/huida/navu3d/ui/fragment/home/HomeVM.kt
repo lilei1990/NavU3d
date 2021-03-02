@@ -13,7 +13,7 @@ import net.sf.marineapi.nmea.sentence.VTGSentence
 
 class HomeVM : BaseViewModel() {
     private val homeRepo by lazy { HomeRepo(viewModelScope, errorLiveData, this) }
-    private val unityRepo by lazy { UnityRepo(viewModelScope, errorLiveData, this) }
+//    private val unityRepo by lazy { UnityRepo(viewModelScope, errorLiveData, this) }
     val vtgData = MutableLiveData<VTGSentence>()
     val ggaData = MutableLiveData<GGASentence>()
     val homeFragmentBean = HomeFragmentBean()
@@ -22,7 +22,6 @@ class HomeVM : BaseViewModel() {
      * 开始
      */
     fun start() {
-        unityRepo.start()
         homeRepo.start()
     }
 
@@ -31,33 +30,16 @@ class HomeVM : BaseViewModel() {
      */
     fun stop() {
         homeRepo.stop()
-        unityRepo.stop()
     }
 
-    /**
-     * 移动
-     */
-    fun move() {
-        homeFragmentBean.currenLatLng.value?.apply {
-            unityRepo.moveCart(this, 2.0)
-        }
-    }
-    /**
-     * 小车姿态
-     */
-    fun stance() {
 
-        homeFragmentBean.steerAngle.value?.apply {
-            unityRepo.cartStance(this)
-        }
-    }
+
 
     /**
      * 设置A点
      */
     fun setPointA() {
         homeRepo.setPointA()
-        unityRepo.setPointA()
     }
 
 
@@ -67,17 +49,13 @@ class HomeVM : BaseViewModel() {
 
     fun setPointB() {
         homeRepo.setPointB()
-        unityRepo.setPointB()
     }
 
     /**
      * 暂停
      */
     fun pause() {
-
         homeRepo.pause()
-        unityRepo.pause()
-
     }
 
     /**
@@ -86,7 +64,6 @@ class HomeVM : BaseViewModel() {
 
     fun saveRecord() {
         homeRepo.saveRecord()
-        unityRepo.saveRecord()
     }
 
     /**
@@ -114,7 +91,7 @@ class HomeVM : BaseViewModel() {
      * “day”白天，“night”晚上
      */
     fun switchLight() {
-        unityRepo.switchLight()
+
     }
 
     /**
@@ -129,7 +106,7 @@ class HomeVM : BaseViewModel() {
      * 添加平行线
      */
     fun addParallelLine() {
-        unityRepo.addParallelLine(homeFragmentBean.mParalleMaplLine)
+
     }
 
 

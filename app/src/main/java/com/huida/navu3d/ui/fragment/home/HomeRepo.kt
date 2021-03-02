@@ -39,7 +39,6 @@ class HomeRepo(
     fun start() {
         viewModelScope.launch(Dispatchers.IO) {
             homeFragmentBean.status.postValue(START)
-            NmeaProviderManager.reset()
             NmeaProviderManager.start()
             NmeaProviderManager.registGGAListen(REGIST_FLAG, ggaListener)
             NmeaProviderManager.registVTGListen(REGIST_FLAG, vtgListener)
@@ -51,6 +50,16 @@ class HomeRepo(
      */
     fun stop() {
         homeFragmentBean.status.postValue(STOP)
+        NmeaProviderManager.removeRegist(REGIST_FLAG)
+        NmeaProviderManager.reset()
+        NmeaProviderManager.stop()
+    }
+
+    /**
+     * 暂停
+     */
+    fun pause() {
+        homeFragmentBean.status.postValue(PAUSE)
         NmeaProviderManager.removeRegist(REGIST_FLAG)
         NmeaProviderManager.stop()
     }
@@ -70,13 +79,6 @@ class HomeRepo(
         homeFragmentBean.creatPointB()
     }
 
-    /**
-     * 暂停
-     */
-    fun pause() {
-        homeFragmentBean.status.postValue(PAUSE)
-        homeFragmentBean.isRecord(false)
-    }
 
     /**
      * 录制

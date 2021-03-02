@@ -1,6 +1,10 @@
 package com.huida.navu3d
 
 import com.facebook.stetho.Stetho
+import com.huida.navu3d.bean.GuideLineData
+import com.huida.navu3d.bean.PointData
+import com.huida.navu3d.bean.TrackLineData
+import com.huida.navu3d.bean.WorkTaskData
 import com.lei.core.BaseApp
 import com.tencent.bugly.crashreport.CrashReport
 import org.litepal.LitePal
@@ -22,7 +26,10 @@ class App: BaseApp() {
         super.onCreate()
         LitePal.initialize(this);
         Stetho.initializeWithDefaults(this);
-
+//LitePal.deleteAll(WorkTaskData::class.java)
+LitePal.deleteAll(PointData::class.java)
+LitePal.deleteAll(GuideLineData::class.java)
+LitePal.deleteAll(TrackLineData::class.java)
         //初始化bugly
         CrashReport.initCrashReport(applicationContext, "9882dbea36", false);
         SkinCompatManager.withoutActivity(this)

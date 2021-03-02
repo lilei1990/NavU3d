@@ -1,7 +1,8 @@
 package com.huida.navu3d.ui.activity.main
 
 import android.os.Bundle
-import androidx.navigation.Navigation
+import android.util.Log
+import com.blankj.utilcode.util.ToastUtils
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.databinding.ActivityMainBinding
 import com.huida.navu3d.ui.activity.unity.U3dExtActivity
@@ -33,6 +34,13 @@ class MainActivity : U3dExtActivity<ActivityMainBinding>(ActivityMainBinding::in
         }
     }
 
+    /**
+     * 场景初始化
+    请求位置
+     */
+    fun onSceneLoad() {
+  ToastUtils.showLong("onSceneLoad")
+    }
 }
 
 

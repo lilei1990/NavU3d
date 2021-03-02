@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.esri.core.geometry.Point
 import com.esri.core.geometry.Polyline
 import com.huida.navu3d.bean.PointData
+import com.lei.core.base.BaseViewModel
 import com.unity3d.player.UnityPlayer
 import com.zs.base_library.http.ApiException
 import kotlinx.coroutines.CoroutineScope
@@ -18,11 +19,7 @@ import org.json.JSONObject
  * 邮箱 :416587959@qq.com
  * 描述 :Unity fragment具体实现类
  */
-class UnityRepo(
-    val viewModelScope: CoroutineScope,
-    val errorLiveData: MutableLiveData<ApiException>,
-    homeVM: HomeVM
-) {
+class UnityVM : BaseViewModel() {
     //缩小的比例系数
     val scaleX=100000
     val scaleY=1000000
@@ -120,7 +117,7 @@ class UnityRepo(
      * 场景初始化
      */
     fun restartScene() {
-        UnityPlayer.UnitySendMessage("Correspondent", "RestartScene", "")
+        UnityPlayer.UnitySendMessage("SceneController", "RestartScene", "")
     }
 
     fun start() {
@@ -141,19 +138,13 @@ class UnityRepo(
     fun setPointB() {
         addPoint("B")
     }
-    /**
-     * 暂停
-     */
-    fun pause() {
-        //关闭轨迹
-        isShowTrack(false, "FF00FF")
-    }
+
     /**
      * 录制
      */
-    fun saveRecord() {
+    fun saveRecord(isRecord:Boolean) {
         //打开小车轨迹
-        isShowTrack(true, "FF00FF")
+        isShowTrack(isRecord, "FF00FF")
     }
 
     /**
