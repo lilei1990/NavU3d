@@ -9,7 +9,7 @@ import org.json.JSONObject
 
 
 class U3dVM : ViewModel() {
-    var mUnityPlayer: UnityPlayer? = null
+
 
 
 
@@ -24,7 +24,7 @@ class U3dVM : ViewModel() {
         var y = (it.y ).toFloat()
 //        var x = (it.X * 1000).toInt()*1f/1000%scaleX
 //        var y = (it.Y * 1000).toInt()*1f/1000%scaleY
-        Log.d("TAG_lilei", "moveCart: ${x}--${y}")
+//        Log.d("TAG_lilei", "moveCart: ${x}--${y}")
         val json = JSONObject()
         json.put("x", x)
         json.put("y", y)

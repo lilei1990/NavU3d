@@ -5,8 +5,11 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import com.huida.navu3d.common.initBackClick
 import com.huida.navu3d.common.initConfirmClick
+import com.huida.navu3d.common.liveEvenBus
+import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.databinding.FragmentFarmMachineryConfigBinding
 import com.lei.core.base.BaseVmFragment
+import com.lei.core.common.clickNoRepeat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -27,8 +30,12 @@ class FarmMachineryConfigFragment :
     }
 
     override fun init(savedInstanceState: Bundle?) {
-        binding.incTitleBar.initBackClick()
-        binding.incTitleBar.initConfirmClick {
+        //返回按钮
+        binding.incTitleBar.clBack.clickNoRepeat {
+            liveEvenBus(BusConstants.TO_PAGE_SETTING.name).post("")
+        }
+        //保存
+        binding.incTitleBar.clConfirm.clickNoRepeat {
             lifecycleScope.launch(Dispatchers.IO) {
                 viewModel.firstData.wheelbase = binding.etWheelbase.text.toString().toDouble()
                 viewModel.firstData.antennaToFront = binding.etAntennaToFront.text.toString().toDouble()
@@ -36,8 +43,8 @@ class FarmMachineryConfigFragment :
 
                 viewModel.saveData()
             }
-
         }
+
         lifecycleScope.launch(Dispatchers.IO) {
 
             viewModel.getData().asFlow().collect {

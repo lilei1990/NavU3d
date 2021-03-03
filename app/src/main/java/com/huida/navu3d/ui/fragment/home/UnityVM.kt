@@ -67,7 +67,7 @@ class UnityVM : BaseViewModel() {
     ) {
         var x = (it.x).toFloat()%scaleX
         var y = (it.y).toFloat()%scaleY
-        Log.d("TAG_lilei", "moveCart: ${x}--${y}")
+//        Log.d("TAG_lilei", "moveCart: ${x}--${y}")
         val json = JSONObject()
         json.put("x", x)
         json.put("y", y)
@@ -82,7 +82,7 @@ class UnityVM : BaseViewModel() {
     fun cartStance(
         steerAngle: Double
     ) {
-        Log.d("TAG_lilei", "cartStance: ${steerAngle}")
+//        Log.d("TAG_lilei", "cartStance: ${steerAngle}")
         val json = JSONObject()
         json.put("yaw", steerAngle)
         json.put("rotationSpeed", 4.0)

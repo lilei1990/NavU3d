@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_setting_fragment_to_fram_machinery_fragment"
             app:destination="@id/fram_machinery_fragment" />
+        <action
+            android:id="@+id/action_setting_fragment_to_home_fragment"
+            app:destination="@id/home_fragment" />
     </fragment>
     <!--农具配置页面-->
     <fragment
@@ -36,7 +39,6 @@
     <fragment
         android:id="@+id/task_list_fragment"
         android:name="com.huida.navu3d.ui.fragment.workTask.WorkTaskFragment">
-
         <action
             android:id="@+id/action_task_list_fragment_to_home_fragment"
             app:destination="@id/home_fragment" />
@@ -48,6 +50,9 @@
     <!--home-->
     <fragment
         android:id="@+id/home_fragment"
-        android:name="com.huida.navu3d.ui.fragment.home.HomeFragment" />
-
+        android:name="com.huida.navu3d.ui.fragment.home.HomeFragment" >
+        <action
+            android:id="@+id/action_home_fragment_to_task_list_fragment"
+            app:destination="@id/task_list_fragment" />
+    </fragment>
 </navigation>

@@ -1,7 +1,6 @@
 package com.huida.navu3d.ui.activity.unity
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
@@ -16,8 +15,6 @@ import com.huida.navu3d.ui.fragment.home.HomeVM
 import com.huida.navu3d.ui.fragment.home.UnityVM
 import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.common.clickNoRepeat
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 /**
@@ -36,12 +33,8 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
 
         liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name, WorkTaskData::class.java)
             .observe(this, Observer {
-                Log.d("TAG_lilei", "init: ${it.toString()}")
                 workTaskData = it
-                workTaskData?.name="1223"
                 homeVM.setWorkTaskData(it)
-
-                ToastUtils.showLong(it.toString())
             })
         binding.apply {
             initButton()
@@ -155,6 +148,12 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
             //更新worktask数据
             liveEvenBus(BusConstants.DB_WORK_TASK_DATA.name)
                 .postAcrossProcess(it)
+        }
+        //轨迹数据
+        homeFragmentBean.trackLineData.observe(this) {
+            for (point in it.points) {
+                unityVM.moveCart(point,2.0)
+            }
         }
 
     }

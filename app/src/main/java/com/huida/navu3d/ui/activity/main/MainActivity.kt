@@ -1,22 +1,14 @@
 package com.huida.navu3d.ui.activity.main
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.Observer
-import com.blankj.utilcode.util.ServiceUtils
-import com.huida.navu3d.LitpalService
-import com.huida.navu3d.bean.TrackLineData
 import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.databinding.ActivityMainBinding
-import com.lei.core.base.BaseVmActivity
+import com.huida.navu3d.ui.activity.unity.U3dExtActivity
 import com.lei.core.utils.PrefUtils
 import com.lei.core.utils.StatusUtils
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.litepal.LitePal
 
 
 /**
@@ -25,13 +17,30 @@ import org.litepal.LitePal
  * 邮箱 :416587959@qq.com
  * 描述 : 入口activity
  */
-class MainActivity : BaseVmActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
-    var a = 0
+class MainActivity : U3dExtActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     var start = System.currentTimeMillis()
     override fun init(savedInstanceState: Bundle?) {
-
+        binding.viewPager.adapter = ViewPageAdapter(this)
+        binding.viewPager.offscreenPageLimit = 5
+//        binding.viewPager.setCurrentItem()
+        binding.viewPager.isUserInputEnabled=false
     }
 
+    override fun observe() {
+        liveEvenBus(BusConstants.TO_PAGE_MAIN.name)
+            .observe(this, Observer {
+                binding.viewPager.setCurrentItem(ViewPageAdapter.PAGE_MAIN, false)
+            })
+        liveEvenBus(BusConstants.TO_PAGE_HOME.name)
+            .observe(this, Observer {
+                binding.viewPager.setCurrentItem(ViewPageAdapter.PAGE_HOME, false)
+            })
+        //退出
+        liveEvenBus(BusConstants.TO_EXIT.name)
+            .observe(this, Observer {
+                finish()
+            })
+    }
 
     /**
      * 沉浸式状态,随主题改变

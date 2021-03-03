@@ -69,7 +69,7 @@ abstract class U3dExtActivity<VB : ViewBinding>(inflate: (LayoutInflater) -> VB)
 
     // Quit Unity
     override fun onDestroy() {
-        mUnityPlayer!!.destroy()
+//        mUnityPlayer!!.destroy()
         super.onDestroy()
         //在activity执行onDestroy时执行mMapView.onDestroy()，销毁地图
 //        binding.map.onDestroy();

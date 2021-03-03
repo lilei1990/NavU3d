@@ -10,5 +10,14 @@ enum class BusConstants {
     SELECT_WORK_TASK_DATA,
     DB_WORK_TASK_DATA,
     DB_TRACK_LINE,
-    DB_POINT
+    DB_POINT,
+    //viewPage 切换
+    TO_PAGE_HOME,
+    TO_PAGE_MAIN,
+    TO_PAGE_MAIN_MENU,
+    TO_PAGE_FARM_MACHINERY,
+    TO_PAGE_FARM_TOOLS,
+    TO_PAGE_WORK_TASK,
+    TO_PAGE_SETTING,
+    TO_EXIT,
 }

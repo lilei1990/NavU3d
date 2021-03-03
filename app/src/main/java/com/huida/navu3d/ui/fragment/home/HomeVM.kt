@@ -63,7 +63,7 @@ class HomeVM : BaseViewModel() {
      */
 
     fun saveRecord() {
-        homeRepo.saveRecord()
+        homeRepo.openRecord()
     }
 
     /**
@@ -83,7 +83,17 @@ class HomeVM : BaseViewModel() {
      * 设置历史数据
      */
     fun setWorkTaskData(workTaskData: WorkTaskData) {
-        homeRepo.setWorkTaskData(workTaskData)
+        //导航线的数据
+        val guideLineData = workTaskData.guideLineData
+        homeFragmentBean.DataParallelLine
+        //轨迹的数据
+        val trackLineData = workTaskData.trackLineData
+        homeFragmentBean.isRecord(true)
+        trackLineData?.forEachIndexed { index, data ->
+            data.findPoint()
+            homeFragmentBean.trackLineData.postValue(data)
+        }
+        homeFragmentBean.isRecord(false)
     }
 
     /**

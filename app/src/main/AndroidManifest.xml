@@ -50,9 +50,9 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".ui.activity.unity.UnityActivity"
-            android:process=":unity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme_Night" />
+<!--            android:process=":unity"-->
     </application>
 
 </manifest>

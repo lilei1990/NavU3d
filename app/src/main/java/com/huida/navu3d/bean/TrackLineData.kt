@@ -14,13 +14,15 @@ import kotlin.collections.ArrayList
  * 邮箱 :416587959@qq.com
  * 描述 :轨迹线的数据
  */
-class TrackLineData : LitePalSupport() , Serializable {
+class TrackLineData : LitePalSupport(), Serializable {
     //时间戳
     var time: Date = Date(System.currentTimeMillis())
 
+    var worktaskId = -1
+
     //当前线段的点
     @Column(ignore = true)
-    lateinit var points:MutableList<PointData>
+    lateinit var points: MutableList<PointData>
 
     fun getId(): Long {
         return super.getBaseObjId()

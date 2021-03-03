@@ -1,36 +1,38 @@
 package com.huida.navu3d.ui.fragment.home
 
-import android.graphics.Color
 import android.os.Bundle
-import android.widget.LinearLayout
+import android.util.Log
+import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
-import com.amap.api.maps.model.LatLng
-import com.amap.api.maps.model.PolylineOptions
-import com.amap.api.maps.model.TextOptions
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import com.blankj.utilcode.util.ToastUtils
+import com.huida.navu3d.R
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.databinding.FragmentHomeBinding
-import com.huida.navu3d.ui.activity.unity.U3dVM
-import com.huida.navu3d.utils.GaoDeUtils
+import com.huida.navu3d.ui.activity.main.MainActivity
 import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
-import com.unity3d.player.UnityPlayer
 import kotlin.math.roundToInt
 
 
 class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
-    private val homeVM by lazy { getFragmentViewModel(HomeVM::class.java) }
-    private val u3dViewModel by lazy { getActivityViewModel(U3dVM::class.java) }
-    private val unityVM by lazy { getActivityViewModel(UnityVM::class.java) }
-    lateinit var llRoot: LinearLayout
+    private val homeVM by lazy { getActivityViewModel(HomeVM::class.java)!! }
+
+    private val unityVM by lazy { getActivityViewModel(UnityVM::class.java)!! }
+    val mUnityPlayer by lazy { (activity as MainActivity).mUnityPlayer }
     var workTaskData: WorkTaskData? = null
+
     override fun init(savedInstanceState: Bundle?) {
+
         liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name, WorkTaskData::class.java)
-            .observeSticky(this, Observer {
+            .observe(this, Observer {
                 workTaskData = it
                 homeVM.setWorkTaskData(it)
             })
@@ -39,16 +41,38 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
             initU3dLayout()
             initRockView()
         }
+
+
     }
 
+    override fun onResume() {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            //跳转到main page
+            liveEvenBus(BusConstants.TO_PAGE_MAIN.name).post(1)
+        }
+        super.onResume()
+    }
+
+    /**
+     * 场景初始化
+    请求位置
+     */
+    fun onSceneLoad() {
+        ToastUtils.showLong("onSceneLoad")
+    }
 
     private fun initU3dLayout() {
-        llRoot = binding.incUnity.llRoot
+
         binding.apply {
-            binding.incUnity.llRoot.addView(u3dViewModel.mUnityPlayer)
-            u3dViewModel.mUnityPlayer!!.requestFocus()
+            if (mUnityPlayer?.getParent() != null) {
+                val view = mUnityPlayer?.getParent() as ViewGroup
+                view.removeAllViews()
+            }
+            binding.incUnity.llRoot.addView(mUnityPlayer)
+
+            mUnityPlayer!!.requestFocus()
             binding.incUnity.scDayNight.clickNoRepeat {
-                u3dViewModel.switchLight()
+                unityVM.switchLight()
             }
         }
         //切换地图和u3d场景
@@ -130,9 +154,21 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 //            workTaskData.lines.add(it)
         }
         homeFragmentBean.lineXYData.observe(this) {
+            //存储线
+            liveEvenBus(BusConstants.DB_TRACK_LINE.name)
+                .postAcrossProcess(it)
             workTaskData?.trackLineData?.add(it)
-            workTaskData?.save()
+            //更新worktask数据
+            liveEvenBus(BusConstants.DB_WORK_TASK_DATA.name)
+                .postAcrossProcess(it)
         }
+        //轨迹数据
+        homeFragmentBean.trackLineData.observe(this) {
+            for (point in it.points) {
+                unityVM.moveCart(point, 2.0)
+            }
+        }
+
     }
 
     private fun initButton() {
@@ -229,8 +265,17 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 
     override fun onDestroy() {
         homeVM.stop()
-        llRoot.removeAllViews()
+        val parent = mUnityPlayer?.parent as ViewGroup
+        parent.removeAllViews()
         NmeaProviderManager.clearAllRegist()
         super.onDestroy()
     }
+//    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            //如果点击的是后退键
+//            return super.onKeyDown(keyCode, event);
+//        }
+//
+//        return  mUnityPlayer!!.injectEvent(event)
+//    }
 }

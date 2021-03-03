@@ -2,6 +2,8 @@ package com.huida.navu3d.ui.fragment.workTask
 
 import android.content.Context
 import android.os.Bundle
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigation
 import com.blankj.utilcode.util.ActivityUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.bean.WorkTaskData
@@ -30,19 +32,11 @@ class WorkTaskListAdapter(
 
     override fun convert(holder: ViewHolder?, t: WorkTaskData?, position: Int) {
         holder?.setOnClickListener(R.id.clRoot) {
-            ActivityUtils.startActivity(UnityActivity::class.java)
+//            ActivityUtils.startActivity(UnityActivity::class.java)
             t?.findGuideLines()
             t?.findTrackLines()
-            GlobalScope.launch {
-                delay(3000)
-                liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name)
-                    .postAcrossProcess(t)
-
-            }
-
-//            ToastUtils.showLong("${position}被点击")
-//            Navigation.findNavController(it)
-//                .navigate(R.id.action_task_list_fragment_to_home_fragment)
+            liveEvenBus(BusConstants.TO_PAGE_HOME.name)
+                .post(t)
         }
         holder?.setText(R.id.tv_name, t?.name)
         holder?.setText(R.id.tv_creator, "创建人:${t?.creator}")

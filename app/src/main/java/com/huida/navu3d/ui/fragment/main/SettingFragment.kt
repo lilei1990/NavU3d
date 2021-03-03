@@ -1,7 +1,10 @@
 package com.huida.navu3d.ui.fragment.main
 
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.addCallback
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.SPUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.constants.Constants
@@ -9,6 +12,7 @@ import com.huida.navu3d.common.initBackClick
 import com.huida.navu3d.databinding.FragmentSettingBinding
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
+import java.lang.Exception
 
 /**
  * 设置界面
@@ -21,6 +25,7 @@ class SettingFragment : BaseVmFragment<FragmentSettingBinding>(FragmentSettingBi
     private lateinit var viewModel: MainMenuVM
 
     override fun init(savedInstanceState: Bundle?) {
+
         binding.incTitleBar.initBackClick()
         binding.btFarmToolsConfig.clickNoRepeat {
             Navigation.findNavController(it)
@@ -38,5 +43,11 @@ class SettingFragment : BaseVmFragment<FragmentSettingBinding>(FragmentSettingBi
             mActivity.recreate()
         }
     }
+    override fun onResume() {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            findNavController().popBackStack()
+        }
 
+        super.onResume()
+    }
 }

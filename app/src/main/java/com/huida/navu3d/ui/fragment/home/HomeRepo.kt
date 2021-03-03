@@ -82,18 +82,12 @@ class HomeRepo(
     /**
      * 录制
      */
-    fun saveRecord() {
+    fun openRecord() {
 
         homeFragmentBean.isRecord(true)
     }
 
-    /**
-     * 设置历史数据
-     */
-    fun setWorkTaskData(workTaskData: WorkTaskData) {
 
-
-    }
 
     /**
      * 画引导线

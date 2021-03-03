@@ -1,19 +1,23 @@
 package com.huida.navu3d.ui.fragment.workTask
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.DatePicker
 import android.widget.LinearLayout
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.huida.navu3d.R
 import com.huida.navu3d.databinding.FragmentTaskListBinding
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
 import kotlinx.coroutines.*
+import java.lang.Exception
 
 
 class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskListBinding::inflate) {
@@ -28,7 +32,10 @@ class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskLis
 
 
     override fun init(savedInstanceState: Bundle?) {
-
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            findNavController().popBackStack()
+            Log.d("TAG_lilei", "init: WorkTaskFragment")
+        }
         initTab()
         initTitleBar()
         initRecycleView()
@@ -126,5 +133,12 @@ class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskLis
             workTaskListAdapter.datas.addAll(it)
             workTaskListAdapter.notifyDataSetChanged()
         })
+    }
+    override fun onResume() {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            findNavController().popBackStack()
+        }
+
+        super.onResume()
     }
 }
