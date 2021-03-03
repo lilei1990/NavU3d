@@ -7,5 +7,8 @@ package com.huida.navu3d.constants
  * 描述 :
  */
 enum class BusConstants {
-    SELECT_WORK_TASK_DATA
+    SELECT_WORK_TASK_DATA,
+    DB_WORK_TASK_DATA,
+    DB_TRACK_LINE,
+    DB_POINT
 }

@@ -2,11 +2,15 @@ package com.huida.navu3d.app
 
 import android.app.Application
 import android.util.Log
+import com.blankj.utilcode.util.ServiceUtils
 import com.facebook.stetho.Stetho
+import com.huida.navu3d.LitpalService
 import com.huida.navu3d.bean.GuideLineData
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.bean.TrackLineData
 import com.huida.navu3d.bean.WorkTaskData
+import com.huida.navu3d.common.liveEvenBus
+import com.huida.navu3d.constants.BusConstants
 import com.tencent.bugly.crashreport.CrashReport
 import org.litepal.LitePal
 
@@ -35,13 +39,9 @@ object AppInitFactory {
         AppInitialization {
         override fun onAppCreate(application: Application?) {
             Log.d("TAG_lilei", "init: 初始化main进程")
-            LitePal.initialize(application!!.applicationContext);
+//            ServiceUtils.startService(LitpalService::class.java)
             //sql web调试工具
             Stetho.initializeWithDefaults(application);
-//LitePal.deleteAll(WorkTaskData::class.java)
-//LitePal.deleteAll(PointData::class.java)
-//LitePal.deleteAll(GuideLineData::class.java)
-//LitePal.deleteAll(TrackLineData::class.java)
             //初始化bugly
             CrashReport.initCrashReport(application!!.applicationContext, "9882dbea36", false);
 //        SkinCompatManager.withoutActivity(this)
@@ -52,15 +52,37 @@ object AppInitFactory {
 ////            .setSkinStatusBarColorEnable(false) // 关闭状态栏换肤，默认打开[可选]
 //            .setSkinWindowBackgroundEnable(false) // 关闭windowBackground换肤，默认打开[可选]
 //            .loadSkin()
+            initLitpal(application)
+
         }
 
+    }
+
+    private fun initLitpal(application: Application?) {
+        LitePal.initialize(application!!.applicationContext);
+        //LitePal.deleteAll(WorkTaskData::class.java)
+//LitePal.deleteAll(PointData::class.java)
+//LitePal.deleteAll(GuideLineData::class.java)
+//LitePal.deleteAll(TrackLineData::class.java)
+        liveEvenBus(BusConstants.DB_TRACK_LINE.name, TrackLineData::class.java)
+            .observeForever {
+                it.save()
+            }
+        liveEvenBus(BusConstants.DB_POINT.name, PointData::class.java)
+            .observeForever {
+                it.save()
+            }
+        liveEvenBus(BusConstants.DB_WORK_TASK_DATA.name, WorkTaskData::class.java)
+            .observeForever {
+                it.save()
+            }
     }
 
     internal class UnityAppInitialization :
         AppInitialization {
         override fun onAppCreate(application: Application?) {
             Log.d("TAG_lilei", "init: 初始化unity进程")
-            LitePal.initialize(application!!.applicationContext);
+//            LitePal.initialize(application!!.applicationContext);
         }
 
     }

@@ -2,40 +2,40 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.huida.navu3d">
 
-    <!--允许程序打开网络套接字-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--允许程序设置内置sd卡的写权限-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--允许程序获取网络状态-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--允许程序访问WiFi网络信息-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--允许程序读写手机状态和身份-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!--GPS定位 之前不显示蓝点-->
+    <!-- 允许程序打开网络套接字 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许程序设置内置sd卡的写权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允许程序获取网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 允许程序访问WiFi网络信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 允许程序读写手机状态和身份 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- GPS定位 之前不显示蓝点 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    >
     <uses-permission android:name="android.permission.ACCESS_GPS" />
     <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
-        android:process=":main"
         android:name=".app.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:process=":main"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--//高德地图-->
+
+        <!-- //高德地图 -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="71330155f8dfe9ebafdd4622265dd947" />
-        <service android:name="com.amap.api.location.APSService" />
 
+        <service android:name="com.amap.api.location.APSService" />
+<!--        <service-->
+<!--            android:name=".LitpalService"-->
+<!--            android:enabled="true"-->
+<!--            exported = "true"-->
+<!--            >-->
+<!--        </service>-->
         <activity
             android:name=".ui.activity.SplashActivity"
             android:screenOrientation="landscape">
@@ -49,10 +49,10 @@
             android:name=".ui.activity.main.MainActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:theme="@style/AppTheme_Night"
             android:name=".ui.activity.unity.UnityActivity"
-            android:screenOrientation="landscape" />
-<!--            android:process=":unity"-->
+            android:process=":unity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme_Night" />
     </application>
 
 </manifest>

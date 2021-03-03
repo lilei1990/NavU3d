@@ -34,7 +34,7 @@ class WorkTaskListAdapter(
             t?.findGuideLines()
             t?.findTrackLines()
             GlobalScope.launch {
-                delay(2000)
+                delay(3000)
                 liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name)
                     .postAcrossProcess(t)
 

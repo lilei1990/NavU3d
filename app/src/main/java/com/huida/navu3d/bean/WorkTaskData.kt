@@ -64,6 +64,11 @@ class WorkTaskData : LitePalSupport() ,Serializable{
             LitePal.where("worktaskdata_id=${getObjId()}")
                 .findFirst(GuideLineData::class.java, true)
     }
+
+    override fun toString(): String {
+        return "WorkTaskData(sortId=$sortId, date=$date, name='$name', creator='$creator', area=$area, farmTools=$farmTools, trackLineData=$trackLineData, guideLineData=$guideLineData)"
+    }
+
 }
 
 

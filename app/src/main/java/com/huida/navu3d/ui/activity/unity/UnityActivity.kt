@@ -1,18 +1,15 @@
 package com.huida.navu3d.ui.activity.unity
 
 import android.os.Bundle
-import android.os.Debug
 import android.util.Log
 import android.widget.LinearLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import com.blankj.utilcode.util.ToastUtils
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.constants.BusConstants
-import com.huida.navu3d.databinding.ActivityMainBinding
 import com.huida.navu3d.databinding.FragmentHomeBinding
 import com.huida.navu3d.ui.fragment.home.HomeFragmentBean
 import com.huida.navu3d.ui.fragment.home.HomeVM
@@ -20,8 +17,6 @@ import com.huida.navu3d.ui.fragment.home.UnityVM
 import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.common.clickNoRepeat
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -43,6 +38,7 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
             .observe(this, Observer {
                 Log.d("TAG_lilei", "init: ${it.toString()}")
                 workTaskData = it
+                workTaskData?.name="1223"
                 homeVM.setWorkTaskData(it)
 
                 ToastUtils.showLong(it.toString())
@@ -152,10 +148,15 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
 //            workTaskData.lines.add(it)
         }
         homeFragmentBean.lineXYData.observe(this) {
-            it.save()
+            //存储线
+            liveEvenBus(BusConstants.DB_TRACK_LINE.name)
+                .postAcrossProcess(it)
             workTaskData?.trackLineData?.add(it)
-            workTaskData?.save()
+            //更新worktask数据
+            liveEvenBus(BusConstants.DB_WORK_TASK_DATA.name)
+                .postAcrossProcess(it)
         }
+
     }
 
     private fun initButton() {

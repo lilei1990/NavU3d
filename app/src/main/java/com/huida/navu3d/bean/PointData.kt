@@ -1,9 +1,9 @@
 package com.huida.navu3d.bean
 
-import org.litepal.annotation.Column
 import org.litepal.crud.LitePalSupport
 import uk.me.jstott.jcoord.LatLng
 import uk.me.jstott.jcoord.UTMRef
+import java.io.Serializable
 
 /**
  * 作者 : lei
@@ -13,7 +13,7 @@ import uk.me.jstott.jcoord.UTMRef
  */
 
 
-open class PointData : LitePalSupport() {
+open class PointData : LitePalSupport() , Serializable {
 
     //0是定位点,1是A点,2是B点,3是线的点,4是引导线的点
     var type: Int = 0

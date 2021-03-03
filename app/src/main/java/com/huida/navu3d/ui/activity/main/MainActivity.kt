@@ -1,14 +1,22 @@
 package com.huida.navu3d.ui.activity.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import com.blankj.utilcode.util.ToastUtils
+import androidx.lifecycle.Observer
+import com.blankj.utilcode.util.ServiceUtils
+import com.huida.navu3d.LitpalService
+import com.huida.navu3d.bean.TrackLineData
+import com.huida.navu3d.common.liveEvenBus
+import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.databinding.ActivityMainBinding
-import com.huida.navu3d.ui.activity.unity.U3dExtActivity
 import com.lei.core.base.BaseVmActivity
 import com.lei.core.utils.PrefUtils
 import com.lei.core.utils.StatusUtils
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.litepal.LitePal
 
 
 /**
@@ -18,6 +26,8 @@ import com.lei.core.utils.StatusUtils
  * 描述 : 入口activity
  */
 class MainActivity : BaseVmActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+    var a = 0
+    var start = System.currentTimeMillis()
     override fun init(savedInstanceState: Bundle?) {
 
     }

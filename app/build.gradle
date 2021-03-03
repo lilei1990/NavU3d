@@ -27,7 +27,7 @@ ext {
                   ModelName.UnityLib,
                   ModelName.NMEA,
                   ModelName.GEOMETRY_LIB,
-    ":lib:jcode"]
+                  ":lib:jcode"]
 }
 
 

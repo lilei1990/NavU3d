@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
 import com.huida.navu3d.bean.*
+import com.huida.navu3d.common.liveEvenBus
+import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.utils.GeometryUtils
 import net.sf.marineapi.nmea.sentence.GGASentence
@@ -214,7 +216,8 @@ class HomeFragmentBean {
      */
     fun savePoint(pointXY: PointData) {
         pointXY.trackLineId = lineXYData.value?.getId()!!
-        pointXY.save()
+        liveEvenBus(BusConstants.DB_POINT.name)
+            .postAcrossProcess(pointXY)
     }
 
     enum class Status {

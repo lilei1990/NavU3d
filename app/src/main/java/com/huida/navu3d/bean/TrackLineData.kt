@@ -4,6 +4,7 @@ import com.esri.core.geometry.Point
 import org.litepal.LitePal
 import org.litepal.annotation.Column
 import org.litepal.crud.LitePalSupport
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -13,7 +14,7 @@ import kotlin.collections.ArrayList
  * 邮箱 :416587959@qq.com
  * 描述 :轨迹线的数据
  */
-class TrackLineData : LitePalSupport() {
+class TrackLineData : LitePalSupport() , Serializable {
     //时间戳
     var time: Date = Date(System.currentTimeMillis())
 
