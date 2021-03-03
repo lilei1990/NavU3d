@@ -34,7 +34,7 @@ class MainFragment : BaseVmFragment<FragmentMainBinding>(FragmentMainBinding::in
 
     override fun onResume() {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            findNavController().popBackStack()
+
         }
         super.onResume()
     }

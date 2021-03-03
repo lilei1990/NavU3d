@@ -4,6 +4,7 @@ import com.esri.core.geometry.Operator
 import com.esri.core.geometry.OperatorFactoryLocal
 import com.esri.core.geometry.OperatorOffset
 import com.esri.core.geometry.Polyline
+import com.huida.navu3d.constants.Constants.lineOffset
 import org.litepal.crud.LitePalSupport
 
 /**
@@ -24,8 +25,7 @@ class GuideLineData : LitePalSupport() {
     var endLat = 0.0
     var endLng = 0.0
 
-    //平行线的间隔
-    val lineOffset = 10
+
 
     /**
      * 创建Utm用的数据,平行线,
@@ -69,12 +69,7 @@ class GuideLineData : LitePalSupport() {
     }
 
     fun getStart(): PointData {
-        val mA = PointData()
-        mA.x = startX
-        mA.y = startY
-        mA.lat = startLat
-        mA.lng = startLng
-        return mA
+        return  PointData.build(startLat,startLng)
     }
 
     /**
@@ -88,11 +83,7 @@ class GuideLineData : LitePalSupport() {
     }
 
     fun getEnd(): PointData {
-        val mB = PointData()
-        mB.x = endX
-        mB.y = endY
-        mB.lat = endLat
-        mB.lng = endLng
-        return mB
+
+        return  PointData.build(endLat,endLng)
     }
 }

@@ -13,7 +13,8 @@ import net.sf.marineapi.nmea.sentence.VTGSentence
 
 class HomeVM : BaseViewModel() {
     private val homeRepo by lazy { HomeRepo(viewModelScope, errorLiveData, this) }
-//    private val unityRepo by lazy { UnityRepo(viewModelScope, errorLiveData, this) }
+
+    //    private val unityRepo by lazy { UnityRepo(viewModelScope, errorLiveData, this) }
     val vtgData = MutableLiveData<VTGSentence>()
     val ggaData = MutableLiveData<GGASentence>()
     val homeFragmentBean = HomeFragmentBean()
@@ -31,8 +32,6 @@ class HomeVM : BaseViewModel() {
     fun stop() {
         homeRepo.stop()
     }
-
-
 
 
     /**
@@ -79,22 +78,7 @@ class HomeVM : BaseViewModel() {
         .getOperator(Operator.Type.DensifyByLength) as OperatorDensifyByLength
 
 
-    /**
-     * 设置历史数据
-     */
-    fun setWorkTaskData(workTaskData: WorkTaskData) {
-        //导航线的数据
-        val guideLineData = workTaskData.guideLineData
-        homeFragmentBean.DataParallelLine
-        //轨迹的数据
-        val trackLineData = workTaskData.trackLineData
-        homeFragmentBean.isRecord(true)
-        trackLineData?.forEachIndexed { index, data ->
-            data.findPoint()
-            homeFragmentBean.trackLineData.postValue(data)
-        }
-        homeFragmentBean.isRecord(false)
-    }
+
 
     /**
      * 切换昼夜模式

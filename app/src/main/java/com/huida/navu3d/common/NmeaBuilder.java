@@ -34,7 +34,7 @@ public class NmeaBuilder {
     private double latDeg, latMinu, longDeg, longMinu, latNMEA, longNMEA;
     public double speed = 0, headingTrue, stepDistance = 0, steerAngle;
     public double steerAngleScrollBar = 0;
-    private double degrees;
+    public double degrees;
 
     public boolean isButtonAngle;
 

@@ -18,8 +18,6 @@ class TrackLineData : LitePalSupport(), Serializable {
     //时间戳
     var time: Date = Date(System.currentTimeMillis())
 
-    var worktaskId = -1
-
     //当前线段的点
     @Column(ignore = true)
     lateinit var points: MutableList<PointData>

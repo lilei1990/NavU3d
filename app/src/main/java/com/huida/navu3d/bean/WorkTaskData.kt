@@ -3,6 +3,8 @@ package com.huida.navu3d.bean
 import org.litepal.LitePal
 import org.litepal.crud.LitePalSupport
 import java.io.Serializable
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * 作者 : lei
@@ -11,7 +13,9 @@ import java.io.Serializable
  * 描述 :作业任务数据模型
  */
 
-class WorkTaskData : LitePalSupport() ,Serializable{
+class WorkTaskData : LitePalSupport(), Serializable {
+    //时间戳
+    var time: Date = Date(System.currentTimeMillis())
 
     var sortId: Int = 0
 
@@ -31,10 +35,10 @@ class WorkTaskData : LitePalSupport() ,Serializable{
     var farmTools: Int = 0
 
     //轨迹数据
-    var trackLineData: ArrayList<TrackLineData>? =null
+    var trackLineData: ArrayList<TrackLineData>? = ArrayList()
 
     //平行线数据,包含AB点
-    var guideLineData: GuideLineData? =null
+    var guideLineData: GuideLineData? = GuideLineData()
 
 //    //A点
 //    var pointA = ArrayList<PointDb>()
@@ -53,16 +57,22 @@ class WorkTaskData : LitePalSupport() ,Serializable{
         var arr =
             LitePal.where("worktaskdata_id=${getObjId()}")
                 .find(TrackLineData::class.java, true)
-        trackLineData?.clear()
-        trackLineData?.addAll(arr)
+        arr?.apply {
+            trackLineData?.clear()
+            trackLineData?.addAll(arr)
+        }
     }
+
     /**
      * 查询导航线的数据
      */
     fun findGuideLines() {
-         guideLineData =
+        val aaa =
             LitePal.where("worktaskdata_id=${getObjId()}")
                 .findFirst(GuideLineData::class.java, true)
+        aaa?.apply {
+            guideLineData = aaa
+        }
     }
 
     override fun toString(): String {

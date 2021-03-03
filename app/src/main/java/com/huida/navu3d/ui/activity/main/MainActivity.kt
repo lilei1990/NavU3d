@@ -21,16 +21,18 @@ class MainActivity : U3dExtActivity<ActivityMainBinding>(ActivityMainBinding::in
     var start = System.currentTimeMillis()
     override fun init(savedInstanceState: Bundle?) {
         binding.viewPager.adapter = ViewPageAdapter(this)
-        binding.viewPager.offscreenPageLimit = 5
+        binding.viewPager.offscreenPageLimit = 2
 //        binding.viewPager.setCurrentItem()
         binding.viewPager.isUserInputEnabled=false
     }
 
     override fun observe() {
+        //跳转到主界面
         liveEvenBus(BusConstants.TO_PAGE_MAIN.name)
             .observe(this, Observer {
                 binding.viewPager.setCurrentItem(ViewPageAdapter.PAGE_MAIN, false)
             })
+        //跳转到home界面
         liveEvenBus(BusConstants.TO_PAGE_HOME.name)
             .observe(this, Observer {
                 binding.viewPager.setCurrentItem(ViewPageAdapter.PAGE_HOME, false)

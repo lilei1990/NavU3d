@@ -72,7 +72,8 @@ class HomeFragmentBean {
     var latZone: Char? = null
 
     //每次点start的时候就代表一个新的线段
-    var lineXYData= MutableLiveData<TrackLineData>()
+    var lineXYData = MutableLiveData<TrackLineData>()
+
     /**
      * 计算gga数据
      */
@@ -130,8 +131,8 @@ class HomeFragmentBean {
             ToastUtils.showLong("请设置B点")
             return
         }
-        val mA = PointData.build(pointA.value!!.lat, pointA.value!!.lng)
-        val mB = PointData.build(pointB.value!!.lat, pointB.value!!.lng)
+        val mA = pointA.value!!
+        val mB = pointB.value!!
         val pointData: MutableList<PointData> = ArrayList()
         //延长
         val length = Constants.EXTEND_LINE
@@ -157,8 +158,6 @@ class HomeFragmentBean {
     }
 
 
-
-
     /**
      * 是否录制轨迹
      */
@@ -174,7 +173,7 @@ class HomeFragmentBean {
      * //每次重新录制就重新初始化一条线
      */
     private fun newLine() {
-        lineXYData.postValue( TrackLineData())
+        lineXYData.postValue(TrackLineData())
     }
 
     /**
@@ -219,6 +218,8 @@ class HomeFragmentBean {
         liveEvenBus(BusConstants.DB_POINT.name)
             .postAcrossProcess(pointXY)
     }
+
+
 
     enum class Status {
         START, PAUSE, STOP

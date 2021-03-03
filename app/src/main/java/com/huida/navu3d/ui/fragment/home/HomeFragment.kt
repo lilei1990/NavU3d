@@ -1,10 +1,13 @@
 package com.huida.navu3d.ui.fragment.home
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -19,6 +22,9 @@ import com.huida.navu3d.ui.activity.main.MainActivity
 import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.lang.Thread.sleep
 import kotlin.math.roundToInt
 
 
@@ -28,13 +34,33 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
     private val unityVM by lazy { getActivityViewModel(UnityVM::class.java)!! }
     val mUnityPlayer by lazy { (activity as MainActivity).mUnityPlayer }
     var workTaskData: WorkTaskData? = null
-
     override fun init(savedInstanceState: Bundle?) {
-
+        val homeFragmentBean = homeVM.homeFragmentBean
         liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name, WorkTaskData::class.java)
             .observe(this, Observer {
-                workTaskData = it
-                homeVM.setWorkTaskData(it)
+            lifecycleScope.launch {
+                unityVM.restartScene()
+                delay(1000)
+                it?.findGuideLines()
+                it?.findTrackLines()
+                workTaskData=it
+                //导航线的数据
+                val guideLineData = it.guideLineData
+                guideLineData?.apply {
+                    homeFragmentBean.pointA.postValue(guideLineData.getStart())
+                    homeFragmentBean.pointB.postValue(guideLineData.getEnd())
+                    homeFragmentBean.creatGuideLine()
+                }
+                //轨迹的数据
+                val trackLineData = it.trackLineData
+                trackLineData?.apply {
+                    trackLineData.forEachIndexed { index, data ->
+                        data.findPoint()
+                        val points = data.points
+                        unityVM.showHistoryTrack(points)
+                    }
+                }
+            }
             })
         binding.apply {
             initButton()
@@ -47,8 +73,23 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 
     override fun onResume() {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            //跳转到main page
-            liveEvenBus(BusConstants.TO_PAGE_MAIN.name).post(1)
+            AlertDialog.Builder(requireContext())
+                .setTitle("提示")
+                .setMessage("确认退出吗?")
+                .setNegativeButton("取消", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+
+                    }
+                })
+                .setPositiveButton("确定", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        //跳转到main page
+                        liveEvenBus(BusConstants.TO_PAGE_MAIN.name).post(1)
+                        dialog?.dismiss()
+                    }
+                })
+                .show()
+
         }
         super.onResume()
     }
@@ -61,6 +102,9 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         ToastUtils.showLong("onSceneLoad")
     }
 
+    /**
+     * 初始化u3d的布局
+     */
     private fun initU3dLayout() {
 
         binding.apply {
@@ -90,7 +134,9 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 //        binding.btSwitch.performClick()
     }
 
-
+    /**
+     * 订阅消息
+     */
     override fun observe() {
         val homeFragmentBean = homeVM.homeFragmentBean
         homeFragmentBean.offsetLineDistance.observe(this) {
@@ -123,6 +169,8 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
             unityVM.setPointA()
             workTaskData?.guideLineData?.apply {
                 setStart(it)
+                save()
+                workTaskData?.save()
             }
         }
         //B
@@ -130,6 +178,8 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
             unityVM.setPointB()
             workTaskData?.guideLineData?.apply {
                 setEnd(it)
+                save()
+                workTaskData?.save()
             }
         }
         homeFragmentBean.status.observe(this) {
@@ -226,10 +276,12 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
                 override fun direction(direction: RockerView.Direction) {
                     when (direction) {
                         RockerView.Direction.DIRECTION_LEFT -> {
-                            NmeaProviderManager.setAngle(-offsetAngle)
+                            NmeaProviderManager.left()
+//                            NmeaProviderManager.setAngle(-offsetAngle)
                         }
                         RockerView.Direction.DIRECTION_RIGHT -> {
-                            NmeaProviderManager.setAngle(offsetAngle)
+                            NmeaProviderManager.right()
+//                            NmeaProviderManager.setAngle(offsetAngle)
                         }
                         RockerView.Direction.DIRECTION_UP -> {
                             NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)
@@ -238,19 +290,27 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
                             NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
                         }
                         RockerView.Direction.DIRECTION_UP_LEFT -> {
-                            NmeaProviderManager.setAngle(-offsetAngle)
+                            NmeaProviderManager.left()
+//                            NmeaProviderManager.setAngle(-offsetAngle)
                             NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)
                         }
                         RockerView.Direction.DIRECTION_UP_RIGHT -> {
-                            NmeaProviderManager.setAngle(offsetAngle)
+//                            NmeaProviderManager.setAngle(offsetAngle)
+                            NmeaProviderManager.right()
                             NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)
                         }
                         RockerView.Direction.DIRECTION_DOWN_LEFT -> {
-                            NmeaProviderManager.setAngle(-offsetAngle)
+                            NmeaProviderManager.left()
+//                            NmeaProviderManager.setAngle(-offsetAngle)
                             NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
                         }
                         RockerView.Direction.DIRECTION_DOWN_RIGHT -> {
-                            NmeaProviderManager.setAngle(offsetAngle)
+//                            NmeaProviderManager.setAngle(offsetAngle)
+                            NmeaProviderManager.right()
+                            NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
+                        }
+                        RockerView.Direction.DIRECTION_CENTER -> {
+                            NmeaProviderManager.setAngle(0.0)
                             NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
                         }
 
@@ -270,12 +330,4 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         NmeaProviderManager.clearAllRegist()
         super.onDestroy()
     }
-//    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            //如果点击的是后退键
-//            return super.onKeyDown(keyCode, event);
-//        }
-//
-//        return  mUnityPlayer!!.injectEvent(event)
-//    }
 }

@@ -18,4 +18,6 @@ object Constants {
     const val SP_THEME_KEY = "sp_theme_key"
     //线的延长长度,单位米
     const val EXTEND_LINE=100000
+    //平行线的间隔
+    val lineOffset = 10
 }

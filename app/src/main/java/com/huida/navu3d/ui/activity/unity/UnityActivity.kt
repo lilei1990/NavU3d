@@ -34,7 +34,6 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
         liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name, WorkTaskData::class.java)
             .observe(this, Observer {
                 workTaskData = it
-                homeVM.setWorkTaskData(it)
             })
         binding.apply {
             initButton()

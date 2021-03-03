@@ -1,14 +1,10 @@
 package com.huida.navu3d.ui.fragment.home
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import com.esri.core.geometry.Point
 import com.esri.core.geometry.Polyline
 import com.huida.navu3d.bean.PointData
+import com.huida.navu3d.bean.WorkTaskData
 import com.lei.core.base.BaseViewModel
 import com.unity3d.player.UnityPlayer
-import com.zs.base_library.http.ApiException
-import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.annotations.Nullable
 import org.json.JSONArray
 import org.json.JSONObject
@@ -21,8 +17,9 @@ import org.json.JSONObject
  */
 class UnityVM : BaseViewModel() {
     //缩小的比例系数
-    val scaleX=100000
-    val scaleY=1000000
+    val scaleX = 100000
+    val scaleY = 1000000
+
     /**
      * 设置标记点
      */
@@ -41,10 +38,10 @@ class UnityVM : BaseViewModel() {
             val line = JSONObject()
             val startPoint = JSONObject()
             val endPoint = JSONObject()
-            var x0: Double = (value.getPoint(0).x%scaleX)
-            var y0: Double = (value.getPoint(0).y%scaleY)
-            var x1: Double = (value.getPoint(1).x%scaleX)
-            var y1: Double = (value.getPoint(1).y%scaleY)
+            var x0: Double = (value.getPoint(0).x % scaleX)
+            var y0: Double = (value.getPoint(0).y % scaleY)
+            var x1: Double = (value.getPoint(1).x % scaleX)
+            var y1: Double = (value.getPoint(1).y % scaleY)
             startPoint.put("x", x0)
             startPoint.put("y", y0)
             endPoint.put("x", x1)
@@ -65,8 +62,8 @@ class UnityVM : BaseViewModel() {
         it: PointData,
         speed: Double
     ) {
-        var x = (it.x).toFloat()%scaleX
-        var y = (it.y).toFloat()%scaleY
+        var x = (it.x).toFloat() % scaleX
+        var y = (it.y).toFloat() % scaleY
 //        Log.d("TAG_lilei", "moveCart: ${x}--${y}")
         val json = JSONObject()
         json.put("x", x)
@@ -74,6 +71,29 @@ class UnityVM : BaseViewModel() {
         //这个速度知识插值器,当数据刷新频率达到一定程度就影响不到实际效果
         json.put("moveSpeed", speed)
         UnityPlayer.UnitySendMessage("Correspondent", "SendVData", json.toString())
+    }
+
+    /**
+     * 生成历史农机轨迹
+     */
+
+    fun showHistoryTrack(
+        it: MutableList<PointData>
+
+    ) {
+        val json = JSONObject()
+        val jsonArray = JSONArray()
+        for (pointData in it) {
+            var x = scaleX(pointData.x)
+            var y = scaleX(pointData.y)
+            val startPoint = JSONObject()
+            startPoint.put("x", x)
+            startPoint.put("y", y)
+            jsonArray.put(startPoint)
+        }
+        json.put("nav", jsonArray)
+        json.put("name", "line1")
+        UnityPlayer.UnitySendMessage("Correspondent", "ShowHistoryTrack", json.toString())
     }
 
     /**
@@ -142,7 +162,7 @@ class UnityVM : BaseViewModel() {
     /**
      * 录制
      */
-    fun saveRecord(isRecord:Boolean) {
+    fun saveRecord(isRecord: Boolean) {
         //打开小车轨迹
         isShowTrack(isRecord, "FF00FF")
     }
@@ -153,5 +173,13 @@ class UnityVM : BaseViewModel() {
     fun stop() {
         //初始化unity
         restartScene()
+    }
+
+
+    fun scaleX(a:Double):Float {
+        return (a).toFloat() % scaleX
+    }
+    fun scaleY(a:Double):Float {
+        return(a).toFloat() % scaleY
     }
 }

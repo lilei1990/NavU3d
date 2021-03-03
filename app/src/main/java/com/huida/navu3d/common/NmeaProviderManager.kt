@@ -128,4 +128,10 @@ object NmeaProviderManager {
         mNmeaBuilder.steerAngle += vlue
 
     }
+    fun left() {
+        mNmeaBuilder.degrees -= 10.0
+    }
+    fun right() {
+        mNmeaBuilder.degrees += 10.0
+    }
 }

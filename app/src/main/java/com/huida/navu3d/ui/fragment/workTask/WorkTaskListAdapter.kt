@@ -33,9 +33,10 @@ class WorkTaskListAdapter(
     override fun convert(holder: ViewHolder?, t: WorkTaskData?, position: Int) {
         holder?.setOnClickListener(R.id.clRoot) {
 //            ActivityUtils.startActivity(UnityActivity::class.java)
-            t?.findGuideLines()
-            t?.findTrackLines()
+
             liveEvenBus(BusConstants.TO_PAGE_HOME.name)
+                .post(1)
+            liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name)
                 .post(t)
         }
         holder?.setText(R.id.tv_name, t?.name)
