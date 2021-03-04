@@ -15,6 +15,8 @@ import java.util.*
 class TrackLineData : LitePalSupport(), Serializable {
     //时间戳
     var time: Date = Date(System.currentTimeMillis())
+    //关联workTask数据
+    var workTaskId = -1L
 
     //当前线段的点
     @Column(ignore = true)
@@ -35,7 +37,7 @@ class TrackLineData : LitePalSupport(), Serializable {
 //        if (arr > 10000) {
 //        }
         points =
-            LitePal.where("worktaskdata_id=${getId()}")
+            LitePal.where("tracklineid=${getId()}")
                 .find(PointData::class.java)
     }
 }

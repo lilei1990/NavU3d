@@ -4,14 +4,15 @@ import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
 import com.huida.navu3d.bean.*
-import com.huida.navu3d.common.BusEnum
-import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.utils.GeometryUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
-import java.util.*
 import java.util.concurrent.ConcurrentLinkedDeque
+import kotlin.collections.ArrayList
 
 
 /**
@@ -51,9 +52,6 @@ class HomeFragmentBean {
     val mParalleMaplLine: MutableMap<Int, Polyline> = mutableMapOf<Int, Polyline>()
 
 
-    //轨迹线
-    var trackLineData = MutableLiveData<TrackLineData>()
-
     //是否录制轨迹
     var isRecord = MutableLiveData<Boolean>(Constants.isRecord)
 
@@ -71,8 +69,13 @@ class HomeFragmentBean {
     var lngZone: Int? = null
     var latZone: Char? = null
 
-    //每次点start的时候就代表一个新的线段
-    var lineXYData = MutableLiveData<TrackLineData>()
+    //当前记录点的线段
+    var trackLine = MutableLiveData<TrackLineData>()
+
+    //轨迹的历史数据
+    var trackLineHistory = MutableLiveData<ArrayList<TrackLineData>>()
+
+    var workTaskData: WorkTaskData? = null
 
     /**
      * 计算gga数据
@@ -133,11 +136,11 @@ class HomeFragmentBean {
         }
         val mA = pointA.value!!
         val mB = pointB.value!!
-        if (mA.x <= 0||mA.y <= 0) {
+        if (mA.x <= 0 || mA.y <= 0) {
             ToastUtils.showLong("A点的值不正确:${mA.x}--${mA.y}")
             return
         }
-        if (mB.x <= 0||mB.y <= 0) {
+        if (mB.x <= 0 || mB.y <= 0) {
             ToastUtils.showLong("B点的值不正确:${mB.x}--${mB.y}")
             return
         }
@@ -171,8 +174,12 @@ class HomeFragmentBean {
      */
 
     fun isRecord(b: Boolean) {
+
         //每次重新录制就重新初始化一条线
-        newLine()
+        GlobalScope.launch(Dispatchers.IO) {
+
+            newLine()
+        }
         isRecord.postValue(b)
 
     }
@@ -181,7 +188,10 @@ class HomeFragmentBean {
      * //每次重新录制就重新初始化一条线
      */
     private fun newLine() {
-        lineXYData.postValue(TrackLineData())
+        val trackLine = TrackLineData()
+        trackLine.workTaskId = workTaskData?.getId()!!
+        trackLine.save()
+        this.trackLine.postValue(trackLine)
     }
 
     /**
@@ -222,11 +232,9 @@ class HomeFragmentBean {
      * 存储数据
      */
     fun savePoint(pointXY: PointData) {
-        pointXY.trackLineId = lineXYData.value?.getId()!!
-        liveEvenBus(BusEnum.DB_POINT)
-            .postAcrossProcess(pointXY)
+        pointXY.trackLineId = trackLine.value?.getId()!!
+        pointXY.save()
     }
-
 
 
     enum class Status {

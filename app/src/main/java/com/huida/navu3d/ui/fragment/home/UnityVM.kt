@@ -85,7 +85,7 @@ class UnityVM : BaseViewModel() {
         val jsonArray = JSONArray()
         for (pointData in it) {
             var x = scaleX(pointData.x)
-            var y = scaleX(pointData.y)
+            var y = scaleY(pointData.y)
             val startPoint = JSONObject()
             startPoint.put("x", x)
             startPoint.put("y", y)

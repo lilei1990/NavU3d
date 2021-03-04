@@ -1,6 +1,7 @@
 package com.huida.navu3d.bean
 
 import org.litepal.LitePal
+import org.litepal.annotation.Column
 import org.litepal.crud.LitePalSupport
 import java.io.Serializable
 import java.util.*
@@ -35,18 +36,14 @@ class WorkTaskData : LitePalSupport(), Serializable {
     var farmTools: Int = 0
 
     //轨迹数据
+    @Column(ignore = true)
     var trackLineData: ArrayList<TrackLineData>? = ArrayList()
 
     //平行线数据,包含AB点
     var guideLineData: GuideLineData? = GuideLineData()
 
-//    //A点
-//    var pointA = ArrayList<PointDb>()
-//
-//    //B点
-//    var pointB = ArrayList<PointDb>()
 
-    fun getObjId(): Long {
+    fun getId(): Long {
         return baseObjId
     }
 
@@ -55,7 +52,7 @@ class WorkTaskData : LitePalSupport(), Serializable {
      */
     fun findTrackLines() {
         var arr =
-            LitePal.where("worktaskdata_id=${getObjId()}")
+            LitePal.where("worktaskId=${getId()}")
                 .find(TrackLineData::class.java, true)
         arr?.apply {
             trackLineData?.clear()
@@ -68,7 +65,7 @@ class WorkTaskData : LitePalSupport(), Serializable {
      */
     fun findGuideLines() {
         val aaa =
-            LitePal.where("worktaskdata_id=${getObjId()}")
+            LitePal.where("worktaskdata_id=${getId()}")
                 .findFirst(GuideLineData::class.java, true)
         aaa?.apply {
             guideLineData = aaa

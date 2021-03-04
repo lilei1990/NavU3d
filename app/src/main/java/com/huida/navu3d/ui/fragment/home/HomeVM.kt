@@ -1,10 +1,9 @@
 package com.huida.navu3d.ui.fragment.home
 
 import android.util.Log
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
+import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.Operator
 import com.esri.core.geometry.OperatorDensifyByLength
 import com.esri.core.geometry.OperatorFactoryLocal
@@ -12,6 +11,8 @@ import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.BusEnum
 import com.huida.navu3d.common.liveEvenBus
 import com.lei.core.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
 
@@ -19,12 +20,12 @@ import net.sf.marineapi.nmea.sentence.VTGSentence
 class HomeVM : BaseViewModel() {
     private val homeRepo by lazy { HomeRepo(viewModelScope, errorLiveData, this) }
     val homeFragmentBean = HomeFragmentBean()
-    val ggaBus = liveEvenBus(BusEnum.NMEA_GGA,GGASentence::class.java)
-    val ggaObserve : Observer<GGASentence> = Observer {
+    val ggaBus = liveEvenBus(BusEnum.NMEA_GGA, GGASentence::class.java)
+    val ggaObserve: Observer<GGASentence> = Observer {
         Log.d("TAGlilei", "${it.toString()}")
     }
 
-    val vtgBus = liveEvenBus(BusEnum.NMEA_VTG,VTGSentence::class.java)
+    val vtgBus = liveEvenBus(BusEnum.NMEA_VTG, VTGSentence::class.java)
     val vtgObserve: Observer<VTGSentence> = Observer {
         Log.d("TAGlilei", "${it.toString()}")
     }
@@ -112,6 +113,34 @@ class HomeVM : BaseViewModel() {
      * 添加平行线
      */
     fun addParallelLine() {
+
+    }
+
+    suspend fun setWorkTaskData(workTask: WorkTaskData?) {
+//        val homeFragmentBean = HomeFragmentBean()
+        homeFragmentBean.workTaskData = workTask
+        flow<WorkTaskData> {
+            workTask?.findGuideLines()
+            workTask?.findTrackLines()
+            emit(workTask!!)
+        }.flowOn(Dispatchers.IO).map {
+            //导航线的数据
+            val guideLineData = it?.guideLineData
+            homeFragmentBean.pointA.setValue(guideLineData?.getStart())
+            homeFragmentBean.pointB.setValue(guideLineData?.getEnd())
+            homeFragmentBean.creatGuideLine()
+            //轨迹的数据
+            val trackLineData = it?.trackLineData
+            trackLineData?.apply {
+                trackLineData.forEachIndexed { index, data ->
+                    data.findPoint()
+                }
+                homeFragmentBean.trackLineHistory.postValue(trackLineData)
+            }
+        }.flowOn(Dispatchers.Main).collect {
+            ToastUtils.showLong("历史数据加载完成")
+        }
+
 
     }
 

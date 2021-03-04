@@ -13,7 +13,6 @@ import com.huida.navu3d.databinding.FragmentHomeBinding
 import com.huida.navu3d.ui.fragment.home.HomeFragmentBean
 import com.huida.navu3d.ui.fragment.home.HomeVM
 import com.huida.navu3d.ui.fragment.home.UnityVM
-import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.common.clickNoRepeat
 import kotlin.math.roundToInt
 
@@ -138,7 +137,7 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
 
 //            workTaskData.lines.add(it)
         }
-        homeFragmentBean.lineXYData.observe(this) {
+        homeFragmentBean.trackLine.observe(this) {
             //存储线
             liveEvenBus(BusEnum.DB_TRACK_LINE)
                 .postAcrossProcess(it)
@@ -147,12 +146,7 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
             liveEvenBus(BusEnum.DB_WORK_TASK_DATA)
                 .postAcrossProcess(it)
         }
-        //轨迹数据
-        homeFragmentBean.trackLineData.observe(this) {
-            for (point in it.points) {
-                unityVM.moveCart(point,2.0)
-            }
-        }
+
 
     }
 

@@ -1,12 +1,11 @@
 package com.huida.navu3d.ui.fragment.home
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.BusEnum
@@ -17,6 +16,7 @@ import com.huida.navu3d.ui.activity.main.MainActivity
 import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 
@@ -42,19 +42,19 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
             AlertDialog.Builder(requireContext())
                 .setTitle("提示")
                 .setMessage("确认退出吗?")
-                .setNegativeButton("取消", object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                .setNegativeButton(
+                    "取消"
+                ) { dialog, which ->
 
-                    }
-                })
-                .setPositiveButton("确定", object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface?, which: Int) {
-                        //跳转到main page
-                        liveEvenBus(BusEnum.TO_PAGE_MAIN).post(1)
-                        unityVM.restartScene()
-                        dialog?.dismiss()
-                    }
-                })
+                }
+                .setPositiveButton(
+                    "确定"
+                ) { dialog, which -> //跳转到main page
+                    liveEvenBus(BusEnum.TO_PAGE_MAIN).post(1)
+                    unityVM.restartScene()
+                    homeVM.stop()
+                    dialog?.dismiss()
+                }
                 .show()
 
         }
@@ -163,43 +163,20 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 
 //            workTaskData.lines.add(it)
         }
-        homeFragmentBean.lineXYData.observe(this) {
-            //存储线
-            liveEvenBus(BusEnum.DB_TRACK_LINE)
-                .postAcrossProcess(it)
-            workTaskData?.trackLineData?.add(it)
-            //更新worktask数据
-            liveEvenBus(BusEnum.DB_WORK_TASK_DATA)
-                .postAcrossProcess(it)
-        }
-        //轨迹数据
-        homeFragmentBean.trackLineData.observe(this) {
-            for (point in it.points) {
-                unityVM.moveCart(point, 2.0)
+
+        //轨迹的历史数据
+        homeFragmentBean.trackLineHistory.observe(this) {
+            it.forEachIndexed { index, data ->
+                val points = data.points
+                unityVM.showHistoryTrack(points)
             }
         }
         //订阅 数据
         liveEvenBus(BusEnum.SELECT_WORK_TASK_DATA, WorkTaskData::class.java)
             .observe(this, Observer {
-
-                it?.findGuideLines()
-                it?.findTrackLines()
                 workTaskData = it
-                //导航线的数据
-                val guideLineData = it.guideLineData
-                guideLineData?.apply {
-                    homeFragmentBean.pointA.value = guideLineData.getStart()
-                    homeFragmentBean.pointB.value = guideLineData.getEnd()
-                    homeFragmentBean.creatGuideLine()
-                }
-                //轨迹的数据
-                val trackLineData = it.trackLineData
-                trackLineData?.apply {
-                    trackLineData.forEachIndexed { index, data ->
-                        data.findPoint()
-                        val points = data.points
-                        unityVM.showHistoryTrack(points)
-                    }
+                lifecycleScope.launch {
+                    homeVM.setWorkTaskData(it)
                 }
             })
     }
@@ -259,11 +236,9 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
                     when (direction) {
                         RockerView.Direction.DIRECTION_LEFT -> {
                             NmeaProviderManager.left()
-//                            NmeaProviderManager.setAngle(-offsetAngle)
                         }
                         RockerView.Direction.DIRECTION_RIGHT -> {
                             NmeaProviderManager.right()
-//                            NmeaProviderManager.setAngle(offsetAngle)
                         }
                         RockerView.Direction.DIRECTION_UP -> {
                             NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)

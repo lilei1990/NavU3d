@@ -3,6 +3,7 @@ package com.huida.navu3d.app
 import android.app.Application
 import android.util.Log
 import com.facebook.stetho.Stetho
+import com.huida.navu3d.bean.GuideLineData
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.bean.TrackLineData
 import com.huida.navu3d.bean.WorkTaskData

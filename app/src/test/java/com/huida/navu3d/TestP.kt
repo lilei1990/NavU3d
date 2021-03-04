@@ -5,7 +5,16 @@ import com.esri.core.geometry.OperatorFactoryLocal
 import com.esri.core.geometry.OperatorGeneralize
 import com.esri.core.geometry.Polyline
 import com.huida.navu3d.bean.PointData
+import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.NmeaProviderManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import org.junit.Test
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -28,52 +37,24 @@ class TestP {
 
     @Test
     fun test() {
-//        val start = System.currentTimeMillis()
-//        for (i in (0 until 100000)) {
-//            val ll = LatLng(84.0, 23.0)
-////            val convertUTMToLatLon = GeoConvert.INSTANCE.convertUTMToLatLon(84.0, 23.0)
-//            val utm = ll.toUTMRef()
-////            val e = utm.toLatLng()
-//        }
-//        println("${System.currentTimeMillis() - start}")
-        //将原始离散点转换成折线
-        val outpm = Polyline()
-        var a=0.01
-        var b=0.02
-        outpm.startPath(a, b)
-        for (i in 1..1000) {
-            a+=0.01
-            outpm.lineTo(a,Math.cos((i*i- 1).toDouble()))
-        }
-        //抽稀操作
-        val generalizer =
-            OperatorFactoryLocal
-                .getInstance()
-                .getOperator(Operator.Type.Generalize) as OperatorGeneralize
-        //1 传入点抽稀
-        var outputGeom = generalizer.execute(
-            outpm,
-            0.03,
-            true,
-            null
-        ) as Polyline
-        val pathSize = outputGeom.getPathSize(0)
-        for (i in (0 until pathSize)) {
-            val point = outputGeom.getPoint(i)
-            println("${point.x}--${point.y}")
+        GlobalScope.launch(Dispatchers.IO) {
+            async {
+            println("start1" + Thread.currentThread())
 
-        }
+            }
+            println("start2" + Thread.currentThread())
+            flow<Int> {
+                println("1" + Thread.currentThread())
+                emit(1)
+            }.flowOn(Dispatchers.IO).map {
+                println("2" + Thread.currentThread())
 
-        val points: List<Point> =
-            ArrayList()
-        for (i in 1..1000) {
-            a+=0.01
-            outpm.lineTo(a,a)
+            }.collect {
+                println("3" + Thread.currentThread())
+            }
         }
-//        for (double x = 0; x < 4; x += 0.05) {
-//    points.add(new MyPoint(x, Math.cos(x*x - 1)));
-}
-
+        sleep(2000)
+    }
 
 
     private fun runTest() {
