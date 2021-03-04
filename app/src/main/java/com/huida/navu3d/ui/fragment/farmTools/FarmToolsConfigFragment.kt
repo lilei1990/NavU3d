@@ -3,10 +3,8 @@ package com.huida.navu3d.ui.fragment.farmTools
 import android.os.Bundle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
-import com.huida.navu3d.common.initBackClick
-import com.huida.navu3d.common.initConfirmClick
+import com.huida.navu3d.common.BusEnum
 import com.huida.navu3d.common.liveEvenBus
-import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.databinding.FragmentFarmToolsConfigBinding
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
@@ -32,7 +30,7 @@ class FarmToolsConfigFragment :
     override fun init(savedInstanceState: Bundle?) {
         //返回按钮
         binding.incTitleBar.clBack.clickNoRepeat {
-            liveEvenBus(BusConstants.TO_PAGE_SETTING.name).post("")
+            liveEvenBus(BusEnum.TO_PAGE_SETTING).post("")
         }
         //保存
         binding.incTitleBar.clConfirm.clickNoRepeat {

@@ -15,9 +15,14 @@ object Constants {
     /**
      * Sp主题key false 白天模式, true 夜间模式
      */
-    const val SP_THEME_KEY = "sp_theme_key"
+    var SP_THEME_KEY = "sp_theme_key"
+
     //线的延长长度,单位米
-    const val EXTEND_LINE=100000
+    var EXTEND_LINE = 100000
+
     //平行线的间隔
-    val lineOffset = 10
+    var lineOffset = 10
+
+    //是否录制
+    var isRecord = false
 }

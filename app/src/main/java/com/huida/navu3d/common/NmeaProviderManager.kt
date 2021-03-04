@@ -115,23 +115,13 @@ object NmeaProviderManager {
         mNmeaBuilder.stepDistance += vlue
     }
 
-    fun setAngle(vlue: Double) {
-        if (-1 > mNmeaBuilder.steerAngle) {
-            mNmeaBuilder.steerAngle = -1.0
-            return
-        }
-        if (mNmeaBuilder.steerAngle > 1) {
-            mNmeaBuilder.steerAngle = 1.0
-            return
-        }
-
-        mNmeaBuilder.steerAngle += vlue
-
-    }
     fun left() {
-        mNmeaBuilder.degrees -= 10.0
+        mNmeaBuilder.steerAngle = -1.0
     }
     fun right() {
-        mNmeaBuilder.degrees += 10.0
+        mNmeaBuilder.steerAngle =1.0
+    }
+    fun center() {
+        mNmeaBuilder.steerAngle =0.0
     }
 }

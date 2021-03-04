@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
 import com.huida.navu3d.bean.*
+import com.huida.navu3d.common.BusEnum
 import com.huida.navu3d.common.liveEvenBus
-import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.utils.GeometryUtils
 import net.sf.marineapi.nmea.sentence.GGASentence
@@ -55,7 +55,7 @@ class HomeFragmentBean {
     var trackLineData = MutableLiveData<TrackLineData>()
 
     //是否录制轨迹
-    var isRecord = MutableLiveData<Boolean>(false)
+    var isRecord = MutableLiveData<Boolean>(Constants.isRecord)
 
     //点的队列
     val mPointQueue = ConcurrentLinkedDeque<PointData>()
@@ -133,6 +133,14 @@ class HomeFragmentBean {
         }
         val mA = pointA.value!!
         val mB = pointB.value!!
+        if (mA.x <= 0||mA.y <= 0) {
+            ToastUtils.showLong("A点的值不正确:${mA.x}--${mA.y}")
+            return
+        }
+        if (mB.x <= 0||mB.y <= 0) {
+            ToastUtils.showLong("B点的值不正确:${mB.x}--${mB.y}")
+            return
+        }
         val pointData: MutableList<PointData> = ArrayList()
         //延长
         val length = Constants.EXTEND_LINE
@@ -215,7 +223,7 @@ class HomeFragmentBean {
      */
     fun savePoint(pointXY: PointData) {
         pointXY.trackLineId = lineXYData.value?.getId()!!
-        liveEvenBus(BusConstants.DB_POINT.name)
+        liveEvenBus(BusEnum.DB_POINT)
             .postAcrossProcess(pointXY)
     }
 

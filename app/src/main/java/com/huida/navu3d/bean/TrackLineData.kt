@@ -1,12 +1,10 @@
 package com.huida.navu3d.bean
 
-import com.esri.core.geometry.Point
 import org.litepal.LitePal
 import org.litepal.annotation.Column
 import org.litepal.crud.LitePalSupport
 import java.io.Serializable
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * 作者 : lei

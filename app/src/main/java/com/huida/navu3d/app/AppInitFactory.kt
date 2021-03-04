@@ -2,15 +2,12 @@ package com.huida.navu3d.app
 
 import android.app.Application
 import android.util.Log
-import com.blankj.utilcode.util.ServiceUtils
 import com.facebook.stetho.Stetho
-import com.huida.navu3d.LitpalService
-import com.huida.navu3d.bean.GuideLineData
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.bean.TrackLineData
 import com.huida.navu3d.bean.WorkTaskData
+import com.huida.navu3d.common.BusEnum
 import com.huida.navu3d.common.liveEvenBus
-import com.huida.navu3d.constants.BusConstants
 import com.tencent.bugly.crashreport.CrashReport
 import org.litepal.LitePal
 
@@ -64,15 +61,15 @@ object AppInitFactory {
 //LitePal.deleteAll(PointData::class.java)
 //LitePal.deleteAll(GuideLineData::class.java)
 //LitePal.deleteAll(TrackLineData::class.java)
-        liveEvenBus(BusConstants.DB_TRACK_LINE.name, TrackLineData::class.java)
+        liveEvenBus(BusEnum.DB_TRACK_LINE, TrackLineData::class.java)
             .observeForever {
                 it.save()
             }
-        liveEvenBus(BusConstants.DB_POINT.name, PointData::class.java)
+        liveEvenBus(BusEnum.DB_POINT, PointData::class.java)
             .observeForever {
                 it.save()
             }
-        liveEvenBus(BusConstants.DB_WORK_TASK_DATA.name, WorkTaskData::class.java)
+        liveEvenBus(BusEnum.DB_WORK_TASK_DATA, WorkTaskData::class.java)
             .observeForever {
                 it.save()
             }

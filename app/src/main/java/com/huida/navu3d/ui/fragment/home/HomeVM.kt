@@ -1,11 +1,16 @@
 package com.huida.navu3d.ui.fragment.home
 
+import android.util.Log
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.esri.core.geometry.Operator
 import com.esri.core.geometry.OperatorDensifyByLength
 import com.esri.core.geometry.OperatorFactoryLocal
 import com.huida.navu3d.bean.WorkTaskData
+import com.huida.navu3d.common.BusEnum
+import com.huida.navu3d.common.liveEvenBus
 import com.lei.core.base.BaseViewModel
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
@@ -13,17 +18,24 @@ import net.sf.marineapi.nmea.sentence.VTGSentence
 
 class HomeVM : BaseViewModel() {
     private val homeRepo by lazy { HomeRepo(viewModelScope, errorLiveData, this) }
-
-    //    private val unityRepo by lazy { UnityRepo(viewModelScope, errorLiveData, this) }
-    val vtgData = MutableLiveData<VTGSentence>()
-    val ggaData = MutableLiveData<GGASentence>()
     val homeFragmentBean = HomeFragmentBean()
+    val ggaBus = liveEvenBus(BusEnum.NMEA_GGA,GGASentence::class.java)
+    val ggaObserve : Observer<GGASentence> = Observer {
+        Log.d("TAGlilei", "${it.toString()}")
+    }
+
+    val vtgBus = liveEvenBus(BusEnum.NMEA_VTG,VTGSentence::class.java)
+    val vtgObserve: Observer<VTGSentence> = Observer {
+        Log.d("TAGlilei", "${it.toString()}")
+    }
 
     /**
      * 开始
      */
     fun start() {
         homeRepo.start()
+//        ggaBus.observeForever(ggaObserve)
+//        vtgBus.observeForever(vtgObserve)
     }
 
     /**
@@ -31,6 +43,8 @@ class HomeVM : BaseViewModel() {
      */
     fun stop() {
         homeRepo.stop()
+//        ggaBus.removeObserver(ggaObserve)
+//        vtgBus.removeObserver(vtgObserve)
     }
 
 
@@ -76,8 +90,6 @@ class HomeVM : BaseViewModel() {
     var densifier = OperatorFactoryLocal
         .getInstance()
         .getOperator(Operator.Type.DensifyByLength) as OperatorDensifyByLength
-
-
 
 
     /**

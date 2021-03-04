@@ -7,24 +7,16 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
-import com.blankj.utilcode.util.ToastUtils
-import com.huida.navu3d.R
 import com.huida.navu3d.bean.WorkTaskData
+import com.huida.navu3d.common.BusEnum
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.common.liveEvenBus
-import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.databinding.FragmentHomeBinding
 import com.huida.navu3d.ui.activity.main.MainActivity
 import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.lang.Thread.sleep
 import kotlin.math.roundToInt
 
 
@@ -35,33 +27,6 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
     val mUnityPlayer by lazy { (activity as MainActivity).mUnityPlayer }
     var workTaskData: WorkTaskData? = null
     override fun init(savedInstanceState: Bundle?) {
-        val homeFragmentBean = homeVM.homeFragmentBean
-        liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name, WorkTaskData::class.java)
-            .observe(this, Observer {
-            lifecycleScope.launch {
-                unityVM.restartScene()
-                delay(1000)
-                it?.findGuideLines()
-                it?.findTrackLines()
-                workTaskData=it
-                //导航线的数据
-                val guideLineData = it.guideLineData
-                guideLineData?.apply {
-                    homeFragmentBean.pointA.postValue(guideLineData.getStart())
-                    homeFragmentBean.pointB.postValue(guideLineData.getEnd())
-                    homeFragmentBean.creatGuideLine()
-                }
-                //轨迹的数据
-                val trackLineData = it.trackLineData
-                trackLineData?.apply {
-                    trackLineData.forEachIndexed { index, data ->
-                        data.findPoint()
-                        val points = data.points
-                        unityVM.showHistoryTrack(points)
-                    }
-                }
-            }
-            })
         binding.apply {
             initButton()
             initU3dLayout()
@@ -70,6 +35,7 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 
 
     }
+
 
     override fun onResume() {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -84,7 +50,8 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
                 .setPositiveButton("确定", object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
                         //跳转到main page
-                        liveEvenBus(BusConstants.TO_PAGE_MAIN.name).post(1)
+                        liveEvenBus(BusEnum.TO_PAGE_MAIN).post(1)
+                        unityVM.restartScene()
                         dialog?.dismiss()
                     }
                 })
@@ -94,13 +61,6 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         super.onResume()
     }
 
-    /**
-     * 场景初始化
-    请求位置
-     */
-    fun onSceneLoad() {
-        ToastUtils.showLong("onSceneLoad")
-    }
 
     /**
      * 初始化u3d的布局
@@ -205,11 +165,11 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         }
         homeFragmentBean.lineXYData.observe(this) {
             //存储线
-            liveEvenBus(BusConstants.DB_TRACK_LINE.name)
+            liveEvenBus(BusEnum.DB_TRACK_LINE)
                 .postAcrossProcess(it)
             workTaskData?.trackLineData?.add(it)
             //更新worktask数据
-            liveEvenBus(BusConstants.DB_WORK_TASK_DATA.name)
+            liveEvenBus(BusEnum.DB_WORK_TASK_DATA)
                 .postAcrossProcess(it)
         }
         //轨迹数据
@@ -218,7 +178,30 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
                 unityVM.moveCart(point, 2.0)
             }
         }
+        //订阅 数据
+        liveEvenBus(BusEnum.SELECT_WORK_TASK_DATA, WorkTaskData::class.java)
+            .observe(this, Observer {
 
+                it?.findGuideLines()
+                it?.findTrackLines()
+                workTaskData = it
+                //导航线的数据
+                val guideLineData = it.guideLineData
+                guideLineData?.apply {
+                    homeFragmentBean.pointA.value = guideLineData.getStart()
+                    homeFragmentBean.pointB.value = guideLineData.getEnd()
+                    homeFragmentBean.creatGuideLine()
+                }
+                //轨迹的数据
+                val trackLineData = it.trackLineData
+                trackLineData?.apply {
+                    trackLineData.forEachIndexed { index, data ->
+                        data.findPoint()
+                        val points = data.points
+                        unityVM.showHistoryTrack(points)
+                    }
+                }
+            })
     }
 
     private fun initButton() {
@@ -265,10 +248,9 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
     private fun initRockView() {
         binding.incDome.rockerView.setCallBackMode(RockerView.CallBackMode.CALL_BACK_MODE_MOVE);
         binding.incDome.rockerView.setOnShakeListener(
-            RockerView.DirectionMode.DIRECTION_8,
+            RockerView.DirectionMode.DIRECTION_4_ROTATE_45,
             object : RockerView.OnShakeListener {
                 override fun onStart() {
-
                 }
 
                 var offsetAngle = 0.01
@@ -289,41 +271,20 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
                         RockerView.Direction.DIRECTION_DOWN -> {
                             NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
                         }
-                        RockerView.Direction.DIRECTION_UP_LEFT -> {
-                            NmeaProviderManager.left()
-//                            NmeaProviderManager.setAngle(-offsetAngle)
-                            NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_UP_RIGHT -> {
-//                            NmeaProviderManager.setAngle(offsetAngle)
-                            NmeaProviderManager.right()
-                            NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_DOWN_LEFT -> {
-                            NmeaProviderManager.left()
-//                            NmeaProviderManager.setAngle(-offsetAngle)
-                            NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_DOWN_RIGHT -> {
-//                            NmeaProviderManager.setAngle(offsetAngle)
-                            NmeaProviderManager.right()
-                            NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_CENTER -> {
-                            NmeaProviderManager.setAngle(0.0)
-                            NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
-                        }
+
 
                     }
                 }
 
                 override fun onFinish() {
-
+                    NmeaProviderManager.center()
                 }
             })
     }
 
+
     override fun onDestroy() {
+
         homeVM.stop()
         val parent = mUnityPlayer?.parent as ViewGroup
         parent.removeAllViews()

@@ -62,6 +62,7 @@ abstract class BaseVmFragment<VB : ViewBinding>(val inflate: (LayoutInflater, Vi
         init(savedInstanceState)
         //observe一定要在初始化最后，因为observe会收到黏性事件，随后对ui做处理
         observe()
+        loadData()
         onClick()
     }
 
@@ -135,12 +136,7 @@ abstract class BaseVmFragment<VB : ViewBinding>(val inflate: (LayoutInflater, Vi
         //StatusUtils.setSystemStatus(mActivity, true, true)
     }
 
-    /**
-     * 初始化View以及事件
-     */
-    open fun initView() {
 
-    }
 
     /**
      * 加载数据

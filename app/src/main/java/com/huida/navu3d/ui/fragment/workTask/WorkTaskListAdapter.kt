@@ -1,20 +1,12 @@
 package com.huida.navu3d.ui.fragment.workTask
 
 import android.content.Context
-import android.os.Bundle
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
-import com.blankj.utilcode.util.ActivityUtils
 import com.huida.navu3d.R
 import com.huida.navu3d.bean.WorkTaskData
+import com.huida.navu3d.common.BusEnum
 import com.huida.navu3d.common.liveEvenBus
-import com.huida.navu3d.constants.BusConstants
-import com.huida.navu3d.ui.activity.unity.UnityActivity
 import com.zhy.adapter.recyclerview.CommonAdapter
 import com.zhy.adapter.recyclerview.base.ViewHolder
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
  * 作者 : lei
@@ -34,9 +26,9 @@ class WorkTaskListAdapter(
         holder?.setOnClickListener(R.id.clRoot) {
 //            ActivityUtils.startActivity(UnityActivity::class.java)
 
-            liveEvenBus(BusConstants.TO_PAGE_HOME.name)
+            liveEvenBus(BusEnum.TO_PAGE_HOME)
                 .post(1)
-            liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name)
+            liveEvenBus(BusEnum.SELECT_WORK_TASK_DATA)
                 .post(t)
         }
         holder?.setText(R.id.tv_name, t?.name)

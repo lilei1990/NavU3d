@@ -2,8 +2,8 @@ package com.huida.navu3d.ui.activity.main
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import com.huida.navu3d.common.BusEnum
 import com.huida.navu3d.common.liveEvenBus
-import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.databinding.ActivityMainBinding
 import com.huida.navu3d.ui.activity.unity.U3dExtActivity
@@ -28,17 +28,17 @@ class MainActivity : U3dExtActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     override fun observe() {
         //跳转到主界面
-        liveEvenBus(BusConstants.TO_PAGE_MAIN.name)
+        liveEvenBus(BusEnum.TO_PAGE_MAIN)
             .observe(this, Observer {
                 binding.viewPager.setCurrentItem(ViewPageAdapter.PAGE_MAIN, false)
             })
         //跳转到home界面
-        liveEvenBus(BusConstants.TO_PAGE_HOME.name)
+        liveEvenBus(BusEnum.TO_PAGE_HOME)
             .observe(this, Observer {
                 binding.viewPager.setCurrentItem(ViewPageAdapter.PAGE_HOME, false)
             })
         //退出
-        liveEvenBus(BusConstants.TO_EXIT.name)
+        liveEvenBus(BusEnum.TO_EXIT)
             .observe(this, Observer {
                 finish()
             })

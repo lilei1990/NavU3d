@@ -6,9 +6,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
 import com.blankj.utilcode.util.ToastUtils
 import com.huida.navu3d.bean.WorkTaskData
+import com.huida.navu3d.common.BusEnum
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.common.liveEvenBus
-import com.huida.navu3d.constants.BusConstants
 import com.huida.navu3d.databinding.FragmentHomeBinding
 import com.huida.navu3d.ui.fragment.home.HomeFragmentBean
 import com.huida.navu3d.ui.fragment.home.HomeVM
@@ -31,14 +31,13 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
     var workTaskData: WorkTaskData? = null
     override fun init(savedInstanceState: Bundle?) {
 
-        liveEvenBus(BusConstants.SELECT_WORK_TASK_DATA.name, WorkTaskData::class.java)
+        liveEvenBus(BusEnum.SELECT_WORK_TASK_DATA, WorkTaskData::class.java)
             .observe(this, Observer {
                 workTaskData = it
             })
         binding.apply {
             initButton()
             initU3dLayout()
-            initRockView()
         }
 
 
@@ -141,11 +140,11 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
         }
         homeFragmentBean.lineXYData.observe(this) {
             //存储线
-            liveEvenBus(BusConstants.DB_TRACK_LINE.name)
+            liveEvenBus(BusEnum.DB_TRACK_LINE)
                 .postAcrossProcess(it)
             workTaskData?.trackLineData?.add(it)
             //更新worktask数据
-            liveEvenBus(BusConstants.DB_WORK_TASK_DATA.name)
+            liveEvenBus(BusEnum.DB_WORK_TASK_DATA)
                 .postAcrossProcess(it)
         }
         //轨迹数据
@@ -198,56 +197,6 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
 
     }
 
-    private fun initRockView() {
-        binding.incDome.rockerView.setCallBackMode(RockerView.CallBackMode.CALL_BACK_MODE_MOVE);
-        binding.incDome.rockerView.setOnShakeListener(
-            RockerView.DirectionMode.DIRECTION_8,
-            object : RockerView.OnShakeListener {
-                override fun onStart() {
-
-                }
-
-                var offsetAngle = 0.01
-                var offsetSpeedDistance = 0.005
-                override fun direction(direction: RockerView.Direction) {
-                    when (direction) {
-                        RockerView.Direction.DIRECTION_LEFT -> {
-                            NmeaProviderManager.setAngle(-offsetAngle)
-                        }
-                        RockerView.Direction.DIRECTION_RIGHT -> {
-                            NmeaProviderManager.setAngle(offsetAngle)
-                        }
-                        RockerView.Direction.DIRECTION_UP -> {
-                            NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_DOWN -> {
-                            NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_UP_LEFT -> {
-                            NmeaProviderManager.setAngle(-offsetAngle)
-                            NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_UP_RIGHT -> {
-                            NmeaProviderManager.setAngle(offsetAngle)
-                            NmeaProviderManager.setSpeedDistance(offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_DOWN_LEFT -> {
-                            NmeaProviderManager.setAngle(-offsetAngle)
-                            NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
-                        }
-                        RockerView.Direction.DIRECTION_DOWN_RIGHT -> {
-                            NmeaProviderManager.setAngle(offsetAngle)
-                            NmeaProviderManager.setSpeedDistance(-offsetSpeedDistance)
-                        }
-
-                    }
-                }
-
-                override fun onFinish() {
-
-                }
-            })
-    }
 
     override fun onDestroy() {
         homeVM.stop()
