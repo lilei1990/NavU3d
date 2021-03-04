@@ -1,6 +1,5 @@
 package com.huida.navu3d.common
 
-import kotlinx.coroutines.delay
 import net.sf.marineapi.nmea.parser.SentenceFactory
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
@@ -101,7 +100,6 @@ object NmeaProviderManager {
         mNmeaBuilder = NmeaBuilder()
     }
 
-
     fun setSpeedDistance(vlue: Double) {
         if (0.0 > mNmeaBuilder.stepDistance) {
             mNmeaBuilder.stepDistance = 0.0
@@ -116,10 +114,10 @@ object NmeaProviderManager {
     }
 
     fun left() {
-        mNmeaBuilder.steerAngle = -1.0
+        mNmeaBuilder.steerAngle = -1.5
     }
     fun right() {
-        mNmeaBuilder.steerAngle =1.0
+        mNmeaBuilder.steerAngle =1.5
     }
     fun center() {
         mNmeaBuilder.steerAngle =0.0

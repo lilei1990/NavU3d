@@ -230,8 +230,7 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
                 override fun onStart() {
                 }
 
-                var offsetAngle = 0.01
-                var offsetSpeedDistance = 0.005
+                var offsetSpeedDistance = 0.01
                 override fun direction(direction: RockerView.Direction) {
                     when (direction) {
                         RockerView.Direction.DIRECTION_LEFT -> {

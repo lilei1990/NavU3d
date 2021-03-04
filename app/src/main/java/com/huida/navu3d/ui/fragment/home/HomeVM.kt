@@ -20,23 +20,14 @@ import net.sf.marineapi.nmea.sentence.VTGSentence
 class HomeVM : BaseViewModel() {
     private val homeRepo by lazy { HomeRepo(viewModelScope, errorLiveData, this) }
     val homeFragmentBean = HomeFragmentBean()
-    val ggaBus = liveEvenBus(BusEnum.NMEA_GGA, GGASentence::class.java)
-    val ggaObserve: Observer<GGASentence> = Observer {
-        Log.d("TAGlilei", "${it.toString()}")
-    }
 
-    val vtgBus = liveEvenBus(BusEnum.NMEA_VTG, VTGSentence::class.java)
-    val vtgObserve: Observer<VTGSentence> = Observer {
-        Log.d("TAGlilei", "${it.toString()}")
-    }
 
     /**
      * 开始
      */
     fun start() {
         homeRepo.start()
-//        ggaBus.observeForever(ggaObserve)
-//        vtgBus.observeForever(vtgObserve)
+
     }
 
     /**
@@ -44,8 +35,7 @@ class HomeVM : BaseViewModel() {
      */
     fun stop() {
         homeRepo.stop()
-//        ggaBus.removeObserver(ggaObserve)
-//        vtgBus.removeObserver(vtgObserve)
+
     }
 
 

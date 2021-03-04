@@ -38,10 +38,10 @@ class UnityVM : BaseViewModel() {
             val line = JSONObject()
             val startPoint = JSONObject()
             val endPoint = JSONObject()
-            var x0: Double = (value.getPoint(0).x % scaleX)
-            var y0: Double = (value.getPoint(0).y % scaleY)
-            var x1: Double = (value.getPoint(1).x % scaleX)
-            var y1: Double = (value.getPoint(1).y % scaleY)
+            val x0: Float = scaleX(value.getPoint(0).x)
+            val y0: Float = scaleY(value.getPoint(0).y)
+            val x1: Float = scaleX(value.getPoint(1).x)
+            val y1: Float = scaleY(value.getPoint(1).y)
             startPoint.put("x", x0)
             startPoint.put("y", y0)
             endPoint.put("x", x1)
@@ -62,8 +62,8 @@ class UnityVM : BaseViewModel() {
         it: PointData,
         speed: Double
     ) {
-        var x = (it.x).toFloat() % scaleX
-        var y = (it.y).toFloat() % scaleY
+        var x = scaleX(it.x)
+        var y = scaleY(it.y)
 //        Log.d("TAG_lilei", "moveCart: ${x}--${y}")
         val json = JSONObject()
         json.put("x", x)
@@ -176,10 +176,11 @@ class UnityVM : BaseViewModel() {
     }
 
 
-    fun scaleX(a:Double):Float {
+    fun scaleX(a: Double): Float {
         return (a).toFloat() % scaleX
     }
-    fun scaleY(a:Double):Float {
-        return(a).toFloat() % scaleY
+
+    fun scaleY(a: Double): Float {
+        return (a).toFloat() % scaleY
     }
 }
