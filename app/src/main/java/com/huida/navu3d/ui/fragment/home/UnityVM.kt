@@ -1,8 +1,9 @@
 package com.huida.navu3d.ui.fragment.home
 
+import android.util.Log
 import com.esri.core.geometry.Polyline
 import com.huida.navu3d.bean.PointData
-import com.huida.navu3d.bean.WorkTaskData
+import com.huida.navu3d.bean.TrackLineData
 import com.lei.core.base.BaseViewModel
 import com.unity3d.player.UnityPlayer
 import org.jetbrains.annotations.Nullable
@@ -32,7 +33,10 @@ class UnityVM : BaseViewModel() {
      */
 //    val scale = 100.0
 //    val scaleY = 10000000
+    var paralleLine: MutableMap<Int, Polyline>? = null
     fun addParallelLine(it: MutableMap<Int, Polyline>) {
+        removeParallelLine()
+        paralleLine = it
         val lines = JSONArray()
         for ((key, value) in it) {
             val line = JSONObject()
@@ -47,11 +51,19 @@ class UnityVM : BaseViewModel() {
             endPoint.put("x", x1)
             endPoint.put("y", y1)
             line.put("nav", JSONArray().put(startPoint).put(endPoint))
-            line.put("name", "line1")
+            line.put("name", "line${100-key}")
             lines.put(line)
+            Log.d("TAGlilei", "addParallelLine: ${100-key}")
         }
         UnityPlayer.UnitySendMessage("Correspondent", "BuildNavLine", lines.toString())
 
+    }
+
+    fun removeParallelLine() {
+        paralleLine?.forEach { t, u ->
+            Log.d("TAGlilei", "addParallelLine: ${t}")
+            UnityPlayer.UnitySendMessage("Correspondent", "RemoveNavLine", "line${100-t}")
+        }
     }
 
     /**
@@ -78,12 +90,14 @@ class UnityVM : BaseViewModel() {
      */
 
     fun showHistoryTrack(
-        it: MutableList<PointData>
+        it: TrackLineData
 
     ) {
+        val id = it.getId()
+        val points = it.points
         val json = JSONObject()
         val jsonArray = JSONArray()
-        for (pointData in it) {
+        for (pointData in points) {
             var x = scaleX(pointData.x)
             var y = scaleY(pointData.y)
             val startPoint = JSONObject()
@@ -92,8 +106,9 @@ class UnityVM : BaseViewModel() {
             jsonArray.put(startPoint)
         }
         json.put("nav", jsonArray)
-        json.put("name", "line1")
+        json.put("name", "line${id}")
         UnityPlayer.UnitySendMessage("Correspondent", "ShowHistoryTrack", json.toString())
+        Log.d("TAGlilei", "cartStance: ${json.toString()}")
     }
 
     /**

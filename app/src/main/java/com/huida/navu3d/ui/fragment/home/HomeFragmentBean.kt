@@ -134,8 +134,8 @@ class HomeFragmentBean {
             ToastUtils.showLong("请设置B点")
             return
         }
-        val mA = pointA.value!!
-        val mB = pointB.value!!
+        val mA = pointA.value!!.copy()
+        val mB = pointB.value!!.copy()
         if (mA.x <= 0 || mA.y <= 0) {
             ToastUtils.showLong("A点的值不正确:${mA.x}--${mA.y}")
             return

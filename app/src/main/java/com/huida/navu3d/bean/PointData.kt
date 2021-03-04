@@ -13,7 +13,7 @@ import java.io.Serializable
  */
 
 
-open class PointData : LitePalSupport() , Serializable {
+open class PointData : LitePalSupport(), Serializable {
 
     //0是定位点,1是A点,2是B点,3是线的点,4是引导线的点
     var type: Int = 0
@@ -25,6 +25,7 @@ open class PointData : LitePalSupport() , Serializable {
     var x = 0.0
 
     var y = 0.0
+
     //线的标识
     var trackLineId = -1L
 
@@ -63,5 +64,14 @@ open class PointData : LitePalSupport() , Serializable {
         }
     }
 
+    fun getId(): Long {
+        return baseObjId
+    }
 
+    /**
+     * 复制一个对象
+     */
+    fun copy(): PointData {
+        return build(lat, lng)
+    }
 }

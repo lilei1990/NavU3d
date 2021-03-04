@@ -25,7 +25,7 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 
     private val unityVM by lazy { getActivityViewModel(UnityVM::class.java)!! }
     val mUnityPlayer by lazy { (activity as MainActivity).mUnityPlayer }
-    var workTaskData: WorkTaskData? = null
+//    var workTaskData: WorkTaskData? = null
     override fun init(savedInstanceState: Bundle?) {
         binding.apply {
             initButton()
@@ -127,20 +127,12 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         //A
         homeFragmentBean.pointA.observe(this) {
             unityVM.setPointA()
-            workTaskData?.guideLineData?.apply {
-                setStart(it)
-                save()
-                workTaskData?.save()
-            }
+
         }
         //B
         homeFragmentBean.pointB.observe(this) {
             unityVM.setPointB()
-            workTaskData?.guideLineData?.apply {
-                setEnd(it)
-                save()
-                workTaskData?.save()
-            }
+
         }
         homeFragmentBean.status.observe(this) {
             when (it) {
@@ -167,14 +159,12 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         //轨迹的历史数据
         homeFragmentBean.trackLineHistory.observe(this) {
             it.forEachIndexed { index, data ->
-                val points = data.points
-                unityVM.showHistoryTrack(points)
+                unityVM.showHistoryTrack(data)
             }
         }
         //订阅 数据
         liveEvenBus(BusEnum.SELECT_WORK_TASK_DATA, WorkTaskData::class.java)
             .observe(this, Observer {
-                workTaskData = it
                 lifecycleScope.launch {
                     homeVM.setWorkTaskData(it)
                 }

@@ -59,9 +59,9 @@ object AppInitFactory {
     private fun initLitpal(application: Application?) {
         LitePal.initialize(application!!.applicationContext);
         //LitePal.deleteAll(WorkTaskData::class.java)
-//LitePal.deleteAll(PointData::class.java)
+LitePal.deleteAll(PointData::class.java)
 //LitePal.deleteAll(GuideLineData::class.java)
-//LitePal.deleteAll(TrackLineData::class.java)
+LitePal.deleteAll(TrackLineData::class.java)
         liveEvenBus(BusEnum.DB_TRACK_LINE, TrackLineData::class.java)
             .observeForever {
                 it.save()
