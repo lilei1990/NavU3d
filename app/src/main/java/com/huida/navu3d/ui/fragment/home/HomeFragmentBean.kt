@@ -1,5 +1,6 @@
 package com.huida.navu3d.ui.fragment.home
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
@@ -49,7 +50,6 @@ class HomeFragmentBean {
 
     //平行线数据
     val DataParallelLine = MutableLiveData<MutableMap<Int, Polyline>>()
-    val mParalleMaplLine: MutableMap<Int, Polyline> = mutableMapOf<Int, Polyline>()
 
 
     //是否录制轨迹
@@ -94,6 +94,13 @@ class HomeFragmentBean {
             mPointQueue.addFirst(point)
         }
         val p = Point(point.x, point.y)
+        val value = DataParallelLine.value
+        value?.forEach { t, u ->
+            if (t == 0) {
+                offsetLineDistance.postValue(GeometryUtils.getPointToCurveDis(p, u).toInt())
+                Log.d("TAGlilei", "putGGA: ${GeometryUtils.getPointToCurveDis(p, u)}")
+            }
+        }
         //计算偏移的距离
 //        val polyline = mParalleMaplLine.get(3)
 
@@ -112,30 +119,42 @@ class HomeFragmentBean {
      * 记录a b点
      */
     fun creatPointA() {
-        pointA.postValue(currenLatLng.value)
+        val value = currenLatLng.value
+        pointA.postValue(value)
+        workTaskData?.guideLineData?.apply {
+            setStart(value!!)
+            save()
+        }
+        workTaskData?.save()
     }
 
     /**
      * 记录a b点
      */
     fun creatPointB() {
-        pointB.postValue(currenLatLng.value)
+        val value = currenLatLng.value
+        pointB.postValue(value)
+        workTaskData?.guideLineData?.apply {
+            setEnd(value!!)
+            save()
+        }
+        workTaskData?.save()
     }
 
     /**
      * 创建到引导线
      */
     fun creatGuideLine() {
-        if (pointA.value == null) {
+        if (workTaskData?.guideLineData?.getStart() == null) {
             ToastUtils.showLong("请设置A点")
             return
         }
-        if (pointB.value == null) {
+        if (workTaskData?.guideLineData?.getEnd() == null) {
             ToastUtils.showLong("请设置B点")
             return
         }
-        val mA = pointA.value!!.copy()
-        val mB = pointB.value!!.copy()
+        val mA = workTaskData?.guideLineData?.getStart()!!
+        val mB = workTaskData?.guideLineData?.getEnd()!!
         if (mA.x <= 0 || mA.y <= 0) {
             ToastUtils.showLong("A点的值不正确:${mA.x}--${mA.y}")
             return
@@ -153,7 +172,7 @@ class HomeFragmentBean {
             ToastUtils.showLong("AB点重合,请重新设置AB点")
             return
         }
-        //分别延长AB两点
+//        //分别延长AB两点
         GeometryUtils.extLine(mA, mB, length)
         GeometryUtils.extLine(mB, mA, length)
         pointData.add(mA)
@@ -163,8 +182,7 @@ class HomeFragmentBean {
         navLineData.startY = mA.y
         navLineData.endX = mB.x
         navLineData.endY = mB.y
-        mParalleMaplLine.putAll(navLineData.budileUtmLine())
-        DataParallelLine.postValue(mParalleMaplLine)
+        DataParallelLine.postValue(navLineData.budileUtmLine())
 
     }
 

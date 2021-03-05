@@ -74,4 +74,9 @@ open class PointData : LitePalSupport(), Serializable {
     fun copy(): PointData {
         return build(lat, lng)
     }
+
+    override fun toString(): String {
+        return "PointData(x=$x, y=$y)"
+    }
+
 }

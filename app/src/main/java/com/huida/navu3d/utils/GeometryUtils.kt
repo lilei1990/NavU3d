@@ -10,6 +10,8 @@ import com.huida.navu3d.bean.PointData
  * 描述 : 集合计算的工具类
  */
 object GeometryUtils {
+    val distanceOperator = OperatorFactoryLocal.getInstance()
+        .getOperator(Operator.Type.Distance) as OperatorDistance
     /**
      * 获取点到曲线的距离
      *
@@ -18,8 +20,7 @@ object GeometryUtils {
      * @return
      */
     fun getPointToCurveDis(pp1: Point, polyline: Polyline): Double {
-        val distanceOperator = OperatorFactoryLocal.getInstance()
-                .getOperator(Operator.Type.Distance) as OperatorDistance
+
         return distanceOperator.execute(pp1, polyline, null)
 
     }
@@ -42,6 +43,7 @@ object GeometryUtils {
         B.lng = latlng[1]
 
     }
+
 
     /**
      * 计算两点之间的距离

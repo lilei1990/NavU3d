@@ -31,8 +31,8 @@ class UnityVM : BaseViewModel() {
     /**
      * 添加导航线
      */
-//    val scale = 100.0
-//    val scaleY = 10000000
+    //防止线的编号为负数,unity不能接收负号
+    val flag = 100000
     var paralleLine: MutableMap<Int, Polyline>? = null
     fun addParallelLine(it: MutableMap<Int, Polyline>) {
         removeParallelLine()
@@ -51,9 +51,9 @@ class UnityVM : BaseViewModel() {
             endPoint.put("x", x1)
             endPoint.put("y", y1)
             line.put("nav", JSONArray().put(startPoint).put(endPoint))
-            line.put("name", "line${100-key}")
+            line.put("name", "line${flag - key}")
             lines.put(line)
-            Log.d("TAGlilei", "addParallelLine: ${100-key}")
+            Log.d("TAGlilei", "addParallelLine: ${flag - key}")
         }
         UnityPlayer.UnitySendMessage("Correspondent", "BuildNavLine", lines.toString())
 
@@ -62,7 +62,7 @@ class UnityVM : BaseViewModel() {
     fun removeParallelLine() {
         paralleLine?.forEach { t, u ->
             Log.d("TAGlilei", "addParallelLine: ${t}")
-            UnityPlayer.UnitySendMessage("Correspondent", "RemoveNavLine", "line${100-t}")
+            UnityPlayer.UnitySendMessage("Correspondent", "RemoveNavLine", "line${flag - t}")
         }
     }
 

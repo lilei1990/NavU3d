@@ -105,16 +105,10 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
         //A
         homeFragmentBean.pointA.observe(this) {
             unityVM.setPointA()
-            workTaskData?.guideLineData?.apply {
-                setStart(it)
-            }
         }
         //B
         homeFragmentBean.pointB.observe(this) {
             unityVM.setPointB()
-            workTaskData?.guideLineData?.apply {
-                setEnd(it)
-            }
         }
         homeFragmentBean.status.observe(this) {
             when (it) {

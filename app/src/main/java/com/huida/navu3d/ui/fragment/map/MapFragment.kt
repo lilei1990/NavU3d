@@ -78,7 +78,7 @@ class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::infla
         homeFragmentBean.DataParallelLine.observe(this) {
             for ((key, polyline) in it) {
                 val latLngs: MutableList<LatLng> = ArrayList()
-
+//                {"paths":[[[449293.3538193225,4417441.63881548],[449291.83056382387,4417834.497475243]]]}
                 for (i in 0 until polyline.pointCount) {
                     val point = polyline.getPoint(i)
                     latLngs.add(GaoDeUtils.utmToGaoDe(point))
@@ -90,6 +90,7 @@ class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::infla
                 val textOptions = TextOptions()
                 textOptions.position(latLngs[0])
                 textOptions.text("编号:${key}")
+                GaoDeUtils.moveCameraLatLng(binding.gdMap.map, latLngs[0],20f, 0f, 30f)
                 binding.gdMap.map.addText(textOptions)
             }
         }

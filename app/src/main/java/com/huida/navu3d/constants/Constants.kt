@@ -18,7 +18,7 @@ object Constants {
     var SP_THEME_KEY = "sp_theme_key"
 
     //线的延长长度,单位米
-    var EXTEND_LINE = 100000
+    var EXTEND_LINE = 10000
 
     //平行线的间隔
     var lineOffset = 10

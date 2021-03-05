@@ -1,25 +1,12 @@
 package com.huida.navu3d
 
-import com.esri.core.geometry.Operator
-import com.esri.core.geometry.OperatorFactoryLocal
-import com.esri.core.geometry.OperatorGeneralize
-import com.esri.core.geometry.Polyline
+import com.esri.core.geometry.*
 import com.huida.navu3d.bean.PointData
-import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.NmeaProviderManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import com.huida.navu3d.utils.GeometryUtils
 import org.junit.Test
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentLinkedQueue
-import kotlin.concurrent.fixedRateTimer
-import kotlin.concurrent.thread
 
 /**
  * 作者 : lei
@@ -37,23 +24,42 @@ class TestP {
 
     @Test
     fun test() {
-        GlobalScope.launch(Dispatchers.IO) {
-            async {
-            println("start1" + Thread.currentThread())
-
-            }
-            println("start2" + Thread.currentThread())
-            flow<Int> {
-                println("1" + Thread.currentThread())
-                emit(1)
-            }.flowOn(Dispatchers.IO).map {
-                println("2" + Thread.currentThread())
-
-            }.collect {
-                println("3" + Thread.currentThread())
-            }
-        }
-        sleep(2000)
+        val A = PointData()
+        A.x = 0.0
+        A.y = 0.0
+        val B = PointData()
+        B.x = -1.0
+        B.y = 1.0
+        GeometryUtils.extLine(A, B, 1)
+        GeometryUtils.extLine(B, A, 1)
+        println(A.toString())
+        println(B.toString())
+//        //补点操作
+//        val polyline = Polyline()
+//        polyline.startPath(0.0, 0.0)
+//        polyline.lineTo(2.0, 0.0)
+//        //补点操作
+//        val densifier =
+//            OperatorFactoryLocal
+//                .getInstance()
+//                .getOperator(Operator.Type.DensifyByLength) as OperatorDensifyByLength
+//        //3 20厘米等间距补点
+//
+//        //3 20厘米等间距补点
+//        val outputGeom =
+//            densifier.execute(polyline, 0.1, null) as Polyline
+//        val jsonString: String = OperatorExportToJson.local().execute(null, outputGeom)
+//        println(jsonString)
+//        val polyline = Polyline()
+//        polyline.startPath(0.0, 0.0)
+//        polyline.lineTo(2.0, 0.0)
+//        var outputGeom = OperatorBuffer.local().execute(polyline, null, 2.0, null);
+//
+//        val jsonString: String = OperatorExportToJson.local().execute(null, outputGeom)
+//        println("Buffer distance = " + java.lang.Double.toString(1.0) + ":")
+//        println("面积:" + ":" + outputGeom.calculateArea2D())
+//        println(jsonString)
+//        println()
     }
 
 
