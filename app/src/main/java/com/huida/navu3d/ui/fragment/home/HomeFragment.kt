@@ -13,6 +13,7 @@ import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.databinding.FragmentHomeBinding
 import com.huida.navu3d.ui.activity.main.MainActivity
+import com.huida.navu3d.utils.GeometryUtils
 import com.kongqw.rockerlibrary.view.RockerView
 import com.lei.core.base.BaseVmFragment
 import com.lei.core.common.clickNoRepeat
@@ -102,7 +103,7 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         val homeRepo = homeVM.homeRepo
         homeRepo.offsetLineDistance.observe(this) {
             //与最近导航线偏移距离
-            binding.incTopBar.tvLength.text = "${it}"
+            binding.incTopBar.tvLength.text = "${(it * 10000).roundToInt() / 100.00}"
         }
         homeRepo.satelliteCount.observe(this) {
             //卫星数
@@ -154,9 +155,13 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
         homeRepo.DataParallelLine.observe(this) {
             unityVM.addParallelLine(it)
 
-//            workTaskData.lines.add(it)
         }
+        homeRepo.workLength.observe(this) {
+            binding.incTopBar.tvMileage.text="${(it * 100).roundToInt() / 100.00}米"
+            binding.incTopBar.tvArea.text=
+                "${(GeometryUtils.calculationWorkArea(it) * 100).roundToInt() / 100.00}亩"
 
+        }
         //轨迹的历史数据
         homeRepo.trackLineHistory.observe(this) {
             it.forEachIndexed { index, data ->

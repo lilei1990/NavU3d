@@ -39,7 +39,7 @@ class HomeRepo(
     var status = MutableLiveData<Status>()
 
     //与最近导航线偏移距离
-    var offsetLineDistance = MutableLiveData<Int>()
+    var offsetLineDistance = MutableLiveData<Double>()
 
     //卫星数
     var satelliteCount = MutableLiveData<Int>()
@@ -66,6 +66,9 @@ class HomeRepo(
 
     //是否录制轨迹
     var isRecord = MutableLiveData<Boolean>(Constants.isRecord)
+
+    //作业里程
+    var workLength = MutableLiveData<Double>(0.0)
 
     //点的队列
     val mPointQueue = ConcurrentLinkedDeque<PointData>()
@@ -184,9 +187,10 @@ class HomeRepo(
         if (isRecord.value!!) {
             mPointQueue.addFirst(point)
         }
-
         //计算偏移的距离
-//        val polyline = mParalleMaplLine.get(3)
+        computeDistance()
+        //计算工作长度,计算面积
+        computerWorkLength()
 
         loop()
     }
@@ -194,15 +198,16 @@ class HomeRepo(
     /**
      *    //计算偏移的距离
      */
-    fun Distance() {
+    fun computeDistance() {
         val data = currenLatLng.value!!
         val toUTMRef = LatLng(data.lat, data.lng).toUTMRef()
         val p = Point(toUTMRef.easting, toUTMRef.northing)
         val value = DataParallelLine.value
+        val len = 0
         value?.forEach { t, u ->
+            val a = GeometryUtils.getPointToCurveDis(p, u).toInt()
             if (t == 0) {
-                offsetLineDistance.postValue(GeometryUtils.getPointToCurveDis(p, u).toInt())
-                Log.d("TAGlilei", "putGGA: ${GeometryUtils.getPointToCurveDis(p, u)}")
+                offsetLineDistance.postValue(GeometryUtils.getPointToCurveDis(p, u))
             }
         }
     }
@@ -280,8 +285,8 @@ class HomeRepo(
         val navLineData = GuideLineData()
         navLineData.setStart(mA)
         navLineData.setEnd(mB)
-
         DataParallelLine.postValue(navLineData.budileUtmLine())
+
 
     }
 
@@ -356,6 +361,30 @@ class HomeRepo(
         pointXY.trackLineId = trackLine.value?.getId()!!
         pointXY.save()
     }
+
+    /**
+     * 计算作业历程
+     */
+    fun computerWorkLength() {
+        var length = workLength.value
+        viewModelScope.launch(Dispatchers.IO) {
+            val trackLineData1 = workTaskData?.trackLineData
+            trackLineData1?.forEachIndexed { index, trackLineData ->
+                length = length?.plus(
+                    GeometryUtils.distanceOfTwoPoints(
+                        trackLineData.findFirst().toUtm(),
+                        trackLineData.findLast().toUtm()
+                    )
+                )
+
+            }
+            workLength.postValue(
+                length
+            )
+        }
+
+    }
+
     enum class Status {
         START, PAUSE, STOP
     }

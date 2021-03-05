@@ -25,4 +25,10 @@ object Constants {
 
     //是否录制
     var isRecord = false
+
+    //犁具宽度
+    var interval: Float = 1.5f
+
+    // 重叠/遗漏,重叠：负数,遗漏：正数
+    var overlapskip: Float = 0.3f
 }

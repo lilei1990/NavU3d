@@ -15,6 +15,7 @@ import java.util.*
 class TrackLineData : LitePalSupport(), Serializable {
     //时间戳
     var time: Date = Date(System.currentTimeMillis())
+
     //关联workTask数据
     var workTaskId = -1L
 
@@ -39,5 +40,22 @@ class TrackLineData : LitePalSupport(), Serializable {
         points =
             LitePal.where("tracklineid=${getId()}")
                 .find(PointData::class.java)
+    }
+
+    /**
+     * 查询线的数据
+     */
+    fun findFirst(): PointData {
+
+        return LitePal.where("tracklineid=${getId()}")
+            .findFirst(PointData::class.java)
+    }
+    /**
+     * 查询线的数据
+     */
+    fun findLast(): PointData {
+
+        return LitePal.where("tracklineid=${getId()}")
+            .findLast(PointData::class.java)
     }
 }

@@ -1,6 +1,8 @@
 package com.huida.navu3d.utils
 
 import com.esri.core.geometry.*
+import com.huida.navu3d.constants.Constants.interval
+import com.huida.navu3d.constants.Constants.overlapskip
 import uk.me.jstott.jcoord.UTMRef
 
 /**
@@ -59,6 +61,31 @@ object GeometryUtils {
                 2.0
             ) + Math.pow((pp2.northing - pp1.northing).toDouble(), 2.0)
         )
+    }
+
+
+    /**
+     * 返回作业面积（单位：亩）
+     *
+     * @param workLength 作业里程
+     * @return
+     */
+    fun calculationWorkArea(workLength: Double): Double {
+
+        return getNavInterval() * workLength * 0.0015
+    }
+
+    /**
+     * 导航线的垄宽，真实垄宽+重叠/遗漏
+     *
+     * @return 如果重叠过大，则导航线垄宽即为真实垄宽，忽略重叠设置
+     */
+    fun getNavInterval(): Double {
+        var pinterval: Double = interval + overlapskip.toDouble()
+        if (pinterval < 0) {
+            pinterval = interval.toDouble()
+        }
+        return pinterval
     }
 
 }
