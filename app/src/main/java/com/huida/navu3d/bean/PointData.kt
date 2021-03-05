@@ -13,56 +13,13 @@ import java.io.Serializable
  */
 
 
-open class PointData : LitePalSupport(), Serializable {
-
-    //0是定位点,1是A点,2是B点,3是线的点,4是引导线的点
-    var type: Int = 0
-
-    var lat = 0.0
-    var lng = 0.0
-
-    //Utm,不存储到数据库
-    var x = 0.0
-
-    var y = 0.0
-
+data class PointData(
+    var lat: Double = 0.0,
+    var lng: Double = 0.0,
     //线的标识
-    var trackLineId = -1L
+    var trackLineId: Long = -1L
+) : LitePalSupport(), Serializable {
 
-    var lngZone: Int? = null
-    var latZone: Char? = null
-
-    companion object {
-        /**
-         * 根据经纬度数据生成对象
-         */
-        fun build(latitude: Double, longitude: Double): PointData {
-            val pointData = PointData()
-            pointData.lat = latitude
-            pointData.lng = longitude
-            val utm = LatLng(latitude, longitude).toUTMRef()
-            pointData.x = utm.easting
-            pointData.y = utm.northing
-            pointData.lngZone = utm.lngZone
-            pointData.latZone = utm.latZone
-            return pointData
-        }
-
-        /**
-         * 根据utm数据创建对象
-         */
-        fun build(lngZone: Int, latZone: Char, x: Double, y: Double): PointData {
-            val pointData = PointData()
-            var latLng = UTMRef(lngZone, latZone, x, y).toLatLng()
-            pointData.lat = latLng.latitude
-            pointData.lng = latLng.longitude
-            pointData.x = x
-            pointData.y = y
-            pointData.lngZone = lngZone
-            pointData.latZone = latZone
-            return pointData
-        }
-    }
 
     fun getId(): Long {
         return baseObjId
@@ -72,11 +29,11 @@ open class PointData : LitePalSupport(), Serializable {
      * 复制一个对象
      */
     fun copy(): PointData {
-        return build(lat, lng)
+        return PointData(lat, lng)
     }
 
-    override fun toString(): String {
-        return "PointData(x=$x, y=$y)"
+    fun toUtm(): UTMRef {
+        return LatLng(lat, lng).toUTMRef()
     }
 
 }

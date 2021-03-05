@@ -6,6 +6,8 @@ import com.esri.core.geometry.OperatorOffset
 import com.esri.core.geometry.Polyline
 import com.huida.navu3d.constants.Constants.lineOffset
 import org.litepal.crud.LitePalSupport
+import uk.me.jstott.jcoord.LatLng
+import uk.me.jstott.jcoord.UTMRef
 
 /**
  * 作者 : lei
@@ -60,30 +62,59 @@ class GuideLineData : LitePalSupport() {
      * 设置开始点
      */
     fun setStart(mA: PointData) {
-        startX = mA.x
-        startY = mA.y
+
         startLat = mA.lat
         startLng = mA.lng
+        val utmRef = LatLng(startLat, startLng).toUTMRef()
+        startX = utmRef.easting
+        startY = utmRef.northing
 
     }
 
+    /**
+     * 设置开始点
+     */
+    fun setStart(mA: UTMRef) {
+
+        startX = mA.easting
+        startY = mA.northing
+        val toLatLng = mA.toLatLng()
+        startLat = toLatLng.latitude
+        startLng = toLatLng.longitude
+    }
+
     fun getStart(): PointData {
-        return PointData.build(startLat, startLng)
+        return PointData(startLat, startLng)
     }
 
     /**
      * 设置结束点
      */
     fun setEnd(mB: PointData) {
-        endX = mB.x
-        endY = mB.y
         endLat = mB.lat
         endLng = mB.lng
+        val utmRef = LatLng(startLat, startLng).toUTMRef()
+        endX = utmRef.easting
+        endY = utmRef.northing
 
+    }
+
+    /**
+     * 设置开始点
+     */
+    fun setEnd(mB: UTMRef) {
+
+        endX = mB.easting
+        endY = mB.northing
+        val toLatLng = mB.toLatLng()
+        endLat = toLatLng.latitude
+        endLng = toLatLng.longitude
     }
 
     fun getEnd(): PointData {
 
-        return PointData.build(endLat, endLng)
+        return PointData(endLat, endLng)
     }
+
+
 }

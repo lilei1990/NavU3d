@@ -1,6 +1,5 @@
 package com.huida.navu3d
 
-import com.esri.core.geometry.*
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.utils.GeometryUtils

@@ -74,8 +74,9 @@ class UnityVM : BaseViewModel() {
         it: PointData,
         speed: Double
     ) {
-        var x = scaleX(it.x)
-        var y = scaleY(it.y)
+        val point=it.toUtm()
+        var x = scaleX(point.easting)
+        var y = scaleY(point.northing)
 //        Log.d("TAG_lilei", "moveCart: ${x}--${y}")
         val json = JSONObject()
         json.put("x", x)
@@ -93,13 +94,15 @@ class UnityVM : BaseViewModel() {
         it: TrackLineData
 
     ) {
+
         val id = it.getId()
         val points = it.points
         val json = JSONObject()
         val jsonArray = JSONArray()
-        for (pointData in points) {
-            var x = scaleX(pointData.x)
-            var y = scaleY(pointData.y)
+        for (point in points) {
+            val p=point.toUtm()
+            var x = scaleX(p.easting)
+            var y = scaleY(p.northing)
             val startPoint = JSONObject()
             startPoint.put("x", x)
             startPoint.put("y", y)
@@ -198,4 +201,7 @@ class UnityVM : BaseViewModel() {
     fun scaleY(a: Double): Float {
         return (a).toFloat() % scaleY
     }
+
+
+
 }

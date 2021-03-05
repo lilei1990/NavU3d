@@ -12,6 +12,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
+import uk.me.jstott.jcoord.LatLng
+import uk.me.jstott.jcoord.UTMRef
 import java.util.concurrent.ConcurrentLinkedDeque
 import kotlin.collections.ArrayList
 
@@ -50,6 +52,7 @@ class HomeFragmentBean {
 
     //平行线数据
     val DataParallelLine = MutableLiveData<MutableMap<Int, Polyline>>()
+    val mParallelLine: MutableMap<Int, Polyline> = mutableMapOf<Int, Polyline>()
 
 
     //是否录制轨迹
@@ -65,9 +68,6 @@ class HomeFragmentBean {
             .getInstance()
             .getOperator(Operator.Type.Generalize) as OperatorGeneralize
 
-    //当前所在的utm区域编号
-    var lngZone: Int? = null
-    var latZone: Char? = null
 
     //当前记录点的线段
     var trackLine = MutableLiveData<TrackLineData>()
@@ -84,16 +84,28 @@ class HomeFragmentBean {
         val position = gga.position
         val latitude = position.latitude
         val longitude = position.longitude
-        val point = PointData.build(latitude, longitude)
-        lngZone = point.lngZone
-        latZone = point.latZone
+        val point = PointData(latitude, longitude)
+
         currenLatLng.postValue(point)
         satelliteCount.postValue(gga.satelliteCount)
         //如果开始录制
         if (isRecord.value!!) {
             mPointQueue.addFirst(point)
         }
-        val p = Point(point.x, point.y)
+
+        //计算偏移的距离
+//        val polyline = mParalleMaplLine.get(3)
+
+        loop()
+    }
+
+    /**
+     *    //计算偏移的距离
+     */
+    fun Distance() {
+        val data = currenLatLng.value!!
+        val toUTMRef = LatLng(data.lat, data.lng).toUTMRef()
+        val p = Point(toUTMRef.easting, toUTMRef.northing)
         val value = DataParallelLine.value
         value?.forEach { t, u ->
             if (t == 0) {
@@ -101,10 +113,6 @@ class HomeFragmentBean {
                 Log.d("TAGlilei", "putGGA: ${GeometryUtils.getPointToCurveDis(p, u)}")
             }
         }
-        //计算偏移的距离
-//        val polyline = mParalleMaplLine.get(3)
-
-        loop()
     }
 
     /**
@@ -153,17 +161,17 @@ class HomeFragmentBean {
             ToastUtils.showLong("请设置B点")
             return
         }
-        val mA = workTaskData?.guideLineData?.getStart()!!
-        val mB = workTaskData?.guideLineData?.getEnd()!!
-        if (mA.x <= 0 || mA.y <= 0) {
-            ToastUtils.showLong("A点的值不正确:${mA.x}--${mA.y}")
+        val mA = workTaskData?.guideLineData?.getStart()!!.toUtm()
+        val mB = workTaskData?.guideLineData?.getEnd()!!.toUtm()
+        if (mA.easting <= 0 || mA.northing <= 0) {
+            ToastUtils.showLong("A点的值不正确:${mA.easting}--${mA.northing}")
             return
         }
-        if (mB.x <= 0 || mB.y <= 0) {
-            ToastUtils.showLong("B点的值不正确:${mB.x}--${mB.y}")
+        if (mB.easting <= 0 || mB.northing <= 0) {
+            ToastUtils.showLong("B点的值不正确:${mB.easting}--${mB.northing}")
             return
         }
-        val pointData: MutableList<PointData> = ArrayList()
+        val pointData: MutableList<UTMRef> = ArrayList()
         //延长
         val length = Constants.EXTEND_LINE
         //计算两点之间的距离
@@ -178,10 +186,9 @@ class HomeFragmentBean {
         pointData.add(mA)
         pointData.add(mB)
         val navLineData = GuideLineData()
-        navLineData.startX = mA.x
-        navLineData.startY = mA.y
-        navLineData.endX = mB.x
-        navLineData.endY = mB.y
+        navLineData.setStart(mA)
+        navLineData.setEnd(mB)
+
         DataParallelLine.postValue(navLineData.budileUtmLine())
 
     }
@@ -218,13 +225,14 @@ class HomeFragmentBean {
     private fun loop() {
         if (isRecord.value!! && mPointQueue.size > 100) {
             mPointQueue.first.apply {
+                val toUtm = this.toUtm()
                 //将原始离散点转换成折线
                 val outpm = Polyline()
-                outpm.startPath(this.x, this.y)
-                var len = mPointQueue.pollFirst()
+                outpm.startPath(toUtm.easting, toUtm.northing)
+                var len = mPointQueue.pollFirst().toUtm()
                 while (len != null) {
-                    outpm.lineTo(len.x, len.y)
-                    len = mPointQueue.pollFirst()
+                    outpm.lineTo(len.easting, len.northing)
+                    len = mPointQueue.pollFirst().toUtm()
                 }
 
                 //1 传入点抽稀
@@ -238,7 +246,9 @@ class HomeFragmentBean {
                 val pathSize = outputGeom.getPathSize(0)
                 for (i in (0 until pathSize)) {
                     val point = outputGeom.getPoint(i)
-                    savePoint(PointData.build(lngZone!!, latZone!!, point.x, point.y))
+                    val utm = currenLatLng.value?.toUtm()!!
+                    val d = UTMRef(utm.lngZone, utm.latZone, point.x, point.y).toLatLng()
+                    savePoint(PointData(d.latitude,d.longitude))
 
                 }
             }
