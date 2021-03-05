@@ -229,10 +229,11 @@ class HomeFragmentBean {
                 //将原始离散点转换成折线
                 val outpm = Polyline()
                 outpm.startPath(toUtm.easting, toUtm.northing)
-                var len = mPointQueue.pollFirst().toUtm()
+                var len = mPointQueue.pollFirst()
                 while (len != null) {
-                    outpm.lineTo(len.easting, len.northing)
-                    len = mPointQueue.pollFirst().toUtm()
+                    val utm = len.toUtm()
+                    outpm.lineTo(utm.easting, utm.northing)
+                    len = mPointQueue.pollFirst()
                 }
 
                 //1 传入点抽稀
