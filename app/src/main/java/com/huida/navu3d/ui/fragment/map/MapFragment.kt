@@ -20,7 +20,7 @@ import com.lei.core.base.BaseVmFragment
  */
 class MapFragment : BaseVmFragment<FragmentMapBinding>(FragmentMapBinding::inflate) {
     private val mapViewModel by lazy { getActivityViewModel(MapVM::class.java)}
-    private val homeFragmentBean by lazy { getActivityViewModel(HomeVM::class.java).homeFragmentBean  }
+    private val homeFragmentBean by lazy { getActivityViewModel(HomeVM::class.java).homeRepo  }
     val gdMap by lazy { binding.gdMap}
     companion object {
         fun newInstance() = MapFragment()

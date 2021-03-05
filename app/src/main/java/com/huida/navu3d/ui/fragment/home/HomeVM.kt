@@ -18,8 +18,7 @@ import net.sf.marineapi.nmea.sentence.VTGSentence
 
 
 class HomeVM : BaseViewModel() {
-    private val homeRepo by lazy { HomeRepo(viewModelScope, errorLiveData, this) }
-    val homeFragmentBean = HomeFragmentBean()
+     val homeRepo by lazy { HomeRepo(viewModelScope, errorLiveData, this) }
 
 
     /**
@@ -108,7 +107,7 @@ class HomeVM : BaseViewModel() {
 
     suspend fun setWorkTaskData(workTask: WorkTaskData?) {
 //        val homeFragmentBean = HomeFragmentBean()
-        homeFragmentBean.workTaskData = workTask
+        homeRepo.workTaskData = workTask
         flow<WorkTaskData> {
             workTask?.findGuideLines()
             workTask?.findTrackLines()
@@ -116,16 +115,16 @@ class HomeVM : BaseViewModel() {
         }.flowOn(Dispatchers.IO).map {
             //导航线的数据
             val guideLineData = it?.guideLineData
-            homeFragmentBean.pointA.setValue(guideLineData?.getStart())
-            homeFragmentBean.pointB.setValue(guideLineData?.getEnd())
-            homeFragmentBean.creatGuideLine()
+            homeRepo.pointA.setValue(guideLineData?.getStart())
+            homeRepo.pointB.setValue(guideLineData?.getEnd())
+            homeRepo.creatGuideLine()
             //轨迹的数据
             val trackLineData = it?.trackLineData
             trackLineData?.apply {
                 trackLineData.forEachIndexed { index, data ->
                     data.findPoint()
                 }
-                homeFragmentBean.trackLineHistory.postValue(trackLineData)
+                homeRepo.trackLineHistory.postValue(trackLineData)
             }
         }.flowOn(Dispatchers.Main).collect {
             ToastUtils.showLong("历史数据加载完成")

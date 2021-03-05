@@ -25,7 +25,8 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
 
     private val unityVM by lazy { getActivityViewModel(UnityVM::class.java)!! }
     val mUnityPlayer by lazy { (activity as MainActivity).mUnityPlayer }
-//    var workTaskData: WorkTaskData? = null
+
+    //    var workTaskData: WorkTaskData? = null
     override fun init(savedInstanceState: Bundle?) {
         binding.apply {
             initButton()
@@ -98,66 +99,66 @@ class HomeFragment : BaseVmFragment<FragmentHomeBinding>(FragmentHomeBinding::in
      * 订阅消息
      */
     override fun observe() {
-        val homeFragmentBean = homeVM.homeFragmentBean
-        homeFragmentBean.offsetLineDistance.observe(this) {
+        val homeRepo = homeVM.homeRepo
+        homeRepo.offsetLineDistance.observe(this) {
             //与最近导航线偏移距离
             binding.incTopBar.tvLength.text = "${it}"
         }
-        homeFragmentBean.satelliteCount.observe(this) {
+        homeRepo.satelliteCount.observe(this) {
             //卫星数
             binding.incTopBar.tvStatellite.text = "${it}"
         }
-        homeFragmentBean.steerAngle.observe(this) {
+        homeRepo.steerAngle.observe(this) {
             //角度
             binding.incTopBar.tvRtk.text = "${it}"
             unityVM.cartStance(it)
         }
-        homeFragmentBean.speed.observe(this) {
+        homeRepo.speed.observe(this) {
             //速度
             binding.incTopBar.tvSpeed.text = "${(it * 100).roundToInt() / 100.00}Km/h"
         }
         //当前位置
-        homeFragmentBean.currenLatLng.observe(this) {
+        homeRepo.currenLatLng.observe(this) {
             unityVM.moveCart(it, 2.0)
         }
         //是否录制
-        homeFragmentBean.isRecord.observe(this) {
+        homeRepo.isRecord.observe(this) {
             unityVM.saveRecord(it)
         }
         //A
-        homeFragmentBean.pointA.observe(this) {
+        homeRepo.pointA.observe(this) {
             unityVM.setPointA()
 
         }
         //B
-        homeFragmentBean.pointB.observe(this) {
+        homeRepo.pointB.observe(this) {
             unityVM.setPointB()
 
         }
-        homeFragmentBean.status.observe(this) {
+        homeRepo.status.observe(this) {
             when (it) {
-                HomeFragmentBean.Status.START -> {
+                HomeRepo.Status.START -> {
 
 //                    binding.incMenu.bt5.itemRoot.visibility=View.INVISIBLE
 //                    binding.incMenu.bt8.itemRoot.visibility=View.VISIBLE
                 }
-                HomeFragmentBean.Status.PAUSE -> {
+                HomeRepo.Status.PAUSE -> {
 //                    binding.incMenu.bt5.itemRoot.visibility=View.INVISIBLE
                 }
-                HomeFragmentBean.Status.STOP -> {
+                HomeRepo.Status.STOP -> {
 //                    binding.incMenu.bt5.itemRoot.visibility=View.VISIBLE
 //                    binding.incMenu.bt8.itemRoot.visibility=View.INVISIBLE
                 }
             }
         }
-        homeFragmentBean.DataParallelLine.observe(this) {
+        homeRepo.DataParallelLine.observe(this) {
             unityVM.addParallelLine(it)
 
 //            workTaskData.lines.add(it)
         }
 
         //轨迹的历史数据
-        homeFragmentBean.trackLineHistory.observe(this) {
+        homeRepo.trackLineHistory.observe(this) {
             it.forEachIndexed { index, data ->
                 unityVM.showHistoryTrack(data)
             }

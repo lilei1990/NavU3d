@@ -3,18 +3,15 @@ package com.huida.navu3d.ui.activity.unity
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
 import com.blankj.utilcode.util.ToastUtils
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.BusEnum
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.common.liveEvenBus
 import com.huida.navu3d.databinding.FragmentHomeBinding
-import com.huida.navu3d.ui.fragment.home.HomeFragmentBean
 import com.huida.navu3d.ui.fragment.home.HomeVM
 import com.huida.navu3d.ui.fragment.home.UnityVM
 import com.lei.core.common.clickNoRepeat
-import kotlin.math.roundToInt
 
 /**
  * 作者 : lei
@@ -76,70 +73,8 @@ class UnityActivity : U3dExtActivity<FragmentHomeBinding>(FragmentHomeBinding::i
 
 
     override fun observe() {
-        val homeFragmentBean = homeVM.homeFragmentBean
-        homeFragmentBean.offsetLineDistance.observe(this) {
-            //与最近导航线偏移距离
-            binding.incTopBar.tvLength.text = "${it}"
-        }
-        homeFragmentBean.satelliteCount.observe(this) {
-            //卫星数
-            binding.incTopBar.tvStatellite.text = "${it}"
-        }
-        homeFragmentBean.steerAngle.observe(this) {
-            //角度
-            binding.incTopBar.tvRtk.text = "${it}"
-            unityVM.cartStance(it)
-        }
-        homeFragmentBean.speed.observe(this) {
-            //速度
-            binding.incTopBar.tvSpeed.text = "${(it * 100).roundToInt() / 100.00}Km/h"
-        }
-        //当前位置
-        homeFragmentBean.currenLatLng.observe(this) {
-            unityVM.moveCart(it, 2.0)
-        }
-        //是否录制
-        homeFragmentBean.isRecord.observe(this) {
-            unityVM.saveRecord(it)
-        }
-        //A
-        homeFragmentBean.pointA.observe(this) {
-            unityVM.setPointA()
-        }
-        //B
-        homeFragmentBean.pointB.observe(this) {
-            unityVM.setPointB()
-        }
-        homeFragmentBean.status.observe(this) {
-            when (it) {
-                HomeFragmentBean.Status.START -> {
 
-//                    binding.incMenu.bt5.itemRoot.visibility=View.INVISIBLE
-//                    binding.incMenu.bt8.itemRoot.visibility=View.VISIBLE
-                }
-                HomeFragmentBean.Status.PAUSE -> {
-//                    binding.incMenu.bt5.itemRoot.visibility=View.INVISIBLE
-                }
-                HomeFragmentBean.Status.STOP -> {
-//                    binding.incMenu.bt5.itemRoot.visibility=View.VISIBLE
-//                    binding.incMenu.bt8.itemRoot.visibility=View.INVISIBLE
-                }
-            }
-        }
-        homeFragmentBean.DataParallelLine.observe(this) {
-            unityVM.addParallelLine(it)
 
-//            workTaskData.lines.add(it)
-        }
-        homeFragmentBean.trackLine.observe(this) {
-            //存储线
-            liveEvenBus(BusEnum.DB_TRACK_LINE)
-                .postAcrossProcess(it)
-            workTaskData?.trackLineData?.add(it)
-            //更新worktask数据
-            liveEvenBus(BusEnum.DB_WORK_TASK_DATA)
-                .postAcrossProcess(it)
-        }
 
 
     }
