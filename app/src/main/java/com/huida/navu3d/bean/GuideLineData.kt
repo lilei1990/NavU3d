@@ -40,7 +40,7 @@ class GuideLineData : LitePalSupport() {
         line.startPath(startX, startY)
         line.lineTo(endX, endY)
         val mapOf = mutableMapOf<Int, Polyline>()
-        for (i in -5..5) {
+        for (i in index - 5..index + 5) {
             var polyline = offseter.execute(
                 line,
                 null,

@@ -4,23 +4,28 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
 import com.esri.core.geometry.*
-import com.huida.navu3d.bean.GuideLineData
 import com.huida.navu3d.bean.PointData
 import com.huida.navu3d.bean.TrackLineData
 import com.huida.navu3d.bean.WorkTaskData
 import com.huida.navu3d.common.NmeaProviderManager
 import com.huida.navu3d.constants.Constants
+import com.huida.navu3d.constants.Constants.lineOffset
 import com.huida.navu3d.utils.GeometryUtils
 import com.zs.base_library.http.ApiException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
 import uk.me.jstott.jcoord.LatLng
 import uk.me.jstott.jcoord.UTMRef
 import java.util.concurrent.ConcurrentLinkedDeque
+import kotlin.math.roundToInt
 
 /**
  * 作者 : lei
@@ -40,6 +45,9 @@ class HomeRepo(
 
     //与最近导航线偏移距离
     var offsetLineDistance = MutableLiveData<Double>()
+
+    //当前所在位置
+    var index = 0
 
     //卫星数
     var satelliteCount = MutableLiveData<Int>()
@@ -187,27 +195,84 @@ class HomeRepo(
         if (isRecord.value!!) {
             mPointQueue.addFirst(point)
         }
-        //计算偏移的距离
+//计算偏移的距离
         computeDistance()
 
         loop()
     }
 
     /**
-     *    //计算偏移的距离
+     *    //计算偏移的距离,定时刷新计算结果
      */
+    //当前所在位置
+    var indexLine = 0
     fun computeDistance() {
-        val data = currenLatLng.value!!
-        val toUTMRef = LatLng(data.lat, data.lng).toUTMRef()
-        val p = Point(toUTMRef.easting, toUTMRef.northing)
-        val value = DataParallelLine.value
-        val len = 0
-        value?.forEach { t, u ->
-            val a = GeometryUtils.getPointToCurveDis(p, u).toInt()
-            if (t == 0) {
-                offsetLineDistance.postValue(GeometryUtils.getPointToCurveDis(p, u))
-            }
+        //当前点
+        val currenLatlng = currenLatLng.value ?: return
+        val currenPoint = currenLatlng.toPoint()
+        //引导线
+        val pointA = pointA.value ?: return
+        val pointB = pointB.value ?: return
+        //判断当前位置在index左侧还是右侧
+        val budileUtmLine = budileUtmLine(pointA.toUtm(), pointB.toUtm(), 0, 1)
+        val line0 = budileUtmLine.get(0)
+        val len0 =
+            GeometryUtils.getPointToCurveDis(currenPoint, line0!!) / Constants.lineOffset
+        //在ab点的左侧还是右侧
+        val leftOfLine = GeometryUtils.LeftOfLine(currenPoint, pointA.toPoint(), pointB.toPoint())
+        if (leftOfLine) {//当前位置在左侧
+            indexLine = -len0.roundToInt()
+        } else {//当前位置在右侧
+            indexLine = len0.roundToInt()
         }
+        DataParallelLine.postValue(
+            budileUtmLine(
+                pointA.toUtm(),
+                pointB.toUtm(),
+                indexLine,
+                1
+            )
+        )
+    }
+
+    /**
+     * 创建Utm用的数据,平行线,
+     */
+    fun budileUtmLine(
+        mA: UTMRef,
+        mB: UTMRef,
+        index: Int = 0,
+        num: Int = 5
+    ): MutableMap<Int, Polyline> {
+        //延长
+        val length = Constants.EXTEND_LINE
+        //分别延长AB两点
+        GeometryUtils.extLine(mA, mB, length)
+        GeometryUtils.extLine(mB, mA, length)
+        //偏移操作
+        val offseter = OperatorFactoryLocal
+            .getInstance()
+            .getOperator(Operator.Type.Offset) as OperatorOffset
+        val line = Polyline()
+        line.startPath(mA.easting, mA.northing)
+        line.lineTo(mB.easting, mB.northing)
+        val mapOf = mutableMapOf<Int, Polyline>()
+        for (i in index - num..index + num) {
+            var polyline = offseter.execute(
+                line,
+                null,
+                Constants.lineOffset * i.toDouble(),
+                OperatorOffset.JoinType.Round,
+                0.0,
+                180.0,
+                null
+            ) as Polyline
+            //编号和线的坐标
+            mapOf.put(i, polyline)
+        }
+
+
+        return mapOf
     }
 
     /**
@@ -275,15 +340,13 @@ class HomeRepo(
             ToastUtils.showLong("AB点重合,请重新设置AB点")
             return
         }
-//        //分别延长AB两点
+        //分别延长AB两点
         GeometryUtils.extLine(mA, mB, length)
         GeometryUtils.extLine(mB, mA, length)
         pointData.add(mA)
         pointData.add(mB)
-        val navLineData = GuideLineData()
-        navLineData.setStart(mA)
-        navLineData.setEnd(mB)
-        DataParallelLine.postValue(navLineData.budileUtmLine())
+
+        DataParallelLine.postValue(budileUtmLine(mA, mB))
 
 
     }
@@ -390,6 +453,30 @@ class HomeRepo(
             )
         }
 
+    }
+
+    suspend fun setWorkTaskData(workTask: WorkTaskData?) {
+        flow<WorkTaskData> {
+            workTask?.findGuideLines()
+            workTask?.findTrackLines()
+            emit(workTask!!)
+        }.flowOn(Dispatchers.IO).map {
+            //导航线的数据
+            val guideLineData = it?.guideLineData
+            pointA.setValue(guideLineData?.getStart())
+            pointB.setValue(guideLineData?.getEnd())
+            creatGuideLine()
+            //轨迹的数据
+            val trackLineData = it?.trackLineData
+            trackLineData?.apply {
+                trackLineData.forEachIndexed { index, data ->
+                    data.findPoint()
+                }
+                trackLineHistory.postValue(trackLineData)
+            }
+        }.flowOn(Dispatchers.Main).collect {
+            ToastUtils.showLong("历史数据加载完成")
+        }
     }
 
     enum class Status {

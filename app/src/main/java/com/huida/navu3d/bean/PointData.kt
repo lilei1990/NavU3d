@@ -1,5 +1,6 @@
 package com.huida.navu3d.bean
 
+import com.esri.core.geometry.Point
 import org.litepal.crud.LitePalSupport
 import uk.me.jstott.jcoord.LatLng
 import uk.me.jstott.jcoord.UTMRef
@@ -36,4 +37,8 @@ data class PointData(
         return LatLng(lat, lng).toUTMRef()
     }
 
+    fun toPoint(): Point {
+        val utm = toUtm()
+        return Point(utm.easting, utm.northing)
+    }
 }

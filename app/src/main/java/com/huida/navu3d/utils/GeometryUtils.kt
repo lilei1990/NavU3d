@@ -14,6 +14,8 @@ import uk.me.jstott.jcoord.UTMRef
 object GeometryUtils {
     val distanceOperator = OperatorFactoryLocal.getInstance()
         .getOperator(Operator.Type.Distance) as OperatorDistance
+    val operatorTouches = OperatorFactoryLocal.getInstance()
+        .getOperator(Operator.Type.Touches) as OperatorTouches
 
     /**
      * 获取点到曲线的距离
@@ -63,6 +65,16 @@ object GeometryUtils {
         )
     }
 
+    /**
+     * 计算两个集合是否相交
+     */
+    fun geometryTouches(
+        geometryA: Geometry?,
+        geometryB: Geometry?
+    ): Boolean {
+
+        return OperatorTouches.local().execute(geometryA, geometryB, null, null)
+    }
 
     /**
      * 返回作业面积（单位：亩）
@@ -88,4 +100,22 @@ object GeometryUtils {
         return pinterval
     }
 
+    /**
+     * 判断点在直线的左边还是右边
+     * 以及两点p1(x1,y1),p2(x2,y2),判断点p(x,y)在线的左边还是右边。
+     */
+    fun LeftOfLine(p: Point, p1: Point, p2: Point): Boolean {
+        val tmpx = (p1.x - p2.x) / (p1.y - p2.y) * (p.y - p2.y) + p2.x;
+        //当tmpx>p.x的时候，说明点在线的左边，小于在右边，等于则在线上。
+        if (tmpx > p.x)
+            return true;
+        return false;
+    }
+    fun LeftOfLine(p: UTMRef, p1: UTMRef, p2: UTMRef): Boolean {
+        val tmpx = (p1.easting - p2.easting) / (p1.northing - p2.northing) * (p.northing - p2.northing) + p2.easting;
+        //当tmpx>p.easting的时候，说明点在线的左边，小于在右边，等于则在线上。
+        if (tmpx > p.easting)
+            return true;
+        return false;
+    }
 }
