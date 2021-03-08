@@ -50,14 +50,15 @@ class WorkTaskData : LitePalSupport(), Serializable {
     /**
      * 查询轨迹线的数据
      */
-    fun findTrackLines() {
-        var arr =
+    fun findTrackLines(): MutableList<TrackLineData>? {
+        val arr =
             LitePal.where("worktaskId=${getId()}")
                 .find(TrackLineData::class.java, true)
         arr?.apply {
             trackLineData?.clear()
             trackLineData?.addAll(arr)
         }
+        return arr
     }
 
     /**

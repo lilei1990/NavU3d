@@ -1,9 +1,11 @@
 package com.huida.navu3d.bean
 
+import android.util.Log
 import org.litepal.LitePal
 import org.litepal.annotation.Column
 import org.litepal.crud.LitePalSupport
 import java.io.Serializable
+import java.lang.Exception
 import java.util.*
 
 /**
@@ -21,7 +23,7 @@ class TrackLineData : LitePalSupport(), Serializable {
 
     //当前线段的点
     @Column(ignore = true)
-    lateinit var points: MutableList<PointData>
+    var points = mutableListOf<PointData>()
 
     fun getId(): Long {
         return super.getBaseObjId()
@@ -45,15 +47,16 @@ class TrackLineData : LitePalSupport(), Serializable {
     /**
      * 查询线的数据
      */
-    fun findFirst(): PointData {
+    fun findFirst(): PointData? {
 
         return LitePal.where("tracklineid=${getId()}")
             .findFirst(PointData::class.java)
     }
+
     /**
      * 查询线的数据
      */
-    fun findLast(): PointData {
+    fun findLast(): PointData? {
 
         return LitePal.where("tracklineid=${getId()}")
             .findLast(PointData::class.java)

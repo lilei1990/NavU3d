@@ -189,8 +189,6 @@ class HomeRepo(
         }
         //计算偏移的距离
         computeDistance()
-        //计算工作长度,计算面积
-        computerWorkLength()
 
         loop()
     }
@@ -320,7 +318,7 @@ class HomeRepo(
      * 循环进行数据处理,对数据进行抽稀
      */
     private fun loop() {
-        if (isRecord.value!! && mPointQueue.size > 100) {
+        if (isRecord.value!! && mPointQueue.size > 10) {
             mPointQueue.first.apply {
                 val toUtm = this.toUtm()
                 //将原始离散点转换成折线
@@ -360,24 +358,33 @@ class HomeRepo(
     fun savePoint(pointXY: PointData) {
         pointXY.trackLineId = trackLine.value?.getId()!!
         pointXY.save()
+        //计算工作长度,计算面积
+        computerWorkLength()
+
     }
 
     /**
      * 计算作业历程
      */
     fun computerWorkLength() {
-        var length = workLength.value
+        var length = 0.0
         viewModelScope.launch(Dispatchers.IO) {
-            val trackLineData1 = workTaskData?.trackLineData
-            trackLineData1?.forEachIndexed { index, trackLineData ->
-                length = length?.plus(
-                    GeometryUtils.distanceOfTwoPoints(
-                        trackLineData.findFirst().toUtm(),
-                        trackLineData.findLast().toUtm()
-                    )
-                )
-
+            val findTrackLines = workTaskData?.findTrackLines()
+            findTrackLines.apply {
+                this?.forEachIndexed { index, trackLineData ->
+                    val findFirst = trackLineData.findFirst()
+                    val findLast = trackLineData.findLast()
+                    if (findFirst != null && findLast != null) {
+                        length = length.plus(
+                            GeometryUtils.distanceOfTwoPoints(
+                                findFirst.toUtm(),
+                                findLast.toUtm()
+                            )
+                        )
+                    }
+                }
             }
+
             workLength.postValue(
                 length
             )
