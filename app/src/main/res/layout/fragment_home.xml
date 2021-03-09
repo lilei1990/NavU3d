@@ -44,11 +44,11 @@
             app:layout_constraintLeft_toLeftOf="parent" >
 
 
-            <fragment
-                android:id="@+id/fgMap"
-                android:name="com.huida.navu3d.ui.fragment.map.MapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+<!--            <fragment-->
+<!--                android:id="@+id/fgMap"-->
+<!--                android:name="com.huida.navu3d.ui.fragment.map.MapFragment"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent" />-->
         </LinearLayout>
     </androidx.constraintlayout.motion.widget.MotionLayout>
 

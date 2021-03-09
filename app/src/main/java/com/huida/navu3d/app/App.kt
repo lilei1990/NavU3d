@@ -16,12 +16,12 @@ import com.lei.core.BaseApp
 class  App: BaseApp() {
     override fun onCreate() {
         super.onCreate()
-        val appInitialization = AppInitFactory.getAppInitialization(getProcessName())
+        val appInitialization = AppInitFactory.getAppInitialization(getCurrentProcessName())
         appInitialization?.onAppCreate(this)
 
 
     }
-    private fun getCurrentProcessName(): String? {
+    private fun getCurrentProcessName(): String{
         var currentProcName = ""
         val pid = Process.myPid()
         val manager: ActivityManager =

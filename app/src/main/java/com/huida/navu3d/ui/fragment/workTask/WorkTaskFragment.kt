@@ -49,11 +49,9 @@ class WorkTaskFragment : BaseVmFragment<FragmentTaskListBinding>(FragmentTaskLis
         binding.incTitleBar.clConfirm.clickNoRepeat {
             workTaskViewModel.workTaskData.name = binding.incNew.etTaskName.text.toString()
             workTaskViewModel.workTaskData.creator = binding.incNew.etCreator.text.toString()
-            lifecycleScope.launch(Dispatchers.IO) {
-                //添加到数据库,更新列表
-                workTaskViewModel.addFarmToolsData()
-                loadWorkListData()
-            }
+            //添加到数据库,更新列表
+            workTaskViewModel.addFarmToolsData()
+            loadWorkListData()
             binding.clContinueTask.performClick()
         }
         binding.incTitleBar.clBack.clickNoRepeat {

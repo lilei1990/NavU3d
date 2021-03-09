@@ -74,13 +74,7 @@ class HomeVM : BaseViewModel() {
         homeRepo.drawGuideLine()
     }
 
-    /**
-     * 切换昼夜模式
-     * “day”白天，“night”晚上
-     */
-    fun switchLight() {
 
-    }
 
     /**
      * 当界面销毁的时候终止任务

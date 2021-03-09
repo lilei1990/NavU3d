@@ -83,7 +83,10 @@ class GuideLineData : LitePalSupport() {
         startLng = toLatLng.longitude
     }
 
-    fun getStart(): PointData {
+    fun getStart(): PointData? {
+        if (startLat == 0.0 || startLng == 0.0) {
+            return null
+        }
         return PointData(startLat, startLng)
     }
 
@@ -111,8 +114,10 @@ class GuideLineData : LitePalSupport() {
         endLng = toLatLng.longitude
     }
 
-    fun getEnd(): PointData {
-
+    fun getEnd(): PointData? {
+        if (endLat == 0.0 || endLng == 0.0) {
+            return null
+        }
         return PointData(endLat, endLng)
     }
 

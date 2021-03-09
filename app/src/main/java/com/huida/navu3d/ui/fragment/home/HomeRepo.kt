@@ -12,14 +12,11 @@ import com.huida.navu3d.constants.Constants
 import com.huida.navu3d.constants.Constants.lineOffset
 import com.huida.navu3d.utils.GeometryUtils
 import com.zs.base_library.http.ApiException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import net.sf.marineapi.nmea.sentence.GGASentence
 import net.sf.marineapi.nmea.sentence.VTGSentence
 import uk.me.jstott.jcoord.LatLng
@@ -47,7 +44,7 @@ class HomeRepo(
     var offsetLineDistance = MutableLiveData<Double>()
 
     //当前所在位置
-    var index = 0
+    var indexLine = 0
 
     //卫星数
     var satelliteCount = MutableLiveData<Int>()
@@ -110,6 +107,12 @@ class HomeRepo(
             }
             NmeaProviderManager.registVTGListen(REGIST_FLAG) {
                 receive(it)
+            }
+            async {
+                while (status.value == Status.START) {
+                    delay(1000)
+                    computeDistance()
+                }
             }
         }
     }
@@ -196,7 +199,7 @@ class HomeRepo(
             mPointQueue.addFirst(point)
         }
 //计算偏移的距离
-        computeDistance()
+//        computeDistance()
 
         loop()
     }
@@ -204,8 +207,7 @@ class HomeRepo(
     /**
      *    //计算偏移的距离,定时刷新计算结果
      */
-    //当前所在位置
-    var indexLine = 0
+
     fun computeDistance() {
         //当前点
         val currenLatlng = currenLatLng.value ?: return
@@ -225,14 +227,19 @@ class HomeRepo(
         } else {//当前位置在右侧
             indexLine = len0.roundToInt()
         }
-        DataParallelLine.postValue(
-            budileUtmLine(
-                pointA.toUtm(),
-                pointB.toUtm(),
-                indexLine,
-                1
+
+        creatGuideLine()
+        DataParallelLine.value?.apply {
+
+            offsetLineDistance.postValue(
+                GeometryUtils.getPointToCurveDis(
+                    currenPoint,
+                    this.get(indexLine)!!
+                )
             )
-        )
+        }
+
+
     }
 
     /**
@@ -346,7 +353,7 @@ class HomeRepo(
         pointData.add(mA)
         pointData.add(mB)
 
-        DataParallelLine.postValue(budileUtmLine(mA, mB))
+        DataParallelLine.postValue(budileUtmLine(mA, mB, indexLine))
 
 
     }
@@ -456,6 +463,7 @@ class HomeRepo(
     }
 
     suspend fun setWorkTaskData(workTask: WorkTaskData?) {
+        workTaskData = workTask
         flow<WorkTaskData> {
             workTask?.findGuideLines()
             workTask?.findTrackLines()
